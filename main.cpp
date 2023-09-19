@@ -30,7 +30,7 @@ int main() {
     // This line ensures we're listening to keyboard inputs.
     XSelectInput(dpy, window, ExposureMask | KeyPressMask | KeyReleaseMask | PointerMotionMask | StructureNotifyMask);
 
-    FPSManager fpsManager(60.0);  // Target 60 FPS
+    FPSManager fpsManager(512.0);  // Target 60 FPS
 
     while (true) {
         XEvent event;
@@ -39,6 +39,8 @@ int main() {
 
         if (currentState == GameState::INIT) {
             titleScreen(width, height);
+            printf("%f,%f\n", mousex, mousey);
+            fflush(stdout);
             if (currentState == GameState::INIT && keysPressed[13]) { //Enter key is pressed
                 sleep(1);
                 currentState = GameState::PLAYING; //Start the Game

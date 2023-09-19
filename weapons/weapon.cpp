@@ -37,7 +37,7 @@ void Weapon::showHitbox() const {
 
 
 Knife::Knife(Player *p) : player(p) {
-    name = "Knife";
+    name = "Lithium Ion Grip Heat Transfer-Saber";
     damage = 200; 
     cooldown = 0.05;
     attackSize = 3;

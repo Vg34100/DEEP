@@ -3,7 +3,7 @@
 #include "../setup/initGLX.h"
 
 void titleScreen(float windowWidth, float windowHeight) {
-    //Draw title
+    //Draw Background
     glColor3f(0.294f, 0.318f, 0.42f); 
     glBegin(GL_QUADS);
         glVertex2f(-windowWidth, -windowHeight);

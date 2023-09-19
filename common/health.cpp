@@ -1,5 +1,5 @@
 //common/health.cpp
-#include "Health.h"
+#include "health.h"
 #include <algorithm>
 #include "../setup/initGLX.h"
 
