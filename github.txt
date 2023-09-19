@@ -1,0 +1,9 @@
+git init
+git add *
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/Vg34100/{name}.git
+git push -u origin main
+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
+
+export DISPLAY=$(grep -m 1 nameserver /etc/resolv.conf | awk '{print $2}'):0

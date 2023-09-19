@@ -1,7 +1,36 @@
-all: game
+# Compiler and flags
+CXX = g++
+CXXFLAGS = -Wall
+LDLIBS = -lX11 -lGL -lGLU -lglut -fsanitize=address
 
-game: init.cpp src/setup/rendering_setup.cpp src/setup/fonts.a src/player/player.cpp src/common/health.cpp src/common/bullet.cpp src/common/bullet_manager.cpp src/common/weapon.cpp src/common/weapon.h src/enemy/enemy.cpp
-	g++ init.cpp src/setup/rendering_setup.cpp src/setup/fonts.a src/player/player.cpp src/common/health.cpp src/common/bullet.cpp src/common/bullet_manager.cpp src/common/weapon.cpp src/enemy/enemy.cpp -o game -lrt -lX11 -lGLU -lGL -pthread -lm
+# Source files
+SRCS = main.cpp \
+       setup/initGLX.cpp \
+       setup/FPSManager.cpp \
+       gui/titleScreen.cpp \
+       world/world.cpp \
+       player/player.cpp \
+       enemies/enemy.cpp \
+       common/vector2.cpp \
+       common/health.cpp \
+       common/CollisionManager.cpp \
+       weapons/weapon.cpp \
+       world/level.cpp
+
+# Object files (this is a "phony" target, no actual .o files are generated)
+OBJS = $(SRCS:.cpp=.o)
+
+all: game debug
+
+game: $(OBJS)
+	$(CXX) $(CXXFLAGS) -o $@ $(OBJS) $(LDLIBS)
+
+debug: CXXFLAGS += -DDEBUG
+debug: $(OBJS)
+	$(CXX) $(CXXFLAGS) -o $@ $(OBJS) $(LDLIBS)
+
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 clean:
-	rm -f game
+	rm -f game debug $(OBJS)
