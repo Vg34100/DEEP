@@ -83,11 +83,46 @@
 - Fix the Fullscreen stuff
 - World collision with player not all accurate. 
 - Text thickness, or a better method for text in general
-- Add more tiles (Wildcard idea)
-- Make tiles rendering dependent on a theme (Forest? - Green Tiles | Cavern? - Dark Tiles | etc...)
-- Enemy AI
 - Attacking should probably be reworked to allow multiple attacks out at a time when it comes to ranged weapons
 
+###### To Do
+- Figure out importing sprites
+- Make a revamped title screen
+    - Pixel art, background of a hole, title of "DEEP" in the top center, stylied, 3 buttons, selectable with up and down and then selecting it with enter
+    - The button "DELVE IN" starts the game (gamestate changes to PLAYING)
+    - Next button should be a settings button, changes the gamestate to settings, and has different things like screen mode, or controls
+    - Final button is Exit to close the game
+- GUI in game
+    - Info card, should show up at the bottom center of the game, and provide the player relavant information like if they get a new gun, if there is a stat change, or if there is a boss incoming
+    - Health GUI that takes the health in increments of 10 for one bar, metroid style health
+    - Weapon Class dependent GUI [The weapon icon and class icon should always be shown to the right]
+        - Melee Class has a crit bar, attack when the bar is at a certain spot, crit is applied
+            - Needs to incorporate a crit multiplier, and possibly a crit chance
+        - Magic Class has a charge bar and mana bar, hold the attack button to charge the power of the attack, the more you charge, the more mana you consume
+            - Needs to incorporate a charge rate and charge multiplier, affects attack and mana usage
+        - Ranged Class has a magazine size based on the weapon, after mag runs out, you need to reload, the ability to reload depends on the players ammo count
+            - Needs to incorporate a mag size and a reload rate
+        - Summon Class has a max summons number
+    - Equipment GUI, looks like a pass port
+        - should display player information like stats, a picture of the player, the weapons [4 weapons, 1 per class], and equipment
+- Player
+    - Needs a Mana mangement system. Naturally regens. Decreases when using a Mana baed weapon
+    - Needs a Ammo management system. Decreases when reloading, decreases the amount of the mag size, 
+    - Needs a Summon management system. Maximum of n (start at 2) summons. Reusing causes respawning of minion, right click changes targeting?
+    - Possible right click action for weapon classes?
+- Add more tiles (Wildcard idea)
+- Make tiles rendering dependent on a theme (Forest? - Green Tiles | Cavern? - Dark Tiles | etc...)
+    - Theme ideas
+        - Forest - "Foiliage", Water (slows player)
+        - Cavern - Pits (player "falls" and takes damage), Rocks (basically walls) - If progression, unlock Ammo
+        - Hallow - Crystals (basically walls) - If progression, unlock Mana/Summon
+        - Lava - Lava Pits (same as pits, but lava), Fire (takes damage as long as u stay on it, u can survive quickly passing it), Geyser (stand on it, it heats up, then after causes damage hitbox, even if player had left, then coolsdown)
+        - Frozen - High Snow (slows, like water, but masks visibility), Icicles (they are spikes), Frozen Zones (everything is slowed)
+        - Underworld - Yellow Fire (its fire, faster?), Geysers that aim
+        - Crimson - Flesh themed, Acidic Pools (slows, like water, damages, like fire), Roller Blades (these are spikes)
+        - Abyss - idk, probably dark, i just thought it sounded cool
+- Enemy AI 
+    - Enemy travelling towards enemy, causing damage to the player when collision with itself or it's attack
 
 ###### Initial Draft
 - PLAYER (Player.cpp)
