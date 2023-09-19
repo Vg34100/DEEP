@@ -30,7 +30,7 @@ int main() {
     // This line ensures we're listening to keyboard inputs.
     XSelectInput(dpy, window, ExposureMask | KeyPressMask | KeyReleaseMask | PointerMotionMask | StructureNotifyMask);
 
-    FPSManager fpsManager(512.0);  // Target 60 FPS
+    FPSManager fpsManager(60.0);  // Target 60 FPS
 
     while (true) {
         XEvent event;
