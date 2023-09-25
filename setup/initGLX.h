@@ -2,7 +2,6 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/glx.h>
-#include <GL/glut.h>
 #include <X11/X.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h> // For window size hints

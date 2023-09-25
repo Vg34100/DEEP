@@ -3,7 +3,6 @@
 
 #include "../common/health.h"
 #include <string>
-#include <GL/glut.h>  // Make sure you include the necessary header for OpenGL
 #include "../common/vector2.h"
 #include "../world/world.h"
 

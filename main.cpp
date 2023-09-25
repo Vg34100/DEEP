@@ -22,9 +22,6 @@ int main() {
     GameState currentState = GameState::INIT;
     initializeGLX();
     initGL();
-    int argc = 0; // These are usually from the main function's parameters
-    char* argv[] = { NULL };  // Dummy argv
-    glutInit(&argc, argv);
 
     World world;
     // This line ensures we're listening to keyboard inputs.

@@ -79,7 +79,7 @@ void Player::render() {
 
     if (activeWeapon) {
         std::string Weapontext = activeWeapon->getName();
-        drawText(Weapontext.data(), Weapontext.size(), -width + 100, height-100, 1);
+        // drawText(Weapontext.data(), Weapontext.size(), -width + 100, height-100, 1);
         activeWeapon->render();
     }
 
