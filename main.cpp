@@ -41,7 +41,7 @@ int main() {
 
         if (currentState == GameState::INIT) {
             titleScreen(width, height);
-            printf("%f,%f\n", mousex, mousey);
+            // printf("%f,%f\n", mousex, mousey);
             fflush(stdout);
             if (currentState == GameState::INIT && keysPressed[13]) { //Enter key is pressed
                 sleep(1);

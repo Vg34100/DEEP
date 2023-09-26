@@ -73,19 +73,27 @@ void cleanupGLX() {
 void XPendingEvent(XEvent event) {
     while (XPending(dpy) > 0) {
         XNextEvent(dpy, &event);
+        int key = (XLookupKeysym(&event.xkey, 0) & 0x0000ffff);
+        if (event.type == KeyRelease) {
+            //gl.keys[key] = 0;
+            if (key == XK_Shift_L || key == XK_Shift_R)
+                std::cout << "CHECK CHECK" << std::endl;
+        }
+
+
         switch (event.type) {
             case KeyPress: {
                 char buf[2];
                 KeySym keysym;
                 XLookupString(&event.xkey, buf, sizeof(buf), &keysym, nullptr);
-                keysPressed[static_cast<unsigned char>(buf[0])] = true;
+                keysPressed[char(buf[0])] = true;
                 break;
             }
             case KeyRelease: {
                 char buf[2];
                 KeySym keysym;
                 XLookupString(&event.xkey, buf, sizeof(buf), &keysym, nullptr);
-                keysPressed[static_cast<unsigned char>(buf[0])] = false;
+                keysPressed[char(buf[0])] = false;
                 break;
             }
             case MotionNotify: {
