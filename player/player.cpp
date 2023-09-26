@@ -30,22 +30,23 @@ void Player::handleInput() {
     playerVelocity.x = 0.0f;  // Reset horizontal velocity
     playerVelocity.y = 0.0f;  // Reset vertical velocity
     // Adjust velocity based on pressed keys
-    if (keysPressed['w']) handleMovement(25.0f * Speed,0);
-    if (keysPressed['s']) handleMovement(-25.0f * Speed,0);
-    if (keysPressed['a']) handleMovement(0,-25.0f * Speed);
-    if (keysPressed['d']) handleMovement(0,25.0f * Speed);
+    if (keysPressed[XK_w]) handleMovement(25.0f * Speed, 0);
+    if (keysPressed[XK_s]) handleMovement(-25.0f * Speed, 0);
+    if (keysPressed[XK_a]) handleMovement(0, -25.0f * Speed);
+    if (keysPressed[XK_d]) handleMovement(0, 25.0f * Speed);
 
-    if (keysPressed['w'] && keysPressed['s']) playerVelocity.y = 0.0f; // If both up and down are pressed
-    if (keysPressed['a'] && keysPressed['d']) playerVelocity.x = 0.0f; // If both left and right are pressed
+    if (keysPressed[XK_w] && keysPressed[XK_s]) playerVelocity.y = 0.0f; // If both up and down are pressed
+    if (keysPressed[XK_a] && keysPressed[XK_d]) playerVelocity.x = 0.0f; // If both left and right are pressed
+
 
     // Normalize diagonal movement
-    if ((keysPressed['w'] || keysPressed['s']) && (keysPressed['a'] || keysPressed['d'])) {
+    if ((keysPressed[XK_w] || keysPressed[XK_s]) && (keysPressed[XK_a] || keysPressed[XK_d])) {
         playerVelocity.normalize();
         playerVelocity.x *= 25.0f * Speed;
         playerVelocity.y *= 25.0f * Speed;
     }
 
-    if ((keysPressed['r'])) useWeapon();
+    if (keysPressed[XK_r]) useWeapon();
 
 
 }

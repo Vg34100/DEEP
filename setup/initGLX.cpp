@@ -7,7 +7,7 @@ Display *dpy;
 Window window;
 GLXContext ctx;
 bool isFullscreen = false;
-bool keysPressed[256] = {false};
+// bool keysPressed[256] = {false};
 float width = 1280;
 float height = 720;
 float aspect = (float)width / (float)height;
@@ -70,30 +70,22 @@ void cleanupGLX() {
     XCloseDisplay(dpy);
 }
 
+bool keysPressed[65536] = {false}; // Increased size to accommodate KeySym values
+
 void XPendingEvent(XEvent event) {
     while (XPending(dpy) > 0) {
         XNextEvent(dpy, &event);
         int key = (XLookupKeysym(&event.xkey, 0) & 0x0000ffff);
-        if (event.type == KeyRelease) {
-            //gl.keys[key] = 0;
-            if (key == XK_Shift_L || key == XK_Shift_R)
-                std::cout << "CHECK CHECK" << std::endl;
-        }
-
-
+        
         switch (event.type) {
             case KeyPress: {
-                char buf[2];
-                KeySym keysym;
-                XLookupString(&event.xkey, buf, sizeof(buf), &keysym, nullptr);
-                keysPressed[char(buf[0])] = true;
+                keysPressed[key] = true;
                 break;
             }
             case KeyRelease: {
-                char buf[2];
-                KeySym keysym;
-                XLookupString(&event.xkey, buf, sizeof(buf), &keysym, nullptr);
-                keysPressed[char(buf[0])] = false;
+                keysPressed[key] = false;
+                if (key == XK_Shift_L || key == XK_Shift_R)
+                    std::cout << "CHECK CHECK" << std::endl;
                 break;
             }
             case MotionNotify: {
@@ -109,17 +101,20 @@ void XPendingEvent(XEvent event) {
                 break;
         }
     }
-    if (keysPressed[27]) {  // ESC key to quit
+    
+    if (keysPressed[XK_Escape]) {  // ESC key to quit
         glXMakeCurrent(dpy, None, NULL);
         glXDestroyContext(dpy, ctx);
         XDestroyWindow(dpy, window);
         XCloseDisplay(dpy);
         exit(0);
     }
-    if (keysPressed['f']) {  // 'f' key to toggle fullscreen
+    
+    if (keysPressed[XK_f]) {  // 'f' key to toggle fullscreen
         toggleFullscreen();
     }
 }
+
 
 // void drawText(const char *text, int length, int x, int y) {
 //     // Save current projection matrix

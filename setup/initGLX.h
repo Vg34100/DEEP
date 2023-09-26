@@ -17,7 +17,7 @@ void toggleFullscreen();
 void handleResize(XEvent *event);
 void XPendingEvent(XEvent event);
 
-extern bool keysPressed[256];
+extern bool keysPressed[65536];
 extern float width;
 extern float height;
 extern float mousex;
