@@ -10,6 +10,11 @@
 #include "world/world.h"
 #include "enemies/enemy.h"
 #include "common/CollisionManager.h"
+#include "devFiles/apacheco2.h"
+#include "devFiles/jlo.h"
+#include "devFiles/prodriguezqu.h"
+#include "devFiles/vto.h"
+
 
 enum class GameState {
     INIT,
