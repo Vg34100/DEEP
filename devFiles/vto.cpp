@@ -21,7 +21,6 @@ Vector2 rotatePoint(const Vector2& point, float angle, const Vector2& center) {
     return p;
 }
 
-
 void Weapon::showHitbox() const {
     // Draw the rectangle outline
     glBegin(GL_LINE_LOOP);
@@ -32,9 +31,6 @@ void Weapon::showHitbox() const {
     glVertex2f(hitbox.topLeft.x, hitbox.bottomRight.y);
     glEnd();
 }
-
-
-
 
 Knife::Knife(Player *p) : player(p) {
     name = "Lithium Ion Grip Heat Transfer-Saber";
