@@ -1,7 +1,7 @@
 //initGLX.cpp
 #include "initGLX.h"
 #include <iostream>
-
+#include <vector>
 
 Display *dpy;
 Window window;
@@ -15,64 +15,162 @@ const float gameWidth = 1280.0f;  // Width of the game world in game units
 const float gameHeight = gameWidth / aspect;
 float mousex;
 float mousey;
+Atom wmDeleteMessage;  // Define as a global variable
+Colormap cmap;
+bool done = false;
+struct ScreenSize {
+    int width;
+    int height;
+};
+
+const std::vector<ScreenSize> screenSizes {
+    {3840, 2160},
+    {3440, 1440},
+    {2560, 1080},
+    {2560, 1440},
+    {1920, 1080},
+    {1920, 1200},
+    {1680, 1050},
+    {1600, 900},
+    {1366, 768},
+    {1280, 720},
+    {1024, 768},
+    // Add other sizes as needed
+};
+
+int currentIndex = 4; // Start with the default size
+void changeScreenSize(bool next) {
+    if (next) {
+        currentIndex = (currentIndex + 1) % screenSizes.size();
+    } else {
+        currentIndex = (currentIndex - 1 + screenSizes.size()) % screenSizes.size();
+    }
+    
+    const auto& newSize = screenSizes[currentIndex];
+    XResizeWindow(dpy, window, newSize.width, newSize.height);
+    width = newSize.width;
+    height = newSize.height;
+}
+
+
+
+int prevX, prevY, prevWidth, prevHeight; // Store the previous position and size of the window
 
 void toggleFullscreen() {
     if (!isFullscreen) {
+        // Store the previous size and position of the window
+        XWindowAttributes windowAttributes;
+        XGetWindowAttributes(dpy, window, &windowAttributes);
+        prevX = windowAttributes.x;
+        prevY = windowAttributes.y;
+        prevWidth = windowAttributes.width;
+        prevHeight = windowAttributes.height;
+
+        // Move and resize the window to cover the entire screen
         XMoveResizeWindow(dpy, window, 0, 0, XDisplayWidth(dpy, 0), XDisplayHeight(dpy, 0));
     } else {
-        XMoveResizeWindow(dpy, window, 0, 0, 600, 600);
+        // Restore the window to its previous size and position
+        XMoveResizeWindow(dpy, window, prevX, prevY, prevWidth, prevHeight);
     }
     isFullscreen = !isFullscreen;
 }
 
 void initGL() {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glMatrixMode(GL_PROJECTION);
-    gluOrtho2D(-gameWidth, gameWidth, -gameHeight, gameHeight);  // Centered at (0, 0)
+    glMatrixMode(GL_PROJECTION); glLoadIdentity();
+	glMatrixMode(GL_MODELVIEW); glLoadIdentity();
+    glOrtho(-gameWidth, gameWidth, -gameHeight, gameHeight, -1 ,1);  // Centered at (0, 0)
+
+	glDisable(GL_LIGHTING);
+	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_FOG);
+	glDisable(GL_CULL_FACE);
+    glEnable(GL_TEXTURE_2D);
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
-
-
-void handleResize(XEvent *event) {
-    int width = event->xconfigure.width;
-    int height = event->xconfigure.height;
-    aspect = (float)width / (float)height;
-    float gameHeight = gameWidth / aspect;
-    glViewport(0, 0, width, height);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluOrtho2D(-gameWidth, gameWidth, -gameHeight, gameHeight);  // Centered at (0, 0)
-}
-
 
 void initializeGLX() {
-    dpy = XOpenDisplay(NULL);
-
     GLint att[] = {GLX_RGBA, GLX_DEPTH_SIZE, 24, GLX_DOUBLEBUFFER, None};
-    XVisualInfo *vi = glXChooseVisual(dpy, 0, att);
-
-    Colormap cmap = XCreateColormap(dpy, RootWindow(dpy, vi->screen), vi->visual, AllocNone);
     XSetWindowAttributes swa;
+    dpy = XOpenDisplay(NULL);
+    if (dpy == NULL) {
+        std::cout << "\n\tcannot connect to X server" << std::endl;
+        exit(EXIT_FAILURE);
+    }
+    Window root = DefaultRootWindow(dpy);
+    XWindowAttributes getWinAttr;
+    XGetWindowAttributes(dpy, root, &getWinAttr);
+
+    XVisualInfo *vi = glXChooseVisual(dpy, 0, att);
+    if (vi == NULL) {
+        std::cout << "\n\tno appropriate visual found\n" << std::endl;
+        exit(EXIT_FAILURE);
+    } 
+
+    cmap = XCreateColormap(dpy, root, vi->visual, AllocNone);
     swa.colormap = cmap;
-    window = XCreateWindow(dpy, RootWindow(dpy, vi->screen), 0, 0, width, height, 0, vi->depth, InputOutput, vi->visual, CWColormap, &swa);
-    
+    swa.event_mask = ExposureMask | KeyPressMask | KeyReleaseMask |
+        PointerMotionMask | MotionNotify | ButtonPress | ButtonRelease |
+        StructureNotifyMask | SubstructureNotifyMask;
+
+    unsigned int winops = CWBorderPixel|CWColormap|CWEventMask;
+    if (isFullscreen) {
+        winops |= CWOverrideRedirect;
+        swa.override_redirect = True;
+    }
+
+    window = XCreateWindow(dpy, root, 0, 0, width, height, 0, vi->depth, InputOutput, vi->visual, winops, &swa);
+
     XMapWindow(dpy, window);
     XStoreName(dpy, window, "2D Top Down Game");
 
-
     ctx = glXCreateContext(dpy, vi, NULL, GL_TRUE);
     glXMakeCurrent(dpy, window, ctx);
+
+    XFree(vi);
+    wmDeleteMessage = XInternAtom(dpy, "WM_DELETE_WINDOW", False);
+    XSetWMProtocols(dpy, window, &wmDeleteMessage, 1);
+
+    //Disallow resizing
+    XSizeHints* sizeHints = XAllocSizeHints();
+    sizeHints->flags = PMinSize | PMaxSize;
+    sizeHints->min_width = sizeHints->max_width = width;
+    sizeHints->min_height = sizeHints->max_height = height;
+    XSetWMNormalHints(dpy, window, sizeHints);
+    XFree(sizeHints);
 }
 
 void cleanupGLX() {
-    glXMakeCurrent(dpy, None, NULL);
-    glXDestroyContext(dpy, ctx);
-    XDestroyWindow(dpy, window);
-    XCloseDisplay(dpy);
+    glFlush();
+    glFinish();
+    if (dpy) {
+        if (ctx) {
+            glXMakeCurrent(dpy, None, NULL);
+            glXDestroyContext(dpy, ctx);
+            ctx = NULL; // Set to NULL to avoid accidental reuse
+        }
+        
+        if (window) {
+            XDestroyWindow(dpy, window);
+            window = 0; // Set to 0 to avoid accidental reuse
+        }
+        
+        if (cmap) {
+            XFreeColormap(dpy, cmap);
+            cmap = 0; // Set to 0 to avoid accidental reuse
+        }
+        
+        XCloseDisplay(dpy);
+        dpy = NULL; // Set to NULL to avoid accidental reuse
+    }
 }
 
 bool keysPressed[65536] = {false}; // Increased size to accommodate KeySym values
 
 void XPendingEvent(XEvent event) {
+    if (dpy == NULL) return; // Check if dpy is not NULL before proceeding
     while (XPending(dpy) > 0) {
         XNextEvent(dpy, &event);
         int key = (XLookupKeysym(&event.xkey, 0) & 0x0000ffff);
@@ -84,8 +182,12 @@ void XPendingEvent(XEvent event) {
             }
             case KeyRelease: {
                 keysPressed[key] = false;
-                if (key == XK_Shift_L || key == XK_Shift_R)
-                    std::cout << "CHECK CHECK" << std::endl;
+                if (key == XK_F11) toggleFullscreen();
+                if (key == XK_Right) {
+                    changeScreenSize(true);
+                } else if (key == XK_Left) {
+                    changeScreenSize(false);
+                }
                 break;
             }
             case MotionNotify: {
@@ -94,49 +196,19 @@ void XPendingEvent(XEvent event) {
                 break;
             }
             case ConfigureNotify: {
-                handleResize(&event);
                 break;
             }
             default:
                 break;
         }
     }
-    
-    if (keysPressed[XK_Escape]) {  // ESC key to quit
-        glXMakeCurrent(dpy, None, NULL);
-        glXDestroyContext(dpy, ctx);
-        XDestroyWindow(dpy, window);
-        XCloseDisplay(dpy);
-        exit(0);
-    }
-    
-    if (keysPressed[XK_f]) {  // 'f' key to toggle fullscreen
-        toggleFullscreen();
+    // In your event handling
+    if (keysPressed[XK_Escape] || (event.type == ClientMessage && (Atom)event.xclient.data.l[0] == wmDeleteMessage)) {
+        done = true;
     }
 }
 
-
-// void drawText(const char *text, int length, int x, int y) {
-//     // Save current projection matrix
-//     glMatrixMode(GL_PROJECTION);
-//     glPushMatrix();
-//     glLoadIdentity();
-//     glOrtho(-width, width, -height, height, -1, 1);
-
-//     // Draw the text
-//     glMatrixMode(GL_MODELVIEW);
-//     glPushMatrix();
-//     glLoadIdentity();
-//     glRasterPos2i(x, y);
-//     for(int i = 0; i < length; i++) {
-//         glutBitmapCharacter(GLUT_BITMAP_9_BY_15, (int)text[i]);
-//     }
-//     glPopMatrix();
-
-//     // Restore the original projection matrix
-//     glMatrixMode(GL_PROJECTION);
-//     glPopMatrix();
-
-//     glMatrixMode(GL_MODELVIEW);  // Set the active matrix to modelview for further rendering
-// }
-
+void XReset() {
+    glXSwapBuffers(dpy, window);
+    glClear(GL_COLOR_BUFFER_BIT);
+}

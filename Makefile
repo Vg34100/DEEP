@@ -5,7 +5,6 @@ LDLIBS = -lX11 -lGL -lGLU
 # Source files
 SRCS = main.cpp \
        setup/initGLX.cpp \
-       setup/FPSManager.cpp \
        gui/titleScreen.cpp \
        world/world.cpp \
        player/player.cpp \

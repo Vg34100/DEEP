@@ -1,6 +1,11 @@
-//main.cpp
+//modified by: Pablo Rodriguez, Arron Pacheco, Vincent To, Justin Lo
+//program: asteroids.cpp -> main.cpp
+//author:  Gordon Griesel
+//date:    2014 - 2021
+//mod spring 2015: added constructors
+//This program is a game starting point for a 3350 project.
+//
 #include "setup/initGLX.h"
-#include "setup/FPSManager.h"
 #include "player/player.h"
 #include <chrono>
 #include <thread>
@@ -15,6 +20,9 @@
 #include "prodriguezqu.h"
 #include "vto.h"
 
+const double physicsRate = 1.0 / 60.0;
+double physicsCountdown=0.0;
+double timeSpan=0.0;
 
 enum class GameState {
     INIT,
@@ -28,21 +36,31 @@ int main() {
     initializeGLX();
     initGL();
 
-    World world;
-    // This line ensures we're listening to keyboard inputs.
-    XSelectInput(dpy, window, ExposureMask | KeyPressMask | KeyReleaseMask | PointerMotionMask | StructureNotifyMask);
 
-    FPSManager fpsManager(60.0);  // Target 60 FPS
+    printf("Press Enter to Play\n");
+    printf("Change Screen Size using left and right arrows\n");
+    printf("Move - WASD | Attack - R | Aim - Mouse\n");
+    printf("Objective: Kill Enemies (White) with Attack -> Proceed to Next Level through Hallway (LightGray)");
+    fflush(stdout);
 
-    while (true) {
+    auto lastUpdateTime = std::chrono::high_resolution_clock::now();
+
+
+
+    while (!done) {
+        XReset();
         XEvent event;
         XPendingEvent(event);       
-        glClear(GL_COLOR_BUFFER_BIT);
+
+        auto currentTime = std::chrono::high_resolution_clock::now();
+        auto elapsedTime = std::chrono::duration<double>(currentTime - lastUpdateTime).count();
+        //auto deltaTime = std::chrono::duration<float>(elapsedTime).count(); // for future use if acceleartion based character is used
+        lastUpdateTime = currentTime;
+        physicsCountdown += elapsedTime;
+
 
         if (currentState == GameState::INIT) {
             titleScreen(width, height);
-            // printf("%f,%f\n", mousex, mousey);
-            fflush(stdout);
             if (currentState == GameState::INIT && keysPressed[XK_Return]) { //Enter key is pressed
                 sleep(1);
                 currentState = GameState::PLAYING; //Start the Game
@@ -50,26 +68,24 @@ int main() {
         }
 
         if (currentState == GameState::PLAYING) {
-
+            static World world;
             static CollisionManager cm(world);
             static Player player(cm, 100.0f); 
-            fpsManager.startFrame();
 
-            player.handleInput();
-            player.cameraSetup();
-            cm.handlePlayerCollisions(player);
-            cm.handleEnemyCollisions(player);
-            world.render();
-            world.renderEnemies();
-            player.render();
-            //Restore original matrix
+            physicsCountdown += timeSpan;
+            while (physicsCountdown >= physicsRate) {
+                player.handleInput();
+                cm.handlePlayerCollisions(player);
+                cm.handleEnemyCollisions(player);
+                physicsCountdown -= physicsRate;
+            }
+                player.cameraSetup();
+                world.render();
+                world.renderEnemies();
+                player.render();
+
             glPopMatrix();
-
-            // Continue with other game rendering if any...
-
-            fpsManager.endFrame();
         }
-        glXSwapBuffers(dpy, window);
     }
     cleanupGLX();
     return 0;
