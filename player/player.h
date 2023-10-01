@@ -12,7 +12,7 @@
 #include "../common/ICollidable.h"
 #include "../common/CollisionManager.h"
 
-#include "../weapons/weapon.h"
+#include "../vto.h"
 
 //class World;
 
