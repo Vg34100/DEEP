@@ -1,7 +1,7 @@
 //Author: Vincent To
 //Weapons
 #include "vto.h"
-#include "player/player.h"
+#include "player.h"
 #include <ctime>
 
 Vector2 rotatePoint(const Vector2& point, float angle, const Vector2& center) {

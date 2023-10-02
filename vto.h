@@ -1,7 +1,7 @@
 //vto.h
 #pragma once
 #include <string>
-#include "common/vector2.h"
+#include "util_vector2.h"
 class Player;
 
 class Weapon {

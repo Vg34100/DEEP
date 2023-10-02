@@ -5,16 +5,16 @@
 //mod spring 2015: added constructors
 //This program is a game starting point for a 3350 project.
 //
-#include "setup/initGLX.h"
-#include "player/player.h"
+#include "initGLX.h"
+#include "player.h"
 #include <chrono>
 #include <thread>
 #include <string>
 #include <unistd.h>
-#include "gui/titleScreen.h"
-#include "world/world.h"
-#include "enemies/enemy.h"
-#include "common/CollisionManager.h"
+#include "gui_titleScreen.h"
+#include "world.h"
+#include "enemy.h"
+#include "util_CollisionManager.h"
 #include "apacheco2.h"
 #include "jlo.h"
 #include "prodriguezqu.h"
@@ -40,7 +40,7 @@ int main() {
     printf("Press Enter to Play\n");
     printf("Change Screen Size using left and right arrows\n");
     printf("Move - WASD | Attack - R | Aim - Mouse\n");
-    printf("Objective: Kill Enemies (White) with Attack -> Proceed to Next Level through Hallway (LightGray)");
+    printf("Objective: Kill Enemies (White) with Attack -> Proceed to Next Level through Hallway (LightGray)\n");
     fflush(stdout);
 
     auto lastUpdateTime = std::chrono::high_resolution_clock::now();

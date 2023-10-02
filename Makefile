@@ -4,22 +4,22 @@ CXXFLAGS = -Wall
 LDLIBS = -lX11 -lGL -lGLU
 # Source files
 SRCS = main.cpp \
-       setup/initGLX.cpp \
-       gui/titleScreen.cpp \
-       world/world.cpp \
-       player/player.cpp \
-       enemies/enemy.cpp \
-       common/vector2.cpp \
-       common/health.cpp \
-       common/CollisionManager.cpp \
-       world/level.cpp \
+       initGLX.cpp \
+       gui_titleScreen.cpp \
+       world.cpp \
+       player.cpp \
+       enemy.cpp \
+       util_vector2.cpp \
+       util_health.cpp \
+       util_CollisionManager.cpp \
+       world_level.cpp \
        vto.cpp \
        jlo.cpp \
        apacheco2.cpp \
        prodriguezqu.cpp
 
 # Object files (this is a "phony" target, no actual .o files are generated)
-OBJS = $(SRCS:.cpp=.o)
+OBJS = $(SRCS:%.cpp=objects/%.o)
 
 all: game debug
 
@@ -30,8 +30,10 @@ debug: CXXFLAGS += -DDEBUG
 debug: $(OBJS)
 	$(CXX) $(CXXFLAGS) -o $@ $(OBJS) $(LDLIBS)
 
-%.o: %.cpp
+objects/%.o: %.cpp
+	mkdir -p objects
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 clean:
-	rm -f game debug $(OBJS)
+	rm -f game debug objects/*.o
+	rm -rf objects
