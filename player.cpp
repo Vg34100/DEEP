@@ -1,10 +1,11 @@
 //player/player.cpp
 #include "player.h"
 #include "initGLX.h"
+#include "prodriguezqu.h"
 
 float easeOut(float factor) {
     return 1 - (1 - factor) * (1 - factor);
-}
+} 
 
 void Player::cameraSetup() {
     // Camera lag
@@ -15,41 +16,57 @@ void Player::cameraSetup() {
 
     glPushMatrix(); 
     glTranslatef(-cameraPos.x, -cameraPos.y, 0.0f);
+
+    // float maxCursorInfluenceDistance = 100.0f;
+    
+    // // Calculate the vector from the player to the mouse cursor
+    // Vector2 toCursor = mousePos - playerPos;
+    
+    // // Calculate how much the cursor should affect the camera's position
+    // float cursorInfluence = toCursor.length() / maxCursorInfluenceDistance;
+    // cursorInfluence = std::min(1.0f, cursorInfluence);  // Ensure it's in [0, 1]
+
+    // // Interpolate between the player's position and the cursor's position
+    // Vector2 targetCameraPos = playerPos + toCursor * cursorInfluence;
+
+    // // Smoothly move the camera towards the target position
+    // cameraPos.x += (targetCameraPos.x - cameraPos.x) * easeOut(factor);
+    // cameraPos.y += (targetCameraPos.y - cameraPos.y) * easeOut(factor);
+
+    // glPushMatrix(); 
+    // glTranslatef(-cameraPos.x, -cameraPos.y, 0.0f);
+    
 }
 
-void Player::handleMovement(float speedY, float speedX) {
-    // printf("handleMovement");
-    // fflush(stdout);
-    playerVelocity.y = speedY;
-    playerVelocity.x = speedX;
-}
+
+// void Player::handleMovement(float speedY, float speedX) {
+//     // printf("handleMovement");
+//     // fflush(stdout);
+//     playerVelocity.y = speedY;
+//     playerVelocity.x = speedX;
+// }
 
 void Player::handleInput() {
 
-    // Adjust velocity based on pressed keys
     playerVelocity.x = 0.0f;  // Reset horizontal velocity
     playerVelocity.y = 0.0f;  // Reset vertical velocity
+
     // Adjust velocity based on pressed keys
-    if (keysPressed[XK_w]) handleMovement(25.0f * Speed, 0);
-    if (keysPressed[XK_s]) handleMovement(-25.0f * Speed, 0);
-    if (keysPressed[XK_a]) handleMovement(0, -25.0f * Speed);
-    if (keysPressed[XK_d]) handleMovement(0, 25.0f * Speed);
-
-    if (keysPressed[XK_w] && keysPressed[XK_s]) playerVelocity.y = 0.0f; // If both up and down are pressed
-    if (keysPressed[XK_a] && keysPressed[XK_d]) playerVelocity.x = 0.0f; // If both left and right are pressed
-
+    if (keysPressed[XK_w]) playerVelocity.y += 25.0f * Speed;
+    if (keysPressed[XK_s]) playerVelocity.y -= 25.0f * Speed;
+    if (keysPressed[XK_a]) playerVelocity.x -= 25.0f * Speed;
+    if (keysPressed[XK_d]) playerVelocity.x += 25.0f * Speed;
 
     // Normalize diagonal movement
-    if ((keysPressed[XK_w] || keysPressed[XK_s]) && (keysPressed[XK_a] || keysPressed[XK_d])) {
-        playerVelocity.normalize();
-        playerVelocity.x *= 25.0f * Speed; 
-        playerVelocity.y *= 25.0f * Speed;
+    if ((playerVelocity.x != 0.0f) && (playerVelocity.y != 0.0f)) {
+        float factor = sqrt(2.0f) / 2.0f;  // Equivalent to 1/sqrt(2)
+        playerVelocity.x *= factor;
+        playerVelocity.y *= factor;
     }
 
     if (keysPressed[XK_r]) useWeapon();
-
-
 }
+
 
 //KEEP - I guess this is important 
 bool Player::isColliding() {
@@ -71,8 +88,9 @@ void Player::showHitbox() const {
 }
 
 void Player::render() { 
+    playerHealth.SetHealth(40);
     updatePlayerDirection();
-
+    updateMousePosition(mousex, mousey);
     Vector2 topLeft = Vector2(playerPos.x - 0.5f * playerWidth, playerPos.y + 0.5f * playerHeight);
     Vector2 bottomRight = Vector2(playerPos.x + 0.5f * playerWidth, playerPos.y - 0.5f * playerHeight);
     Vector2 topRight = Vector2(playerPos.x + 0.5f * playerWidth, playerPos.y + 0.5f * playerHeight);
@@ -83,6 +101,7 @@ void Player::render() {
         // drawText(Weapontext.data(), Weapontext.size(), -width + 100, height-100, 1);
         activeWeapon->render();
     }
+
 
     glBegin(GL_QUADS);
     glColor3f(1.0f, 0.0f, 0.0f);
@@ -112,8 +131,9 @@ void Player::render() {
     glVertex2f(indicatorPos.x - 0.5f * indicatorSize, indicatorPos.y + 0.5f * indicatorSize);
     glEnd();
 
-    playerHealth.DisplayStaticHealthBar(-width + 100, height - 70);
 
+
+    playerHealth.DisplayStaticHealthBar(-width + 100, height - 70);
 
 
 
@@ -122,6 +142,11 @@ void Player::render() {
     #ifdef DEBUG     
     showHitbox();
     #endif
+
+    glPopMatrix();
+    showcaseHealth(playerHealth.GetMaxHealth(), playerHealth.GetCurrentHealth());
+    glPushMatrix();
+
 }
 
 void Player::updateMousePosition(float mouseX, float mouseY) {

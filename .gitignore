@@ -3,4 +3,4 @@ debug
 *.o
 github.txt
 cache
-vscode
+.vscode

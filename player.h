@@ -58,6 +58,7 @@ public:
             activeWeapon->setDuration(activeWeapon->getDuration() * Range); // changes the weapon's duration based on player's range stat | not for Melee Class
         activeWeapon->setCooldown(activeWeapon->getCooldown() / AttackSpeed); // changes the weapon's cooldown based on player's attack speed stat
         activeWeapon->setAttackSize(activeWeapon->getAttackSize() * Size); // change the weapon's attack size based on player's own size
+   
     };
 
     std::vector<std::shared_ptr<Weapon>> inventory;
