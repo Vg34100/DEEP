@@ -5,7 +5,6 @@ LDLIBS = -lX11 -lGL -lGLU
 # Source files
 SRCS = main.cpp \
        initGLX.cpp \
-       gui_titleScreen.cpp \
        world.cpp \
        player.cpp \
        enemy.cpp \
@@ -16,7 +15,9 @@ SRCS = main.cpp \
        vto.cpp \
        jlo.cpp \
        apacheco2.cpp \
-       prodriguezqu.cpp
+       prodriguezqu.cpp \
+       image.cpp \
+       libggfonts.a
 
 # Object files (this is a "phony" target, no actual .o files are generated)
 OBJS = $(SRCS:%.cpp=objects/%.o)

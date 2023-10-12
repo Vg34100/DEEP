@@ -2,7 +2,7 @@
 #pragma once
 
 enum class EnemyType {
-    NONE,  // Represents no enemy
-    ORC,
-    // Add other enemy types as needed
+	NONE,  // Represents no enemy
+	ORC,
+	// Add other enemy types as needed
 };

@@ -1,7 +1,38 @@
 # DEEP
 ### Dungeon Explorer's Endless Pursuit
 
-###### Current Version
+###### Version Update 10/11/2023 as of 5:00 PM
+- Added the image files
+    - Can load an image and render it
+    - Can render a sprite sheet out of it 
+    - The first pixel of the sprite is considered the green screen
+- Added back the font solution from asteroids, despite it being super small
+- prodriguezqu
+    - Added a simple bar health bar
+    - Created a functional Title Screen
+    - Delve starts the game | Options opens the options page | Quit quits the game
+        - Select using up and down arrow, and then enter key
+    - Options menu allows for change between fullscreen and windowed, as well as screen size
+        - Actual creen size and fullscreen changing could use some tweaking
+    - Added some text to help track level progression, enemies remaining, and enemies defeated
+- CollisionManager
+    - Fixed the collision so now created levels do not have the offset bug
+    - Now when there are still enemies in the level, hallways will not let you pass
+- Coverted everything to tabs thanks to VSCODE
+
+
+###### Plans
+- Plan on adding camera movement in relation to the mouse cursor
+- Camera zoom out based on speed for more depth
+- Visuals for Fullscreen and Screensize options in options menu
+- Apply button for options menu instead of immidiate change
+- More options like changing of keybinds
+- Sprites/Visuals for other things
+- A sound solution, something like midi or whatever
+- Spritesheet for the alphabet to use to create a custom font for the game
+
+
+###### PREVIOUS VERSION
 - Launches Window
 - CONTROLS
     - WASD  - Move
@@ -75,23 +106,29 @@
 
 
 ###### Stuff to Fix
-- Memory Leaks when Game Closes
-- FPSManager doesn't actually fix the same FPS problem
-    - Fix FPS so the game runs the same on different systems
-- Movement - Specifically Direction Movement
+- ~~Memory Leaks when Game Closes~~
++ No fix for this
+- ~~FPSManager doesn't actually fix the same FPS problem~~
+    - ~~Fix FPS so the game runs the same on different systems~~
++ Implemented back the Asteroids FPS soluton
+- ~~Movement - Specifically Direction Movement~~
++ Added back diagonal movement
 - World not loading sometimes for Vincent? 
 - Fix the Fullscreen stuff
-- World collision with player not all accurate. 
-- Text thickness, or a better method for text in general
+- ~~World collision with player not all accurate.~~
++ Figured out to use the same collision for walls with everything else
+- ~~Text thickness, or a better method for text in general~~
++ Added back the font from asteroids for debug text, and we can create images for other text
++ A text solution using a sprite sheet would be good
 - Attacking should probably be reworked to allow multiple attacks out at a time when it comes to ranged weapons
 
 ###### To Do
-- Figure out importing sprites
+- ~~Figure out importing sprites~~
 - Make a revamped title screen
     - Pixel art, background of a hole, title of "DEEP" in the top center, stylied, 3 buttons, selectable with up and down and then selecting it with enter
-    - The button "DELVE IN" starts the game (gamestate changes to PLAYING)
-    - Next button should be a settings button, changes the gamestate to settings, and has different things like screen mode, or controls
-    - Final button is Exit to close the game
+    - ~~The button "DELVE IN" starts the game (gamestate changes to PLAYING)~~
+    - ~~Next button should be a settings button, changes the gamestate to settings, and has different things like screen mode,~~ or controls
+    - ~~Final button is Exit to close the game~~
 - GUI in game
     - Info card, should show up at the bottom center of the game, and provide the player relavant information like if they get a new gun, if there is a stat change, or if there is a boss incoming
     - Health GUI that takes the health in increments of 10 for one bar, metroid style health

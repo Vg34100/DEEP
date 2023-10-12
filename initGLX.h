@@ -24,7 +24,8 @@ extern float height;
 extern float mousex;
 extern float mousey;
 extern bool done;
+extern bool isFullscreen;
 
 void drawText(const char *text, int length, int x, int y, float scale = 1, int thickness = 1);
 void drawWorldText(const char *text, int length, int x, int y, float scale = 1, int thickness = 1);
-
+void changeScreenSize(bool next);
