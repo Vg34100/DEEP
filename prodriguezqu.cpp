@@ -84,7 +84,7 @@ Image start("images/Delve.png");
 Image option("images/Options.png");
 Image quit("images/Quit.png");
 Image background("images/Hole.gif");
-Image arrow("images/select.png");
+Image arrow("images/Select.png");
 ScreenState currentState = ScreenState::DELVE;
 int titleScreen() {
 	static int inputDelayCounter = 30; // Adjust as necessary
