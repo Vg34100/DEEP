@@ -2,6 +2,8 @@
 #include "player.h"
 #include "initGLX.h"
 #include "prodriguezqu.h"
+#include <ctime>
+
 
 float easeOut(float factor) {
 	return 1 - (1 - factor) * (1 - factor);
@@ -52,7 +54,8 @@ void Player::showHitbox() const {
 }
 
 void Player::render() { 
-	playerHealth.SetHealth(40);
+	//playerHealth.SetHealth(40);
+	UpdateInvulnerability();
 	updatePlayerDirection();
 	updateMousePosition(mousex, mousey);
 	Vector2 topLeft = Vector2(playerPos.x - 0.5f * playerWidth, playerPos.y + 0.5f * playerHeight);
@@ -103,9 +106,9 @@ void Player::render() {
 
 	hitbox.topLeft = topLeft; 
 	hitbox.bottomRight = bottomRight;
-	#ifdef DEBUG     
-	showHitbox();
-	#endif
+	// #ifdef DEBUG     
+	// showHitbox();
+	// #endif
 
 	glPopMatrix();
 	showcaseHealth(playerHealth.GetMaxHealth(), playerHealth.GetCurrentHealth());
@@ -130,3 +133,27 @@ void Player::switchWeapon(int inventoryIndex) {
 }
 
 void Player::useWeapon() { if (activeWeapon) { activeWeapon->use(); }}
+
+void Player::TakeDamage(float damage) {
+	// std::cout << "Take Damage!" << std::endl;
+	if (!invulnerable) {
+		playerHealth.TakeDamage(damage);
+		invulnerable = true; 
+		lastDamageTime = std::clock(); 
+		// if(isDeadCheck()) { 
+		// 	enemiesDefeated++;
+		// 	enemiesRemaining--;
+		// 	isDead = true;
+		// 	deathTimestamp = std::clock();
+		// }
+	}
+}
+
+void Player::UpdateInvulnerability() {
+	if (invulnerable) {
+		float elapsedTime = (std::clock() - lastDamageTime) / CLOCKS_PER_SEC;
+		if (elapsedTime >= invincibilityDuration) {
+			invulnerable = false;
+		}
+	}
+}

@@ -35,22 +35,22 @@ TileType CollisionManager::getPlayerCurrentTileType(const Player& player) {
 	if (currentTileType == TileType::HALLWAYN) {
 		//NORTH LEVEL
 		counterY++;
-		world.generateNewLevel(randomLevel, 0, world.getRows() - 2 - rowOffset);
+		world.generateNewLevel(randomLevel, 0, world.getRows() - 3 - rowOffset);
 	}
 	if (currentTileType == TileType::HALLWAYE) { // Eat
 		//EAST LEVEL
 		counterX++;
-		world.generateNewLevel(randomLevel, world.getColumns() - 2 - columnOffset, 0);
+		world.generateNewLevel(randomLevel, world.getColumns() - 3 - columnOffset, 0);
 	}
 	if (currentTileType == TileType::HALLWAYS) {
 		//SOUTH LEVEL
 		counterY--;
-		world.generateNewLevel(randomLevel, 0, -world.getRows() + 2 + rowOffset);
+		world.generateNewLevel(randomLevel, 0, -world.getRows() + 3 + rowOffset);
 	}
 	if (currentTileType == TileType::HALLWAYW) { // Waffles
 		//WEST LEVEL
 		counterX--;
-		world.generateNewLevel(randomLevel, -world.getColumns() + 2 + columnOffset, 0);
+		world.generateNewLevel(randomLevel, -world.getColumns() + 3 + columnOffset, 0);
 	}
 	return currentTileType;
 }
@@ -60,7 +60,7 @@ void CollisionManager::handlePlayerCollisions(Player& player) {
 	getPlayerCurrentTileType(player);
 	Vector2 potentialNewPosition = player.getPos();
 	potentialNewPosition.add(player.getVelocity());
-
+	// player.showHitbox();
 	// Check against walls with rays
 	if (!isCollidingWithWallsUsingRays(player.getPos(), potentialNewPosition)) {
 		player.setPos(potentialNewPosition);
@@ -91,6 +91,19 @@ void CollisionManager::handleEnemyCollisions(Player& player) {
 					enemy->TakeDamage(weapon->getDamage());
 				}
 			}
+		}
+	}
+	Hitbox playerHitbox = player.getHitbox();
+	for (const auto& enemy : world.getEnemies()) {
+		// player.showHitbox();
+		// enemy->showHitbox();
+		// playerHitbox.print();
+		// enemy->getHitbox().print();
+		// std::cout << "Handle Enemy->Player" << std::endl;
+		if (playerHitbox.isColliding2(enemy->getHitbox())) {
+			// std::cout << "Is Colliding" << std::endl;
+			// fflush(stdout);
+			player.TakeDamage(enemy->getDamage());
 		}
 	}
 }

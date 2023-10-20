@@ -33,6 +33,13 @@ private:
 	float playerWidth;  // in world units
 	float playerHeight; // in world units
 
+
+
+	float invincibilityDuration = 0.1f; 
+	bool invulnerable = false; 
+	float lastDamageTime = 0.0f; 
+
+
 	Vector2 playerPos;
 	Vector2 mousePos;
 	Vector2 cameraPos;
@@ -89,6 +96,11 @@ public:
 
 	void showHitbox() const;
 	Hitbox getHitbox() { return hitbox; }
+
+
+	void TakeDamage(float damage);
+	void UpdateInvulnerability();
+
 };
 
 

@@ -93,14 +93,16 @@ int main() {
 			physicsCountdown += timeSpan;
 			while (physicsCountdown >= physicsRate) {
 				player.handleInput();
-				cm.handlePlayerCollisions(player);
-				cm.handleEnemyCollisions(player);
+
 				physicsCountdown -= physicsRate;
 			}
 				player.cameraSetup();
+
 				world.render();
 				world.renderEnemies();
 				player.render();
+				cm.handlePlayerCollisions(player);
+				cm.handleEnemyCollisions(player);
 				levelenemyText();
 
 			glPopMatrix();

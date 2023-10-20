@@ -33,11 +33,14 @@ void World::generateNewLevel(const Level& level, float customOffsetX, float cust
 	//Level sample = Level::SampleLevel();
 	this->setWorldFromLevel(level, customOffsetX, customOffsetY); 
 	initialized = level;
+	#ifdef DEBUG
 	WorldCorners corners = getWorldDimensions();
 	std::cout << "Top Left: (" << corners.topLeft.x << ", " << corners.topLeft.y << ")\n";
 	std::cout << "Top Right: (" << corners.topRight.x << ", " << corners.topRight.y << ")\n";
 	std::cout << "Bottom Left: (" << corners.bottomLeft.x << ", " << corners.bottomLeft.y << ")\n";
 	std::cout << "Bottom Right: (" << corners.bottomRight.x << ", " << corners.bottomRight.y << ")\n";
+	#endif // DEBUG
+
 }
 
 
@@ -151,7 +154,9 @@ World::~World() {
 }
 
 void World::spawnEnemy(EnemyType type, Vector2 pos) {
+	#ifdef DEBUG
 	printf("Spawning enemy of type: %d at position X: %f, Y: %f\n", static_cast<int>(type), pos.x, pos.y);
+	#endif // DEBUG
 	enemiesRemaining++;
 	fflush(stdout);
 	switch (type) {

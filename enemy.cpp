@@ -4,8 +4,10 @@
 
 Enemy::Enemy(const std::string& nm, float dmg, float cooldown, float hp, float sz, World& wrld, Vector2 pos) 
 	: name(nm), attackDamage(dmg), attackCooldown(cooldown), health(hp), size(sz), position(pos), world(wrld)  {
+		#ifdef DEBUG
 		std::cerr << "Enemy created: " << this << std::endl;
-
+		#endif // DEBUG
+ 
 	}
 
 void Enemy::render() {
@@ -112,9 +114,9 @@ void Orc::render() {
 	Vector2 bottomRight = Vector2(rightX, bottomY);
 	hitbox.topLeft = topLeft;
 	hitbox.bottomRight = bottomRight;
-	#ifdef DEBUG
+	// #ifdef DEBUG
 	showHitbox();
-	#endif
+	// #endif
 }
 
 void Orc::attack() {
