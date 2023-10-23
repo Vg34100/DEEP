@@ -6,7 +6,7 @@
 #include <GL/glu.h>
 #include <GL/glx.h>
 #include "util_vector2.h"
-
+#include "image.h"
 #include "util_health.h"
 
 #include "util_CollisionManager.h"
@@ -48,6 +48,16 @@ private:
 	std::shared_ptr<Weapon> activeWeapon;  // Using smart pointers for safer memory management
 	Hitbox hitbox;
 
+	Image idle{"images/player1_idle.png"};
+    int currentFrame = 0;
+    int totalFrames = 4;
+    int frameDelay = 150;
+    int timeSinceLastFrame = 0;
+    static constexpr const char* SPRITE_SHEET_PATH = "images/player1_idle.png";
+
+
+
+
 public:
 	Player(CollisionManager& cm, float initialMaxHealth) : collisionManager(cm), playerHealth(initialMaxHealth) {
 		activeWeapon = std::make_shared<Knife>(this);
@@ -65,7 +75,7 @@ public:
 			activeWeapon->setDuration(activeWeapon->getDuration() * Range); // changes the weapon's duration based on player's range stat | not for Melee Class
 		activeWeapon->setCooldown(activeWeapon->getCooldown() / AttackSpeed); // changes the weapon's cooldown based on player's attack speed stat
 		activeWeapon->setAttackSize(activeWeapon->getAttackSize() * Size); // change the weapon's attack size based on player's own size
-   
+		initialize();
 	};
 
 	std::vector<std::shared_ptr<Weapon>> inventory;
@@ -88,7 +98,9 @@ public:
 	void updateMousePosition(float mouseX, float mouseY);
 	void updatePlayerDirection();  // Update the direction the player is looking based on mousePos
 
+	bool initialize();
 	void render();
+    void animate(int elapsedTime);
 
 	void handleMovement(float speedY, float speedX);
 	void switchWeapon(int inventoryIndex);

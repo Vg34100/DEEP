@@ -53,6 +53,26 @@ void Player::showHitbox() const {
 	glEnd();
 }
 
+bool Player::initialize() {
+    // Perform complex initializations here (e.g., loading textures)
+    if (!idle.loadTexture()) {
+        std::cerr << "Failed to load texture" << std::endl;
+        return false;
+    }
+    idle.setSpriteSheet(4,4);
+    // ... other initialization code...
+    return true;
+}
+
+void Player::animate(int elapsedTime) {
+    timeSinceLastFrame += elapsedTime;
+
+    if (timeSinceLastFrame > frameDelay) {
+        currentFrame = (currentFrame + 1) % totalFrames;
+        timeSinceLastFrame = 0;  // Reset the timer
+    }
+}
+
 void Player::render() { 
 	//playerHealth.SetHealth(40);
 	UpdateInvulnerability();
@@ -98,6 +118,7 @@ void Player::render() {
 	glVertex2f(indicatorPos.x - 0.5f * indicatorSize, indicatorPos.y + 0.5f * indicatorSize);
 	glEnd();
 
+    idle.renderSprite(0, currentFrame, playerPos.x, playerPos.y, 50);
 
 
 	playerHealth.DisplayStaticHealthBar(-width + 100, height - 70);
@@ -135,17 +156,10 @@ void Player::switchWeapon(int inventoryIndex) {
 void Player::useWeapon() { if (activeWeapon) { activeWeapon->use(); }}
 
 void Player::TakeDamage(float damage) {
-	// std::cout << "Take Damage!" << std::endl;
 	if (!invulnerable) {
 		playerHealth.TakeDamage(damage);
 		invulnerable = true; 
 		lastDamageTime = std::clock(); 
-		// if(isDeadCheck()) { 
-		// 	enemiesDefeated++;
-		// 	enemiesRemaining--;
-		// 	isDead = true;
-		// 	deathTimestamp = std::clock();
-		// }
 	}
 }
 

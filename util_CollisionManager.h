@@ -15,10 +15,6 @@ public:
 	bool isCollidingWithTile(const Vector2& position, float halfWidth, float halfHeight) const;
 	void handlePlayerCollisions(Player& player);
 	void handleEnemyCollisions(Player& player);
-	bool isCollidingWithWallsUsingRays(const Vector2& currentPos, const Vector2& newPos) const;
-	TileType whatIsCollidingWithUsingRays(const Vector2& currentPos, const Vector2& newPos) const;
+	int isCollidingWithWallsUsingRays(const Vector2& currentPos, const Vector2& newPos) const;
 	bool lineIntersectsLine(const Vector2& A, const Vector2& B, const Vector2& C, const Vector2& D) const;
-	TileType getPlayerCurrentTileType(const Player& player);
-	// TileType printCurrentTileType(const Vector2& playerPos) const;
-
 };

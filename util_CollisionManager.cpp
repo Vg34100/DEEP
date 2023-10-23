@@ -5,71 +5,58 @@ const float TILE_SIZE = 128.0f;
 
 int counterY = 0;
 int counterX = 0;
-bool CollisionManager::isCollidingWithTile(const Vector2& position, float halfWidth, float halfHeight) const {
-	// Check four corners of the bounding box
-	if (world.getTileTypeAtPosition(position.x - halfWidth, position.y - halfHeight) != TileType::FLOOR) return true;
-	if (world.getTileTypeAtPosition(position.x + halfWidth, position.y - halfHeight) != TileType::FLOOR) return true;
-	if (world.getTileTypeAtPosition(position.x - halfWidth, position.y + halfHeight) != TileType::FLOOR) return true;
-	if (world.getTileTypeAtPosition(position.x + halfWidth, position.y + halfHeight) != TileType::FLOOR) return true;
 
-	return false;
-}
-
-TileType CollisionManager::getPlayerCurrentTileType(const Player& player) {
-	// Get player's current position
-
+void CollisionManager::handlePlayerCollisions(Player& player) {
 	Vector2 playerPos = player.getPos();
 	Vector2 potentialNewPosition = player.getPos();
 	potentialNewPosition.add(player.getVelocity());
-	// Fetch the tile type at that position
-	// TileType currentTileType = printCurrentTileType(playerPos);
-	TileType currentTileType = whatIsCollidingWithUsingRays(playerPos, potentialNewPosition);
 
-	//std::cout << "Player is currently on tile: " << static_cast<int>(currentTileType) << std::endl;
-	if(!world.AreThereNoEnemies())
-		return currentTileType;;
-	Level randomLevel = world.getNewLevel();
-	float rowOffset = 0;
-	float columnOffset = 0;
+	int collisionResult = isCollidingWithWallsUsingRays(player.getPos(), potentialNewPosition);
+	TileType currentTileType = static_cast<TileType>(collisionResult);
+	if(world.AreThereNoEnemies()) {
+		Level randomLevel = world.getNewLevel();
+		float rowOffset = 0;
+		float columnOffset = 0;
 
-	if (currentTileType == TileType::HALLWAYN) {
-		//NORTH LEVEL
-		counterY++;
-		world.generateNewLevel(randomLevel, 0, world.getRows() - 3 - rowOffset);
+		if (currentTileType == TileType::HALLWAYN) {
+			//NORTH LEVEL
+			counterY++;
+			world.generateNewLevel(randomLevel, 0, world.getRows() - 2 - rowOffset);
+			player.setPos(Vector2(playerPos.x,playerPos.y + 50));
+		}
+		if (currentTileType == TileType::HALLWAYE) { // Eat
+			//EAST LEVEL
+			counterX++;
+			world.generateNewLevel(randomLevel, world.getColumns() - 2 - columnOffset, 0);
+			player.setPos(Vector2(playerPos.x + 50,playerPos.y));
+
+		}
+		if (currentTileType == TileType::HALLWAYS) {
+			//SOUTH LEVEL
+			counterY--;
+			world.generateNewLevel(randomLevel, 0, -world.getRows() + 2 + rowOffset);
+			player.setPos(Vector2(playerPos.x ,playerPos.y - 50));
+
+		}
+		if (currentTileType == TileType::HALLWAYW) { // Waffles
+			//WEST LEVEL
+			counterX--;
+			world.generateNewLevel(randomLevel, -world.getColumns() + 2 + columnOffset, 0);
+			player.setPos(Vector2(playerPos.x- 50 ,playerPos.y ));
+		}
 	}
-	if (currentTileType == TileType::HALLWAYE) { // Eat
-		//EAST LEVEL
-		counterX++;
-		world.generateNewLevel(randomLevel, world.getColumns() - 3 - columnOffset, 0);
-	}
-	if (currentTileType == TileType::HALLWAYS) {
-		//SOUTH LEVEL
-		counterY--;
-		world.generateNewLevel(randomLevel, 0, -world.getRows() + 3 + rowOffset);
-	}
-	if (currentTileType == TileType::HALLWAYW) { // Waffles
-		//WEST LEVEL
-		counterX--;
-		world.generateNewLevel(randomLevel, -world.getColumns() + 3 + columnOffset, 0);
-	}
-	return currentTileType;
-}
 
 
-void CollisionManager::handlePlayerCollisions(Player& player) {
-	getPlayerCurrentTileType(player);
-	Vector2 potentialNewPosition = player.getPos();
-	potentialNewPosition.add(player.getVelocity());
-	// player.showHitbox();
+
 	// Check against walls with rays
-	if (!isCollidingWithWallsUsingRays(player.getPos(), potentialNewPosition)) {
+	if (!collisionResult) {
 		player.setPos(potentialNewPosition);
 	} else {
 		// Handle the sliding effect
 		// Check in x-direction
 		Vector2 xMove = player.getPos();
 		xMove.add(Vector2(player.getVelocity().x, 0.0f));
-		if (!isCollidingWithWallsUsingRays(player.getPos(), xMove)) {
+		if (!isCollidingWithWallsUsingRays(player.getPos(), xMove) ) {
 			player.setX(xMove.x);
 		}
 
@@ -80,6 +67,9 @@ void CollisionManager::handlePlayerCollisions(Player& player) {
 			player.setY(yMove.y);
 		}
 	}
+
+
+
 }
 
 void CollisionManager::handleEnemyCollisions(Player& player) {
@@ -94,61 +84,32 @@ void CollisionManager::handleEnemyCollisions(Player& player) {
 		}
 	}
 	Hitbox playerHitbox = player.getHitbox();
-	for (const auto& enemy : world.getEnemies()) {
-		// player.showHitbox();
-		// enemy->showHitbox();
-		// playerHitbox.print();
-		// enemy->getHitbox().print();
-		// std::cout << "Handle Enemy->Player" << std::endl;
-		if (playerHitbox.isColliding2(enemy->getHitbox())) {
-			// std::cout << "Is Colliding" << std::endl;
-			// fflush(stdout);
-			player.TakeDamage(enemy->getDamage());
+	if(playerHitbox.topLeft.x) {
+		for (const auto& enemy : world.getEnemies()) {
+			if (playerHitbox.isCollidingExtra(enemy->getHitbox())) {
+				player.TakeDamage(enemy->getDamage());
+			}
 		}
 	}
+
 }
 
 std::string tileTypeToString(TileType type) {
 	switch (type) {
 		case TileType::WALL: return "WALL";
 		case TileType::FLOOR: return "FLOOR";
+		case TileType::HALLWAYN: return "HWN";
+		case TileType::HALLWAYE: return "HWE";
+		case TileType::HALLWAYS: return "HWS";
+		case TileType::HALLWAYW: return "HWW";
+
 		// ... other cases ...
 		default: return "UNKNOWN";
 	}
 }
 
 
-TileType CollisionManager::whatIsCollidingWithUsingRays(const Vector2& currentPos, const Vector2& newPos) const {
-	// Define the ray endpoints
-	Vector2 A = currentPos;
-	Vector2 B = newPos;
-
-	// Iterate through each tile in the world
-	for (const auto& row : world.getGrid()) {
-		for (const auto& tile : row) {
-			// if (tile.type == TileType::WALL) {
-				// Define the 4 corners of the tile
-				Vector2 topLeft(tile.x * TILE_SIZE - world.getOffsetX(), tile.y * TILE_SIZE - world.getOffsetY());
-				Vector2 topRight((tile.x + 1) * TILE_SIZE - world.getOffsetX(), tile.y * TILE_SIZE - world.getOffsetY());
-				Vector2 bottomLeft(tile.x * TILE_SIZE - world.getOffsetX(), (tile.y + 1) * TILE_SIZE - world.getOffsetY());
-				Vector2 bottomRight((tile.x + 1) * TILE_SIZE - world.getOffsetX(), (tile.y + 1) * TILE_SIZE - world.getOffsetY());
-
-				// Check intersection with each side of the tile
-				if (lineIntersectsLine(A, B, topLeft, topRight) ||
-					lineIntersectsLine(A, B, topRight, bottomRight) ||
-					lineIntersectsLine(A, B, bottomRight, bottomLeft) ||
-					lineIntersectsLine(A, B, bottomLeft, topLeft)) {
-					return tile.type; // Collision detected
-				}
-			// }
-		}
-	}
-
-	return TileType::WALL;  // No collision detected
-}
-
-
-bool CollisionManager::isCollidingWithWallsUsingRays(const Vector2& currentPos, const Vector2& newPos) const {
+int CollisionManager::isCollidingWithWallsUsingRays(const Vector2& currentPos, const Vector2& newPos) const {
 	// Define the ray endpoints
 	Vector2 A = currentPos;
 	Vector2 B = newPos;
@@ -171,13 +132,30 @@ bool CollisionManager::isCollidingWithWallsUsingRays(const Vector2& currentPos, 
 					lineIntersectsLine(A, B, topRight, bottomRight) ||
 					lineIntersectsLine(A, B, bottomRight, bottomLeft) ||
 					lineIntersectsLine(A, B, bottomLeft, topLeft)) {
-					return true; // Collision detected
+					return  true; // Collision detected
+				}
+			}
+			if (( (tile.type == TileType::HALLWAYN || tile.type == TileType::HALLWAYS || 
+				tile.type == TileType::HALLWAYW || tile.type == TileType::HALLWAYE) 
+				&& world.AreThereNoEnemies() ) ) {
+				// Define the 4 corners of the tile
+				Vector2 topLeft(tile.x * TILE_SIZE - world.getOffsetX(), tile.y * TILE_SIZE - world.getOffsetY());
+				Vector2 topRight((tile.x + 1) * TILE_SIZE - world.getOffsetX(), tile.y * TILE_SIZE - world.getOffsetY());
+				Vector2 bottomLeft(tile.x * TILE_SIZE - world.getOffsetX(), (tile.y + 1) * TILE_SIZE - world.getOffsetY());
+				Vector2 bottomRight((tile.x + 1) * TILE_SIZE - world.getOffsetX(), (tile.y + 1) * TILE_SIZE - world.getOffsetY());
+
+				// Check intersection with each side of the tile
+				if (lineIntersectsLine(A, B, topLeft, topRight) ||
+					lineIntersectsLine(A, B, topRight, bottomRight) ||
+					lineIntersectsLine(A, B, bottomRight, bottomLeft) ||
+					lineIntersectsLine(A, B, bottomLeft, topLeft)) {
+					return static_cast<int>(tile.type); // Collision detected
 				}
 			}
 		}
 	}
 
-	return false;  // No collision detected
+	return  false;  // No collision detected
 }
 
 bool CollisionManager::lineIntersectsLine(const Vector2& A, const Vector2& B, const Vector2& C, const Vector2& D) const {

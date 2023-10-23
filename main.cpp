@@ -90,19 +90,18 @@ int main() {
 			static CollisionManager cm(world);
 			static Player player(cm, 100.0f); 
 
+			player.cameraSetup();
 			physicsCountdown += timeSpan;
 			while (physicsCountdown >= physicsRate) {
 				player.handleInput();
-
+				cm.handlePlayerCollisions(player);
+				cm.handleEnemyCollisions(player);
 				physicsCountdown -= physicsRate;
 			}
-				player.cameraSetup();
-
 				world.render();
 				world.renderEnemies();
 				player.render();
-				cm.handlePlayerCollisions(player);
-				cm.handleEnemyCollisions(player);
+				player.animate(elapsedTime * 1000);
 				levelenemyText();
 
 			glPopMatrix();

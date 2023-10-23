@@ -56,7 +56,7 @@ struct Hitbox {
 		return false;
 	}
 
-	bool isColliding2(const Hitbox& other) const {
+	bool isCollidingExtra(const Hitbox& other) const {
 		return !(topLeft.x > other.bottomRight.x ||
 				bottomRight.x < other.topLeft.x ||
 				topLeft.y < other.bottomRight.y ||

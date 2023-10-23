@@ -114,9 +114,9 @@ void Orc::render() {
 	Vector2 bottomRight = Vector2(rightX, bottomY);
 	hitbox.topLeft = topLeft;
 	hitbox.bottomRight = bottomRight;
-	// #ifdef DEBUG
+	#ifdef DEBUG
 	showHitbox();
-	// #endif
+	#endif
 }
 
 void Orc::attack() {
