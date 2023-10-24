@@ -8,6 +8,7 @@
 #include "initGLX.h"
 #include "player.h"
 #include <chrono>
+#include <cstring>
 #include <thread>
 #include <string>
 #include <unistd.h>
@@ -21,9 +22,43 @@
 #include "image.h"
 #include "fonts.h"
 
-const double physicsRate = 1.0 / 60.0;
+const double physicsRate = 1.0 / 256.0;
+const double oobillion = 1.0 / 1e9;
 double physicsCountdown=0.0;
 double timeSpan=0.0;
+struct timespec timeStart, timeCurrent;
+struct timespec timePause;
+
+double timeDiff(struct timespec *start, struct timespec *end)
+{
+	//return the difference in two times.
+	return (double)(end->tv_sec - start->tv_sec ) +
+		(double)(end->tv_nsec - start->tv_nsec) * oobillion;
+}
+void timeCopy(struct timespec *dest, struct timespec *source)
+{
+	//copy one time structure to another.
+	memcpy(dest, source, sizeof(struct timespec));
+}
+
+
+int total_running_time(const bool get)
+{
+	// printf("Running");
+	static int firsttime = 1;
+	static int start_time;
+	if (firsttime || !get) {
+		start_time = time(NULL);
+		firsttime=0;
+	}
+	if (get) {
+		// printf("%li", time(NULL) - start_time);
+		return time(NULL) - start_time;
+	}
+	return 0;
+}
+
+
 
 enum class GameState {
 	INIT,
@@ -45,19 +80,28 @@ int main() {
 	printf("Objective: Kill Enemies (White) with Attack -> Proceed to Next Level through Hallway (LightGray)\n");
 	fflush(stdout);
 
-	auto lastUpdateTime = std::chrono::high_resolution_clock::now();
-
-
+	#ifdef DEBUG
+	printf("DEBUG Active");
+	#endif // DEBUG
+	// auto lastUpdateTime = std::chrono::high_resolution_clock::now();
+	srand(time(NULL));
+	clock_gettime(CLOCK_REALTIME, &timePause);
+	clock_gettime(CLOCK_REALTIME, &timeStart);
 
 	while (!done) {
 		XReset();
 		XEvent event;
 		XPendingEvent(event);       
 
-		auto currentTime = std::chrono::high_resolution_clock::now();
-		auto elapsedTime = std::chrono::duration<double>(currentTime - lastUpdateTime).count();
-		lastUpdateTime = currentTime;
-		physicsCountdown += elapsedTime;
+		clock_gettime(CLOCK_REALTIME, &timeCurrent);
+		timeSpan = timeDiff(&timeStart, &timeCurrent);
+		timeCopy(&timeStart, &timeCurrent);
+		physicsCountdown += timeSpan;
+
+		// auto currentTime = std::chrono::high_resolution_clock::now();
+		// auto elapsedTime = std::chrono::duration<double>(currentTime - lastUpdateTime).count();
+		// lastUpdateTime = currentTime;
+		// physicsCountdown += elapsedTime;
 
 
 		if (currentState == GameState::INIT) {
@@ -91,7 +135,7 @@ int main() {
 			static Player player(cm, 100.0f); 
 
 			player.cameraSetup();
-			physicsCountdown += timeSpan;
+			//physicsCountdown += timeSpan;
 			while (physicsCountdown >= physicsRate) {
 				player.handleInput();
 				cm.handlePlayerCollisions(player);
@@ -101,8 +145,8 @@ int main() {
 				world.render();
 				world.renderEnemies();
 				player.render();
-				player.animate(elapsedTime * 1000);
-				levelenemyText();
+				player.animate(timeSpan * 80);
+				levelenemyText(total_running_time(true));
 
 			glPopMatrix();
 		}

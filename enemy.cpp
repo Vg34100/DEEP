@@ -77,7 +77,7 @@ Hitbox Enemy::getHitbox() {  return hitbox; }
 
 
 //name, damage, cooldown, hp, size, world
-Orc::Orc(World& wrld, Vector2 pos) : Enemy("Orc", 20.0f, 1.0f, 100.0f, 128.0f, wrld, pos) {}
+Orc::Orc(World& wrld, Vector2 pos) : Enemy("Orc", 20.0f, 1.0f, 100.0f, 80.0f, wrld, pos) {}
 
 void Orc::render() {
 	// if(isDead)

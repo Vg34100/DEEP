@@ -3,6 +3,7 @@
 #include "fonts.h"
 #include <iostream>
 #include <vector>
+#include "prodriguezqu.h"
 
 Display *dpy;
 Window window;
@@ -174,11 +175,11 @@ void cleanupGLX() {
 bool keysPressed[65536] = {false}; // Increased size to accommodate KeySym values
 
 void XPendingEvent(XEvent event) {
+	running_time(mouse_since, true);
 	if (dpy == NULL) return; // Check if dpy is not NULL before proceeding
 	while (XPending(dpy) > 0) {
 		XNextEvent(dpy, &event);
 		int key = (XLookupKeysym(&event.xkey, 0) & 0x0000ffff);
-		
 		switch (event.type) {
 			case KeyPress: {
 				keysPressed[key] = true;
@@ -186,15 +187,10 @@ void XPendingEvent(XEvent event) {
 			}
 			case KeyRelease: {
 				keysPressed[key] = false;
-				// if (key == XK_F11) toggleFullscreen();
-				// if (key == XK_Right) {
-				//     changeScreenSize(true);
-				// } else if (key == XK_Left) {
-				//     changeScreenSize(false);
-				// }
 				break;
 			}
 			case MotionNotify: {
+				running_time(mouse_since, false);
 				mousex = event.xmotion.x;
 				mousey = event.xmotion.y;              
 				break;
@@ -216,4 +212,5 @@ void XPendingEvent(XEvent event) {
 void XReset() {
 	glXSwapBuffers(dpy, window);
 	glClear(GL_COLOR_BUFFER_BIT);
+	fflush(stdout);
 }

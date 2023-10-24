@@ -32,10 +32,10 @@ struct Hitbox {
 	}
 	
 	bool isColliding(const Hitbox& other) const {
-		std::cout << topLeft.x << ", " << topLeft.y << std::endl;
-		std::cout << bottomRight.x << ", " << bottomRight.y << std::endl;
-		std::cout << other.topLeft.x << ", " << other.topLeft.y << std::endl;
-		std::cout << other.bottomRight.x << ", " << other.bottomRight.y << std::endl;
+		// std::cout << topLeft.x << ", " << topLeft.y << std::endl;
+		// std::cout << bottomRight.x << ", " << bottomRight.y << std::endl;
+		// std::cout << other.topLeft.x << ", " << other.topLeft.y << std::endl;
+		// std::cout << other.bottomRight.x << ", " << other.bottomRight.y << std::endl;
 		// std::cout << "CHECKING COLLISION" << std::endl;
 		// Check if any corner of the other hitbox is inside this hitbox
 		if (contains(other.topLeft) ||
@@ -52,7 +52,7 @@ struct Hitbox {
 			other.contains(bottomRight)) {
 			return true;
 		}
-		std::cout << "FALSE" << std::endl;
+		// std::cout << "FALSE" << std::endl;
 		return false;
 	}
 

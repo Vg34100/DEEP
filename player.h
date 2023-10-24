@@ -17,7 +17,7 @@
 
 class Player {
 private:
-	CollisionManager& collisionManager;
+	CollisionManager& collisionManager; 
 	// Attributes
 	Health playerHealth;
 	// Mana playerMana;
@@ -49,6 +49,8 @@ private:
 	Hitbox hitbox;
 
 	Image idle{"images/player1_idle.png"};
+	int directionx = 0;
+	int directiony = 0;
     int currentFrame = 0;
     int totalFrames = 4;
     int frameDelay = 150;
@@ -68,8 +70,8 @@ public:
 		Range = 1.0f;
 		Luck = 1.0f;
 		Size = 1.0f;
-		playerWidth = 100.0f * Size;
-		playerHeight = 100.0f * Size;
+		playerWidth = 50.0f * Size;
+		playerHeight = 50.0f * Size;
 		activeWeapon->setDamage(activeWeapon->getDamage() * Damage);  // changes the weapon's damage based on player's damage stat
 		if(activeWeapon->getWeaponClass() != "Melee")
 			activeWeapon->setDuration(activeWeapon->getDuration() * Range); // changes the weapon's duration based on player's range stat | not for Melee Class

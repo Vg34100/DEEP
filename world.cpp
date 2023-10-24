@@ -7,7 +7,7 @@ const float DOOR_COLOR[] = {0.6f, 0.6f, 0.6f};
 const float WALL_COLOR[] = {0.1f, 0.1f, 0.1f};
 const float PIT_COLOR[] = {0.0f, 0.0f, 0.0f};
 const float ENEMY_COLOR[] = {0.4f, 0.4f, 0.4f};
-const float TILE_SIZE = 128.0f;
+const float TILE_SIZE = 80.0f;
 const float HALLWAY_COLOR[] = {0.7f, 0.7f, 0.7f};
 
 int levelsCompleted = 0;

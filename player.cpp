@@ -25,12 +25,26 @@ void Player::handleInput() {
 
 	playerVelocity.x = 0.0f;  // Reset horizontal velocity
 	playerVelocity.y = 0.0f;  // Reset vertical velocity
+	directiony = -1;
+	directionx = -1;
 
 	// Adjust velocity based on pressed keys
-	if (keysPressed[XK_w]) playerVelocity.y += 25.0f * Speed;
-	if (keysPressed[XK_s]) playerVelocity.y -= 25.0f * Speed;
-	if (keysPressed[XK_a]) playerVelocity.x -= 25.0f * Speed;
-	if (keysPressed[XK_d]) playerVelocity.x += 25.0f * Speed;
+	if (keysPressed[XK_w]) {
+		playerVelocity.y += 4.0f * Speed;
+		directiony = 0;
+	}
+	if (keysPressed[XK_s]) {
+		playerVelocity.y -= 4.0f * Speed;
+		directiony = 1;
+	} 
+	if (keysPressed[XK_a]) {
+		playerVelocity.x -= 4.0f * Speed;
+		directionx = 0;
+	} 
+	if (keysPressed[XK_d]) {
+		playerVelocity.x += 4.0f * Speed;
+		directionx = 1;
+	} 
 
 	// Normalize diagonal movement
 	if ((playerVelocity.x != 0.0f) && (playerVelocity.y != 0.0f)) {
@@ -71,6 +85,27 @@ void Player::animate(int elapsedTime) {
         currentFrame = (currentFrame + 1) % totalFrames;
         timeSinceLastFrame = 0;  // Reset the timer
     }
+}
+
+int determineSpriteRow(int directionsx, int directionsy) {
+    // Using directionsy and directionsx to determine the row.
+    if (directionsy == 0 && directionsx == 0) return 3; // Up left
+    if (directionsy == 0 && directionsx == 1) return 3; // Up right
+    if (directionsy == 1 && directionsx == 0) return 1; // Down left
+    if (directionsy == 1 && directionsx == 1) return 1; // Down right
+	if (directionsy == 0 && directionsx == -1) return 2;
+	if (directionsy == 1 && directionsx == -1) return 0;
+	if (directionsy == -1 && directionsx == 0) return 1;
+	if (directionsy == -1 && directionsx == 1) return 1;
+
+
+
+    return 0; // Default, in case of invalid input
+}
+
+bool shouldFlipSprite(int directionsx) {
+    // We flip the sprite only when the direction is left (either up-left or down-left).
+    return directionsx == 0;
 }
 
 void Player::render() { 
@@ -118,7 +153,20 @@ void Player::render() {
 	glVertex2f(indicatorPos.x - 0.5f * indicatorSize, indicatorPos.y + 0.5f * indicatorSize);
 	glEnd();
 
-    idle.renderSprite(0, currentFrame, playerPos.x, playerPos.y, 50);
+	/*
+	Directionsx
+	0 - left
+	1 - right
+	Directionsy
+	0 - up
+	1 - down
+	*/
+
+	int row = determineSpriteRow(directionx, directiony);
+	bool flip = shouldFlipSprite(directionx);
+
+	idle.renderSprite(row, currentFrame, playerPos.x, playerPos.y, 42, flip);
+    // idle.renderSprite(0, currentFrame, playerPos.x, playerPos.y, 42);
 
 
 	playerHealth.DisplayStaticHealthBar(-width + 100, height - 70);
@@ -127,9 +175,9 @@ void Player::render() {
 
 	hitbox.topLeft = topLeft; 
 	hitbox.bottomRight = bottomRight;
-	// #ifdef DEBUG     
-	// showHitbox();
-	// #endif
+	#ifdef DEBUG     
+	showHitbox();
+	#endif
 
 	glPopMatrix();
 	showcaseHealth(playerHealth.GetMaxHealth(), playerHealth.GetCurrentHealth());

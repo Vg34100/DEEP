@@ -1,7 +1,7 @@
 // CollisionManager.cpp
 #include "util_CollisionManager.h"
 #include "player.h"
-const float TILE_SIZE = 128.0f;
+const float TILE_SIZE = 80.0f;
 
 int counterY = 0;
 int counterX = 0;

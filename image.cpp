@@ -110,33 +110,37 @@ void Image::render(float x, float y, float scale) {
 	glDisable(GL_BLEND);
 }
 
-void Image::renderSprite(int row, int col, float x, float y, float scale) {
-	if(!texture || !isSpriteSheet) return;
+void Image::renderSprite(int row, int col, float x, float y, float scale, bool flip) {
+    if(!texture || !isSpriteSheet) return;
 
-	float frameWidth = static_cast<float>(width) / cols;
-	float frameHeight = static_cast<float>(height) / rows;
-	float aspectRatio = frameWidth / frameHeight;
-	float scaledWidth = scale * aspectRatio;
-	float scaledHeight = scale;
+    float frameWidth = static_cast<float>(width) / cols;
+    float frameHeight = static_cast<float>(height) / rows;
+    float aspectRatio = frameWidth / frameHeight;
+    float scaledWidth = scale * aspectRatio;
+    float scaledHeight = scale;
 
-	float s1 = static_cast<float>(col) / cols;
-	float s2 = static_cast<float>(col + 1) / cols;
-	float t1 = static_cast<float>(row) / rows;
-	float t2 = static_cast<float>(row + 1) / rows;
+    float s1 = static_cast<float>(col) / cols;
+    float s2 = static_cast<float>(col + 1) / cols;
+    float t1 = static_cast<float>(row) / rows;
+    float t2 = static_cast<float>(row + 1) / rows;
 
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    if (flip) {
+        std::swap(s1, s2);  // Swap the horizontal texture coordinates
+    }
 
-	glBindTexture(GL_TEXTURE_2D, texture);
-	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	glBegin(GL_QUADS);
-		glTexCoord2f(s1, t2); glVertex2f(x - scaledWidth, y - scaledHeight); // Bottom left
-		glTexCoord2f(s2, t2); glVertex2f(x + scaledWidth, y - scaledHeight); // Bottom right
-		glTexCoord2f(s2, t1); glVertex2f(x + scaledWidth, y + scaledHeight); // Top right
-		glTexCoord2f(s1, t1); glVertex2f(x - scaledWidth, y + scaledHeight); // Top left
-	glEnd();
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
-	glBindTexture(GL_TEXTURE_2D, 0);
-	glDisable(GL_BLEND);
+    glBegin(GL_QUADS);
+        glTexCoord2f(s1, t2); glVertex2f(x - scaledWidth, y - scaledHeight); // Bottom left
+        glTexCoord2f(s2, t2); glVertex2f(x + scaledWidth, y - scaledHeight); // Bottom right
+        glTexCoord2f(s2, t1); glVertex2f(x + scaledWidth, y + scaledHeight); // Top right
+        glTexCoord2f(s1, t1); glVertex2f(x - scaledWidth, y + scaledHeight); // Top left
+    glEnd();
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glDisable(GL_BLEND);
 }
