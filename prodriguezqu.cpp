@@ -77,12 +77,12 @@ ScreenState changeState(ScreenState current, int direction)
 
 int titleScreen() 
 {
-	Image title("images/Deep.png");
-	Image start("images/Delve.png");
-	Image option("images/Options.png");
-	Image quit("images/Quit.png");
-	Image arrow("images/Select.png");
-	Image background("images/Hole.gif");
+	static Image title("images/Deep.png");
+	static Image start("images/Delve.png");
+	static Image option("images/Options.png");
+	static Image quit("images/Quit.png");
+	static Image arrow("images/Select.png");
+	static Image background("images/Hole.gif");
 
 	static ScreenState currentState = ScreenState::DELVE;
 	static bool rendering = false;
@@ -195,10 +195,10 @@ OptionState changeState(OptionState current, int direction) {
 
 int optionScreen()
 {
-	Image setMenu("images/setMenu.jpg");
-	Image option("images/Options.png");
-	Image quit("images/Quit.png");
-	Image arrow("images/Select.png");
+	static Image setMenu("images/setMenu.jpg");
+	static Image option("images/Options.png");
+	static Image quit("images/Quit.png");
+	static Image arrow("images/Select.png");
 
 	static bool options = false;
 	static bool settinginit = false;
