@@ -176,7 +176,7 @@ void cleanupGLX() {
 bool keysPressed[65536] = {false}; // Increased size to accommodate KeySym values
 
 void XPendingEvent(XEvent event) {
-	running_time(mouse_since, true);
+	mouse_since_counter(false, false);
 	if (dpy == NULL) return; // Check if dpy is not NULL before proceeding
 	while (XPending(dpy) > 0) {
 		XNextEvent(dpy, &event);
@@ -193,7 +193,7 @@ void XPendingEvent(XEvent event) {
                 break;
 			}
 			case MotionNotify: {
-				running_time(mouse_since, false);
+				mouse_since_counter(true, false);
 				mousex = event.xmotion.x;
 				mousey = event.xmotion.y;              
 				break;

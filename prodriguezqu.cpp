@@ -316,8 +316,6 @@ int optionScreen()
 
 } 
 
-int mouse_since = 0;
-
 int running_time(int &since, const bool get)
 {
 	static int firsttime = 1;
@@ -330,6 +328,24 @@ int running_time(int &since, const bool get)
 	if (get) {
 		since = time(NULL) - start_time;
 	}
+	return 0;
+}
+
+int mouse_since_counter(const bool reset, bool render)
+{
+	static int firsttime = 1;
+	static int start_time;
+	static int mouse_since = 0;
+	if (firsttime || reset) {
+		start_time = time(NULL);
+		firsttime=0;
+		mouse_since = 0;
+	}
+	if (!reset) {
+		mouse_since = time(NULL) - start_time;
+	}
+	if (render)
+		renderRect("Since Mouse: ", mouse_since);
 	return 0;
 }
 
@@ -357,6 +373,6 @@ void levelenemyText(double elapsedtime)
 	renderRect("Enemies Remaining: ", enemiesRemaining);
 	renderRect("Enemies Defeated: ", enemiesDefeated);
 
-	renderRect("Since Mouse: ", mouse_since);
+	mouse_since_counter(false, true);
 }
 
