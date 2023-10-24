@@ -28,7 +28,9 @@ protected:
 public:
 	Enemy(const std::string& name, float dmg, float cooldown, float hp, float sz, World& wrld, Vector2 pos);
 	~Enemy() {
+	#ifdef DEBUG
 	std::cerr << "Enemy destroyed: " << this << std::endl;
+	#endif // DEBUG
 	}
 
 	virtual void render();  // For drawing the enemy
@@ -40,6 +42,7 @@ public:
 	void TakeDamage(float damage);
 	void UpdateInvulnerability();
 
+	float getDamage() { return attackDamage; }
 	void showHitbox() const;
 	Hitbox getHitbox();
 	float getDeathTimestamp() { return deathTimestamp; }

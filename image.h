@@ -17,7 +17,7 @@ public:
 	bool loadTexture();
 	void render(float x, float y, float scale);
 
-	void renderSprite(int row, int col, float x, float y, float scale);
+	void renderSprite(int row, int col, float x, float y, float scale, bool flip = false);
 
 	void setSpriteSheet(int rows, int cols); // Set the image as a sprite sheet and define its structure
 

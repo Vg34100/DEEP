@@ -3,7 +3,6 @@
  * Author: Pablo Rodriguez
  * Created: 9.29.23 
 */ 
-
 #include <GL/gl.h>
 #include <GL/glx.h>
 #include <GL/glu.h>
@@ -14,9 +13,6 @@
 #include "image.h"
 #include "fonts.h"
 #include "world.h"
-
-
-
 
 void showcaseHealth(int maxHealth, int currentHealth) {
 	// Ensure that currentHealth does not exceed maxHealth
@@ -84,7 +80,7 @@ Image start("images/Delve.png");
 Image option("images/Options.png");
 Image quit("images/Quit.png");
 Image background("images/Hole.gif");
-Image arrow("images/select.png");
+Image arrow("images/Select.png");
 ScreenState currentState = ScreenState::DELVE;
 int titleScreen() {
 	static int inputDelayCounter = 30; // Adjust as necessary
@@ -112,27 +108,21 @@ int titleScreen() {
 	if(!rendering) {
 		if (!title.loadTexture()) {
 			std::cerr << "Failed to load texture" << std::endl;
-			//return -1;  // or handle error in some other way
 		}
 		if (!start.loadTexture()) {
 			std::cerr << "Failed to load texture" << std::endl;
-			//return -1;  // or handle error in some other way
 		}
 		if (!option.loadTexture()) {
 			std::cerr << "Failed to load texture" << std::endl;
-			//return -1;  // or handle error in some other way
 		}
 		if (!quit.loadTexture()) {
 			std::cerr << "Failed to load texture" << std::endl;
-			//return -1;  // or handle error in some other way
 		}
 		if (!background.loadTexture()) {
 			std::cerr << "Failed to load texture" << std::endl;
-			//return -1;  // or handle error in some other way
 		}
 		if (!arrow.loadTexture()) {
 			std::cerr << "Failed to load texture" << std::endl;
-			//return -1;  // or handle error in some other way
 		}
 		rendering = true;
 	}
@@ -182,13 +172,13 @@ int titleScreen() {
 	return 0;
 }
 
-
 enum class OptionState {
 	QUIT,
 	FULLSCREEN,
 	SCREENSIZE,
 	MAX_STATES  // Helper to keep track of the number of states
 };
+
 // Function to handle state change
 OptionState changeState(OptionState current, int direction) {
 	// Convert enum class to int, adjust the state, and handle wrapping
@@ -253,34 +243,27 @@ int optionScreen()
 		}
 		options = true;
 	}
+
 	setMenu.render(0,0,height + 300);
 	quit.render(-width+200,height-200,30);
 	option.render(0,height-200,60);
 
-
 	Rect r;
-	//
 	r.bot = height - 600;
 	r.left = 10;
 	r.center = 0;
-	if(isFullscreen)
+	if(isFullscreen) {
 		ggprint16(&r, 16, 0x00ff0000, "FULLSCREEN");
-	else {
+	} else {
 		ggprint16(&r, 16, 0x00ff0000, "WINDOWED");
 	}
 
-
 	Rect h;
-	//
 	h.bot = height - 1000;
 	h.left = 10;
 	h.center = 0;
 	std::string currentSize = std::to_string(static_cast<int>(width)) + " x " + std::to_string(static_cast<int>(height));
 	ggprint16(&h, 16, 0x00ff0000, currentSize.c_str());
-
-
-
-
 
 	switch(optionState) {
 		case OptionState::QUIT: {
@@ -333,30 +316,47 @@ int optionScreen()
 
 } 
 
+int mouse_since = 0;
 
-void levelenemyText() 
+int running_time(int &since, const bool get)
 {
-	Rect h;
-	//
-	h.bot = height - 50;
-	h.left = -width + 50;
-	h.center = 0;
-	std::string levelsText = "Levels Completed: " + std::to_string(levelsCompleted);
-	ggprint16(&h, 16, 0x00ff0000, levelsText.c_str());
-
-	Rect e;
-	//
-	e.bot = height - 70;
-	e.left = -width + 50;
-	e.center = 0;
-	std::string remainingText = "Enemies Remaining: " + std::to_string(enemiesRemaining);
-	ggprint16(&e, 16, 0x00ff0000, remainingText.c_str());
-
-	Rect t;
-	//
-	t.bot = height - 90;
-	t.left = -width + 50;
-	t.center = 0;
-	std::string defeatedText = "Enemies Defeated: " + std::to_string(enemiesDefeated);
-	ggprint16(&t, 16, 0x00ff0000, defeatedText.c_str());
+	static int firsttime = 1;
+	static int start_time;
+	if (firsttime || !get) {
+		start_time = time(NULL);
+		firsttime=0;
+		since = 0;
+	}
+	if (get) {
+		since = time(NULL) - start_time;
+	}
+	return 0;
 }
+
+Rect stats;
+bool firstload = true;
+void renderRect(std::string text, int value) {
+	if (firstload) {
+		stats.bot = height - 500;
+		stats.left = -width + 50;
+		stats.center = 0;
+		firstload = !firstload;
+	}
+
+	std::string levelsText = text + std::to_string(value);
+	ggprint16(&stats, 16, 0x00ff0000, levelsText.c_str());
+}
+
+
+void levelenemyText(double elapsedtime) 
+{
+	firstload = true;
+	renderRect("Elapsed Time: ", elapsedtime);
+
+	renderRect("Levels Completed: ", levelsCompleted);
+	renderRect("Enemies Remaining: ", enemiesRemaining);
+	renderRect("Enemies Defeated: ", enemiesDefeated);
+
+	renderRect("Since Mouse: ", mouse_since);
+}
+

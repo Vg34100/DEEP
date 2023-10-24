@@ -76,7 +76,9 @@ float Health::GetResistance(const std::string& damageType) const {
 
 void Health::ShowDamageNumber(float damageAmount) const {
 	// This would involve some graphical or console output, so it's just a placeholder here.
+	#ifdef DEBUG
 	printf("Damage taken: %.2f\n", damageAmount);
+	#endif // DEBUG
 }
 
 void Health::DisplayHealthBar(float positionX, float positionY) const {

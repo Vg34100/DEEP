@@ -4,8 +4,10 @@
 
 Enemy::Enemy(const std::string& nm, float dmg, float cooldown, float hp, float sz, World& wrld, Vector2 pos) 
 	: name(nm), attackDamage(dmg), attackCooldown(cooldown), health(hp), size(sz), position(pos), world(wrld)  {
+		#ifdef DEBUG
 		std::cerr << "Enemy created: " << this << std::endl;
-
+		#endif // DEBUG
+ 
 	}
 
 void Enemy::render() {
@@ -75,7 +77,7 @@ Hitbox Enemy::getHitbox() {  return hitbox; }
 
 
 //name, damage, cooldown, hp, size, world
-Orc::Orc(World& wrld, Vector2 pos) : Enemy("Orc", 20.0f, 1.0f, 100.0f, 128.0f, wrld, pos) {}
+Orc::Orc(World& wrld, Vector2 pos) : Enemy("Orc", 20.0f, 1.0f, 100.0f, 80.0f, wrld, pos) {}
 
 void Orc::render() {
 	// if(isDead)

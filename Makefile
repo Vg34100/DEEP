@@ -19,19 +19,39 @@ SRCS = main.cpp \
        image.cpp \
        libggfonts.a
 
+HEDS = initGLX.h \
+       world.h \
+       player.h \
+       enemy.h \
+       util_vector2.h \
+       util_health.h \
+       util_CollisionManager.h \
+       world_level.h \
+       vto.h \
+       jlo.h \
+       apacheco2.h \
+       prodriguezqu.h \
+       image.h \
+       fonts.h     
+
 # Object files (this is a "phony" target, no actual .o files are generated)
 OBJS = $(SRCS:%.cpp=objects/%.o)
+DOBJS = $(SRCS:%.cpp=objects/D_%.o)
 
 all: game debug
 
-game: $(OBJS)
+game: $(OBJS) $(HEDS)
 	$(CXX) $(CXXFLAGS) -o $@ $(OBJS) $(LDLIBS)
 
 debug: CXXFLAGS += -DDEBUG
-debug: $(OBJS)
-	$(CXX) $(CXXFLAGS) -o $@ $(OBJS) $(LDLIBS)
+debug: $(DOBJS) $(HEDS)
+	$(CXX) $(CXXFLAGS) -o $@ $(DOBJS) $(LDLIBS)
 
 objects/%.o: %.cpp
+	mkdir -p objects
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+objects/D_%.o: %.cpp
 	mkdir -p objects
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
