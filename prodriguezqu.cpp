@@ -14,7 +14,8 @@
 #include "fonts.h"
 #include "world.h"
 
-void showcaseHealth(int maxHealth, int currentHealth) {
+void showcaseHealth(int maxHealth, int currentHealth) 
+{
 	// Ensure that currentHealth does not exceed maxHealth
 	if (currentHealth > maxHealth) {
 		currentHealth = maxHealth;
@@ -54,15 +55,16 @@ void showcaseHealth(int maxHealth, int currentHealth) {
 	glEnd();
 }
 
-
-enum class ScreenState {
+enum class ScreenState 
+{
 	DELVE,
 	OPTION,
 	QUIT,
 	MAX_STATES  // Helper to keep track of the number of states
 };
 // Function to handle state change
-ScreenState changeState(ScreenState current, int direction) {
+ScreenState changeState(ScreenState current, int direction) 
+{
 	// Convert enum class to int, adjust the state, and handle wrapping
 	int newState = (static_cast<int>(current) + direction) % static_cast<int>(ScreenState::MAX_STATES);
 	
@@ -73,16 +75,19 @@ ScreenState changeState(ScreenState current, int direction) {
 	return static_cast<ScreenState>(newState);
 }
 
-bool rendering = false;
-bool menu = true;
-Image title("images/Deep.png");
-Image start("images/Delve.png");
-Image option("images/Options.png");
-Image quit("images/Quit.png");
-Image background("images/Hole.gif");
-Image arrow("images/Select.png");
-ScreenState currentState = ScreenState::DELVE;
-int titleScreen() {
+int titleScreen() 
+{
+	Image title("images/Deep.png");
+	Image start("images/Delve.png");
+	Image option("images/Options.png");
+	Image quit("images/Quit.png");
+	Image arrow("images/Select.png");
+	Image background("images/Hole.gif");
+
+	static ScreenState currentState = ScreenState::DELVE;
+	static bool rendering = false;
+	static bool menu = true;
+
 	static int inputDelayCounter = 30; // Adjust as necessary
 	if (!menu) {
 		inputDelayCounter = 30;
@@ -131,9 +136,6 @@ int titleScreen() {
 	start.render(0,50,30);
 	option.render(0,-75,30);
 	quit.render(0,-200,30);
-
-	// static int keyHoldCounter = 0;
-	// const int keyHoldThreshold = 30; // Example value, adjust as needed
 
 	// If the delay counter hasn't reached 0, decrement it and skip input processing
 	if (inputDelayCounter > 0) {
@@ -191,12 +193,19 @@ OptionState changeState(OptionState current, int direction) {
 	return static_cast<OptionState>(newState);
 }
 
-bool options = false;
-Image setMenu("images/setMenu.jpg");
-bool settinginit = false;
-OptionState optionState = OptionState::FULLSCREEN;
 int optionScreen()
 {
+	Image setMenu("images/setMenu.jpg");
+	Image option("images/Options.png");
+	Image quit("images/Quit.png");
+	Image arrow("images/Select.png");
+
+	static bool options = false;
+	static bool settinginit = false;
+	static OptionState optionState = OptionState::FULLSCREEN;
+	static int keyHoldCounter = 0;
+	const int keyHoldThreshold = 30; 
+
 	if(!settinginit) {
 		optionState = OptionState::FULLSCREEN;
 		settinginit = true;
@@ -206,10 +215,6 @@ int optionScreen()
 		settinginit = false;
 		return -1;
 	}
-
-
-	static int keyHoldCounter = 0;
-	const int keyHoldThreshold = 30; // Example value, adjust as needed
 
 	if (keysPressed[XK_Up] || keysPressed[XK_Down]) {
 		if (keyHoldCounter <= 0) {
@@ -222,8 +227,6 @@ int optionScreen()
 	} else {
 		keyHoldCounter = 0;  // Reset the counter if key is not pressed
 	}
-
-
 
 	if(!options) {
 		if (!setMenu.loadTexture()) {
@@ -349,9 +352,10 @@ int mouse_since_counter(const bool reset, bool render)
 	return 0;
 }
 
-Rect stats;
 bool firstload = true;
-void renderRect(std::string text, int value) {
+void renderRect(std::string text, int value) 
+{
+	static Rect stats;
 	if (firstload) {
 		stats.bot = height - 500;
 		stats.left = -width + 50;
