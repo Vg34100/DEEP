@@ -61,96 +61,110 @@ int total_running_time(const bool get)
 
 
 enum class GameState {
-	INIT,
-	OPTIONS,
-	PLAYING,
-	PAUSED,
-	GAME_OVER
+    INIT,
+    OPTIONS,
+    PLAYING,
+    PAUSED,
+    GAME_OVER
 };
 
 int main() {
-	GameState currentState = GameState::INIT;
-	initializeGLX();
-	initGL();
+    GameState currentState = GameState::INIT;
+    initializeGLX();
+    initGL();
 
 
-	printf("Press Enter to Play\n");
-	printf("Change Screen Size using left and right arrows\n");
-	printf("Move - WASD | Attack - R | Aim - Mouse\n");
-	printf("Objective: Kill Enemies (White) with Attack -> Proceed to Next Level through Hallway (LightGray)\n");
-	fflush(stdout);
+    printf("Press Enter to Play\n");
+    printf("Change Screen Size using left and right arrows\n");
+    printf("Move - WASD | Attack - R | Aim - Mouse\n");
+    printf("Objective: Kill Enemies (White) with Attack -> Proceed to Next Level through Hallway (LightGray)\n");
+    fflush(stdout);
 
-	#ifdef DEBUG
-	printf("DEBUG Active");
-	#endif // DEBUG
-	// auto lastUpdateTime = std::chrono::high_resolution_clock::now();
-	srand(time(NULL));
-	clock_gettime(CLOCK_REALTIME, &timePause);
-	clock_gettime(CLOCK_REALTIME, &timeStart);
-
-	while (!done) {
-		XReset();
-		XEvent event;
-		XPendingEvent(event);       
-
-		clock_gettime(CLOCK_REALTIME, &timeCurrent);
-		timeSpan = timeDiff(&timeStart, &timeCurrent);
-		timeCopy(&timeStart, &timeCurrent);
-		physicsCountdown += timeSpan;
-
-		// auto currentTime = std::chrono::high_resolution_clock::now();
-		// auto elapsedTime = std::chrono::duration<double>(currentTime - lastUpdateTime).count();
-		// lastUpdateTime = currentTime;
-		// physicsCountdown += elapsedTime;
+    auto lastUpdateTime = std::chrono::high_resolution_clock::now();
 
 
-		if (currentState == GameState::INIT) {
-			switch(titleScreen()) {
-				case 1:
-					currentState = GameState::PLAYING;
-					break;
-				case 2:
-					currentState = GameState::OPTIONS;
-					break;
-				case -1:
-					done = true;
-					break;
-				default:
-					break;
-			}
-		}
 
-		if (currentState == GameState::OPTIONS) {
-			switch(optionScreen()) {
-				case -1:
-					currentState = GameState::INIT;
-					break;
-			}
-		}
+    while (!done) {
+        XReset();
+        XEvent event;
+        XPendingEvent(event);       
+
+        auto currentTime = std::chrono::high_resolution_clock::now();
+        auto elapsedTime = std::chrono::duration<double>(currentTime - lastUpdateTime).count();
+        lastUpdateTime = currentTime;
+        physicsCountdown += elapsedTime;
 
 
-		if (currentState == GameState::PLAYING) {
-			static World world;
-			static CollisionManager cm(world);
-			static Player player(cm, 100.0f); 
+        if (currentState == GameState::INIT) {
+            switch(titleScreen()) {
+                case 1:
+                    currentState = GameState::PLAYING;
+                    break;
+                case 2:
+                    currentState = GameState::OPTIONS;
+                    break;
+                case -1:
+                    done = true;
+                    break;
+                default:
+                    break;
+            }
+        }
 
-			player.cameraSetup();
-			//physicsCountdown += timeSpan;
-			while (physicsCountdown >= physicsRate) {
-				player.handleInput();
-				cm.handlePlayerCollisions(player);
-				cm.handleEnemyCollisions(player);
-				physicsCountdown -= physicsRate;
-			}
-				world.render();
-				world.renderEnemies();
-				player.render();
-				player.animate(timeSpan * 80);
-				levelenemyText(total_running_time(true));
+        if (currentState == GameState::OPTIONS) {
+            switch(optionScreen()) {
+                case -1:
+                    currentState = GameState::INIT;
+                    break;
+            }
+        }
 
-			glPopMatrix();
-		}
-	}
-	cleanupGLX();
-	return 0;
+
+        if (currentState == GameState::PLAYING) {
+            static World world;
+            static CollisionManager cm(world);
+            static Player player(cm, 100.0f); 
+
+            physicsCountdown += timeSpan;
+            while (physicsCountdown >= physicsRate) {
+                player.handleInput();
+                cm.handlePlayerCollisions(player);
+                cm.handleEnemyCollisions(player);
+                physicsCountdown -= physicsRate;
+            }
+            player.cameraSetup();
+            world.render();
+            world.renderEnemies();
+            player.render();
+            levelenemyText();
+
+            glPopMatrix();
+        }
+    }
+    cleanupGLX();
+    //draw the statistics box
+    if(gl.statistics) {
+        gl.color3ub(100, 100, 100);
+        glPushMaxtrix();
+        glTranslatef(20.0, 20.0, 0.0);
+        int w = 230;
+        int h = 130;
+        glBegin(GL_QUADS);
+            glVertex2f(0, 0);
+            glVertex2f(0, h);
+            glVertex2f(w, h);
+            glVertex2f(w, 0);
+        glEnd(0);
+        r.bot = 124;
+        r.left = 28;
+        r.center = 0;
+        ggprint13(&r, 20, 0x0055ff55, "Game Statistics");
+        ggprint13(&r, 20, 0x00ffff00, "Runtime(sec): %i");
+        ggprint13();
+        ggprint13();
+        ggprint13();
+    }
+
+    return 0;
+  
 }

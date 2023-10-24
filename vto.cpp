@@ -41,8 +41,6 @@ Knife::Knife(Player *p) : player(p) {
 	duration = 0.05;
 	damageType = "default";
 	weaponClass = "Melee";
-	
-
 }
 
 void Knife::use() {
@@ -85,16 +83,20 @@ void Knife::render() {
 		// Left or Right
 		std::swap(indicatorWidth, indicatorHeight);
 		if (direction.x > 0) { // Right
-			startPos.x += 0.5f * indicatorWidth; // Adjust start position slightly to the right
+			startPos.x += 0.5f * indicatorWidth; // Adjust start position 
+                                                 // slightly to the right
 		} else { // Left
-			startPos.x -= 0.5f * indicatorWidth; // Adjust start position slightly to the left
+			startPos.x -= 0.5f * indicatorWidth; // Adjust start position 
+                                                 // slightly to the left
 		}
 	} else {
 		// Up or Down
 		if (direction.y > 0) { // Up
-			startPos.y += 0.5f * indicatorHeight; // Adjust start position slightly upwards
+			startPos.y += 0.5f * indicatorHeight; // Adjust start position 
+                                                  // slightly upwards
 		} else { // Down
-			startPos.y -= 0.5f * indicatorHeight; // Adjust start position slightly downwards
+			startPos.y -= 0.5f * indicatorHeight; // Adjust start position 
+                                                  // slightly downwards
 		}
 	}
 	if (isAttacking) {
@@ -116,4 +118,13 @@ void Knife::render() {
 	#ifdef DEBUG
 	showHitbox();
 	#endif
+}
+
+int renderFunctionCalls(const bool renderfun) 
+{
+    static int startCount = 1;
+    static int actualCount;
+    if (startCount) {
+        actualCount++;
+    }
 }
