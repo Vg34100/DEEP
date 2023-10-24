@@ -1,5 +1,5 @@
 #pragma once
-
+#include <string>
 void showcaseHealth(int maxHealth, int currentHealth);
 int titleScreen();
 int optionScreen();
