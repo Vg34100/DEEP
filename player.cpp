@@ -21,6 +21,8 @@ void Player::cameraSetup() {
 	
 }
 
+bool statsScreen = false;
+
 void Player::handleInput() {
 
 	playerVelocity.x = 0.0f;  // Reset horizontal velocity
@@ -45,6 +47,10 @@ void Player::handleInput() {
 		playerVelocity.x += 4.0f * Speed;
 		directionx = 1;
 	} 
+
+	if (keysPressed[XK_s]) {
+		statsScreen = !statsScreen;
+	}
 
 	// Normalize diagonal movement
 	if ((playerVelocity.x != 0.0f) && (playerVelocity.y != 0.0f)) {

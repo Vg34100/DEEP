@@ -118,3 +118,4 @@ public:
 };
 
 
+extern bool statsScreen;

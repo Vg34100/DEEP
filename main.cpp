@@ -140,9 +140,12 @@ int main() {
 				world.renderEnemies();
 				player.render();
 				player.animate(timeSpan * 80);
-				levelenemyText(total_running_time(true));
-                //HERE
-                 time_since_key_press(keyCheck);
+				if(statsScreen) {
+					levelenemyText(total_running_time(true));
+					//HERE
+					time_since_key_press(keyCheck);
+				}
+
 
 			glPopMatrix();
 		}
