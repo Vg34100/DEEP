@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include "prodriguezqu.h"
+#include "apacheco2.h"
 
 Display *dpy;
 Window window;
@@ -183,11 +184,13 @@ void XPendingEvent(XEvent event) {
 		switch (event.type) {
 			case KeyPress: {
 				keysPressed[key] = true;
-				break;
+				keyCheck = false;
+                break;
 			}
 			case KeyRelease: {
 				keysPressed[key] = false;
-				break;
+				keyCheck = true;
+                break;
 			}
 			case MotionNotify: {
 				running_time(mouse_since, false);

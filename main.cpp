@@ -42,7 +42,7 @@ void timeCopy(struct timespec *dest, struct timespec *source)
 }
 
 
-int total_running_time(const bool get)
+ int total_running_time(const bool get)
 {
 	// printf("Running");
 	static int firsttime = 1;
@@ -56,7 +56,7 @@ int total_running_time(const bool get)
 		return time(NULL) - start_time;
 	}
 	return 0;
-}
+} 
 
 
 
@@ -123,8 +123,7 @@ int main() {
 			}
 		}
 
-
-		if (currentState == GameState::PLAYING) {
+        	if (currentState == GameState::PLAYING) {
 			static World world;
 			static CollisionManager cm(world);
 			static Player player(cm, 100.0f); 
@@ -142,6 +141,8 @@ int main() {
 				player.render();
 				player.animate(timeSpan * 80);
 				levelenemyText(total_running_time(true));
+                //HERE
+                 time_since_key_press(keyCheck);
 
 			glPopMatrix();
 		}
