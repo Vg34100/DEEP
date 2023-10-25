@@ -58,6 +58,32 @@ void timeCopy(struct timespec *dest, struct timespec *source)
 	return 0;
 } 
 
+void devMode()
+{
+	static bool statsScreen;
+	// if (keysPressed[XK_s] && (keysPressed[XK_Control_L] || keysPressed[XK_Control_R])) {
+	// 	statsScreen = !statsScreen;
+	// }
+	static int DMkeyHoldCounter = 0; //DM - DevMode
+	const int DMkeyHoldThreshold = 30; 
+	if (keysPressed[XK_s] && (keysPressed[XK_Control_L] || keysPressed[XK_Control_R])) {
+
+		if (DMkeyHoldCounter <= 0) {
+			statsScreen = !statsScreen;
+			DMkeyHoldCounter = DMkeyHoldThreshold;  // Reset the counter when state changes
+		} else {
+			DMkeyHoldCounter--;  // Decrease the counter if key is held
+		}
+	} else {
+		DMkeyHoldCounter = 0;  // Reset the counter if key is not pressed
+	}
+	if(statsScreen) {
+		levelenemyText(total_running_time(true));
+		renderFunctionCalls(true);
+		time_since_key_press(keyCheck);
+	}
+}
+
 
 
 enum class GameState {
@@ -78,6 +104,7 @@ int main() {
 	printf("Change Screen Size using left and right arrows\n");
 	printf("Move - WASD | Attack - R | Aim - Mouse\n");
 	printf("Objective: Kill Enemies (White) with Attack -> Proceed to Next Level through Hallway (LightGray)\n");
+	printf("Display Stats and other Developer Options with CTRL+S\n");
 	fflush(stdout);
 
 	#ifdef DEBUG
@@ -97,7 +124,6 @@ int main() {
 		timeSpan = timeDiff(&timeStart, &timeCurrent);
 		timeCopy(&timeStart, &timeCurrent);
 		physicsCountdown += timeSpan;
-
 
 		if (currentState == GameState::INIT) {
 			switch(titleScreen()) {
@@ -140,15 +166,11 @@ int main() {
 				world.renderEnemies();
 				player.render();
 				player.animate(timeSpan * 80);
-				if(statsScreen) {
-					levelenemyText(total_running_time(true));
-					renderFunctionCalls(true);
-					time_since_key_press(keyCheck);
-				}
-
 
 			glPopMatrix();
 		}
+
+		devMode();
 	}
 	cleanupGLX();
 	return 0;
