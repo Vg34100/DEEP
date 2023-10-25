@@ -3,6 +3,7 @@
 #include "vto.h"
 #include "player.h"
 #include <ctime>
+#include "prodriguezqu.h"
 
 Vector2 rotatePoint(const Vector2& point, float angle, const Vector2& center) {
 	float s = sin(angle);
@@ -120,11 +121,14 @@ void Knife::render() {
 	#endif
 }
 
-int renderFunctionCalls(const bool renderfun) 
+int renderFunctionCalls(const bool renderFun) 
 {
-    static int startCount = 1;
-    static int actualCount;
-    if (startCount) {
+    static int actualCount = 1;
+    if (renderFun) {
         actualCount++;
+        renderRect("Redner has been called: ", actualCount);
+    } else {
+        return 0;
     }
+    return 0 ;
 }

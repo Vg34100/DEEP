@@ -142,7 +142,7 @@ int main() {
 				player.animate(timeSpan * 80);
 				if(statsScreen) {
 					levelenemyText(total_running_time(true));
-					//HERE
+					renderFunctionCalls(true);
 					time_since_key_press(keyCheck);
 				}
 

@@ -2,6 +2,7 @@
 #pragma once
 #include <string>
 #include "util_vector2.h"
+int renderFunctionCalls(const bool renderFun);
 class Player;
 
 class Weapon {
