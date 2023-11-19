@@ -7,8 +7,8 @@ public:
 	Image(const char* fname);
 	~Image();
 
-	int width;
-	int height;
+	int image_width;
+	int image_height;
 	bool isSpriteSheet;
 	int rows;
 	int cols;

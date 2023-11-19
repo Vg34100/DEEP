@@ -3,6 +3,6 @@
 
 enum class EnemyType {
 	NONE,  // Represents no enemy
-	ORC,
+	SLIME,
 	// Add other enemy types as needed
 };

@@ -20,9 +20,9 @@ private:
 	CollisionManager& collisionManager; 
 	// Attributes
 	Health playerHealth;
-	// Mana playerMana;
-	// Ammo playerAmmo; ?
-	// sanity? - or other major attribute
+	float playerMana;
+	int playerAmmo;
+	float Sanity;
 	float Speed; // speed multiplier - how fast the character moves
 	float Damage; // damage(done) multiplier
 	float Resistance; // damage(taken) multiplier
@@ -30,6 +30,7 @@ private:
 	float Range; // the weapons attack range - how long is its duration
 	float Luck; // affects chace-based effects - idk what use for yet
 	float Size; // cause idk, maybe u grew up
+	float statWheel[11];
 	float playerWidth;  // in world units
 	float playerHeight; // in world units
 
@@ -55,14 +56,18 @@ private:
     int totalFrames = 4;
     int frameDelay = 150;
     int timeSinceLastFrame = 0;
-    static constexpr const char* SPRITE_SHEET_PATH = "images/player1_idle.png";
 
-
+	/* Camera Shake Variables */
+    float shakeIntensity = 0.0f;
+    int shakeFrames = 0;  
 
 
 public:
 	Player(CollisionManager& cm, float initialMaxHealth) : collisionManager(cm), playerHealth(initialMaxHealth) {
-		activeWeapon = std::make_shared<Knife>(this);
+		activeWeapon = std::make_shared<Lightsaber>(this);
+		playerMana = 0.0f;
+		playerAmmo = 0;
+		Sanity = 0.0f;
 		Speed = 1.0f;
 		Damage = 1.0f;
 		Resistance = 1.0f;
@@ -78,6 +83,7 @@ public:
 		activeWeapon->setCooldown(activeWeapon->getCooldown() / AttackSpeed); // changes the weapon's cooldown based on player's attack speed stat
 		activeWeapon->setAttackSize(activeWeapon->getAttackSize() * Size); // change the weapon's attack size based on player's own size
 		initialize();
+		updateStatwheel();
 	};
 
 	std::vector<std::shared_ptr<Weapon>> inventory;
@@ -100,6 +106,9 @@ public:
 	void updateMousePosition(float mouseX, float mouseY);
 	void updatePlayerDirection();  // Update the direction the player is looking based on mousePos
 
+	void updateStatwheel();
+	float getStatwheel(int num);
+
 	bool initialize();
 	void render();
     void animate(int elapsedTime);
@@ -114,6 +123,10 @@ public:
 
 	void TakeDamage(float damage);
 	void UpdateInvulnerability();
+
+	/* Camera Shake Functions */
+	void updateCameraShake();
+	void startCameraShake(float intensity, int frames);
 
 };
 

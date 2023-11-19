@@ -32,8 +32,7 @@ Level Level::SampleLevel() {
 	};
 	static const std::vector<EnemyType> enemyTypes = {
 		// Your enemy types here
-		EnemyType::ORC,
-		// EnemyType::ORC
+		EnemyType::SLIME,
 	};
 	return Level("SampleLevel", layout, enemyTypes);  // "SampleLevel" is the hard-coded name for this level.
 }
@@ -66,15 +65,15 @@ Level Level::PitLand() {
 	};
 	static const std::vector<EnemyType> enemyTypes = {
 		// Your enemy types here
-		EnemyType::ORC,
-		EnemyType::ORC,
-		EnemyType::ORC,
-		EnemyType::ORC,
-		EnemyType::ORC,
-		EnemyType::ORC,
-		EnemyType::ORC,
-		EnemyType::ORC,
-		EnemyType::ORC,
+		EnemyType::SLIME,
+		EnemyType::SLIME,
+		EnemyType::SLIME,
+		EnemyType::SLIME,
+		EnemyType::SLIME,
+		EnemyType::SLIME,
+		EnemyType::SLIME,
+		EnemyType::SLIME,
+		EnemyType::SLIME,
 
 	};
 	return Level("PitLand", layout, enemyTypes);  // "SampleLevel" is the hard-coded name for this level.

@@ -5,6 +5,7 @@
 #include <string>
 #include "util_vector2.h"
 #include "world.h"
+#include "image.h"
 
 class World;
 
@@ -47,11 +48,16 @@ public:
 	Hitbox getHitbox();
 	float getDeathTimestamp() { return deathTimestamp; }
 	bool isDeadCheck() const;
+
+	void moveToPlayer(const Vector2& playerPos);
+
+
 };
 
-class Orc : public Enemy {
+class Slime : public Enemy {
+private:
 public:
-	Orc(World& wrld, Vector2 pos);
+	Slime(World& wrld, Vector2 pos);
 	
 	void render() override;
 	void attack() override;

@@ -2,6 +2,8 @@
 #pragma once
 #include <string>
 #include "util_vector2.h"
+#include "image.h"
+
 int renderFunctionCalls(const bool renderFun);
 class Player;
 
@@ -109,9 +111,24 @@ private:
 	int currentSummons();
 };
 
-class Knife : public MeleeWeapon {
+class Lightsaber : public MeleeWeapon {
 public:
-	Knife(Player *p);
+	Lightsaber(Player *p);
+
+	void use() override;
+
+	void update() override;
+
+	void render() override;
+private:
+	Player *player; // A pointer/reference to the player to know their direction and position
+    Image idle{"images/lightsaberSprite.jpeg"};
+	static constexpr const char* SPRITE_SHEET_PATH = "images/lightsaberSprite.jpeg";
+
+};
+class Gun : public RangedWeapon {
+public:
+	Gun(Player *p);
 
 	void use() override;
 

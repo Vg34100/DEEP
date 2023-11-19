@@ -2,14 +2,14 @@
 #include <iostream>
 #include <GL/glu.h> // Include this header
 
-unsigned char* addAlphaChannel(unsigned char* data, int width, int height) {
-	int newSize = width * height * 4;
+unsigned char* addAlphaChannel(unsigned char* data, int image_width, int image_height) {
+	int newSize = image_width * image_height * 4;
 	unsigned char* newData = new unsigned char[newSize];
 	unsigned char tr = data[0];  // Red component of transparent color
 	unsigned char tg = data[1];  // Green component
 	unsigned char tb = data[2];  // Blue component
 	int j = 0;
-	for (int i = 0; i < width * height * 3; i+=3) {
+	for (int i = 0; i < image_width * image_height * 3; i+=3) {
 		newData[j] = data[i];     // R
 		newData[j+1] = data[i+1]; // G
 		newData[j+2] = data[i+2]; // B
@@ -41,10 +41,10 @@ Image::Image(const char* fname) : data(nullptr), texture(0) {
 		while (line[0] == '#')  // Skip comments
 			fgets(line, 200, fpi);
 
-		sscanf(line, "%d %d", &width, &height); // Read image size
+		sscanf(line, "%d %d", &image_width, &image_height); // Read image size
 		fgets(line, 200, fpi);  // Read max color value (255)
 
-		int n = width * height * 3;  // Total number of bytes (3 bytes per pixel)
+		int n = image_width * image_height * 3;  // Total number of bytes (3 bytes per pixel)
 		data = new unsigned char[n];  // Allocate data array
 		fread(data, sizeof(unsigned char), n, fpi);  // Read pixel data
 		fclose(fpi);
@@ -73,13 +73,13 @@ bool Image::loadTexture() {
 		return false;
 
 	// Add alpha channel to the image data using the first pixel as the transparent color
-	unsigned char* rgbaData = addAlphaChannel(data, width, height);
+	unsigned char* rgbaData = addAlphaChannel(data, image_width, image_height);
 
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, rgbaData);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image_width, image_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, rgbaData);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	delete[] rgbaData; // Free the temporary RGBA data
 
@@ -89,7 +89,7 @@ bool Image::loadTexture() {
 void Image::render(float x, float y, float scale) {
 	if(!texture) return;
 
-	float aspectRatio = static_cast<float>(width) / height;
+	float aspectRatio = static_cast<float>(image_width) / image_height;
 	float scaledWidth = scale * aspectRatio;
 	float scaledHeight = scale;
 
@@ -113,8 +113,8 @@ void Image::render(float x, float y, float scale) {
 void Image::renderSprite(int row, int col, float x, float y, float scale, bool flip) {
     if(!texture || !isSpriteSheet) return;
 
-    float frameWidth = static_cast<float>(width) / cols;
-    float frameHeight = static_cast<float>(height) / rows;
+    float frameWidth = static_cast<float>(image_width) / cols;
+    float frameHeight = static_cast<float>(image_height) / rows;
     float aspectRatio = frameWidth / frameHeight;
     float scaledWidth = scale * aspectRatio;
     float scaledHeight = scale;

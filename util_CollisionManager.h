@@ -5,6 +5,9 @@
 
 class Player;
 
+extern bool current_level_completed;
+
+
 class CollisionManager {
 private:
 	World& world; // Reference to the world to check collisions against

@@ -1,6 +1,7 @@
 //world/world.cpp
 #include "world.h"
 #include <ctime> 
+#include "prodriguezqu.h"
 // Colors for rendering
 const float FLOOR_COLOR[] = {0.5f, 0.5f, 0.5f};
 const float DOOR_COLOR[] = {0.6f, 0.6f, 0.6f};
@@ -160,8 +161,8 @@ void World::spawnEnemy(EnemyType type, Vector2 pos) {
 	enemiesRemaining++;
 	fflush(stdout);
 	switch (type) {
-		case EnemyType::ORC:
-			enemies.push_back(std::make_unique<Orc>(*this, pos));
+		case EnemyType::SLIME:
+			enemies.push_back(std::make_unique<Slime>(*this, pos));
 			break;
 		case EnemyType::NONE:
 			printf("NONE");
@@ -220,6 +221,10 @@ void World::renderEnemies() const {
 	for (const auto& enemy : enemies) {
 		enemy->render();
 	}
+}
+
+int World::countEnemies() const {
+    return enemies.size();
 }
 
 

@@ -17,7 +17,9 @@ SRCS = main.cpp \
        apacheco2.cpp \
        prodriguezqu.cpp \
        image.cpp \
-       libggfonts.a
+       libggfonts.a \
+       gui.cpp \
+       util_keys.cpp
 
 HEDS = initGLX.h \
        world.h \
@@ -32,7 +34,10 @@ HEDS = initGLX.h \
        apacheco2.h \
        prodriguezqu.h \
        image.h \
-       fonts.h     
+       fonts.h \
+       gui.h  \
+       util_keys.h \
+       keybinds.h
 
 # Object files (this is a "phony" target, no actual .o files are generated)
 OBJS = $(SRCS:%.cpp=objects/%.o)

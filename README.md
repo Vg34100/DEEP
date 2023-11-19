@@ -1,6 +1,19 @@
 # DEEP
 ### Dungeon Explorer's Endless Pursuit
 
+###### Version Update 11/19/2023 as of 12:00 AM
+- Camera Shake on Hit
+- Improved Options Screen
+- Fixed Fullscreen and Screensizes
+- Enemy Movement
+- Display for Level Cleared
+- Stats Display while Playing (CTRL+Z)
+- Pause State
+- Custom Keybinds
+- Camera Move w/ Mouse
+- Letter/Number Writing Method
+- Sword Sprites
+
 ###### Version Update 10/11/2023 as of 5:00 PM
 - Added the image files
     - Can load an image and render it

@@ -77,18 +77,21 @@ Hitbox Enemy::getHitbox() {  return hitbox; }
 
 
 //name, damage, cooldown, hp, size, world
-Orc::Orc(World& wrld, Vector2 pos) : Enemy("Orc", 20.0f, 1.0f, 100.0f, 80.0f, wrld, pos) {}
+Slime::Slime(World& wrld, Vector2 pos) : Enemy("Slime", 20.0f, 1.0f, 100.0f, 80.0f, wrld, pos) 
+{
 
-void Orc::render() {
+}
+
+void Slime::render() {
 	// if(isDead)
 	//     return;
 	UpdateInvulnerability();
-	// Specific rendering for the orc
-	// Define the color for the Orc - black in this case
-	const float ORC_COLOR[] = {1.0f, 1.0f, 1.0f};
+	// Specific rendering for the Slime
+	// Define the color for the Slime - black in this case
+	const float Slime_COLOR[] = {1.0f, 1.0f, 1.0f};
 
 	// Apply the color
-	glColor3fv(ORC_COLOR);
+	glColor3fv(Slime_COLOR);
 
 	// Assuming the position vector denotes the bottom-left of the square
 	float leftX = position.x;
@@ -99,14 +102,21 @@ void Orc::render() {
 	// Draw the square
 	if(!isDead)
 	{
-		glBegin(GL_QUADS);
-			glVertex2f(leftX, bottomY);
-			glVertex2f(rightX, bottomY);
-			glVertex2f(rightX, topY);
-			glVertex2f(leftX, topY);
-		glEnd();
-
+		// glBegin(GL_QUADS);
+		// 	glVertex2f(leftX, bottomY);
+		// 	glVertex2f(rightX, bottomY);
+		// 	glVertex2f(rightX, topY);
+		// 	glVertex2f(leftX, topY);
+		// glEnd();
+		static Image idle_image("images/slime.png");
+		bool once = false;
+		if (!once) {
+			idle_image.loadTexture();
+			once = true;
+		}
+		idle_image.render(position.x + size/2, position.y+size/2, 48);
 		health.DisplayHealthBar(leftX + size/2, topY + 8);
+
 	}
 
 
@@ -119,6 +129,19 @@ void Orc::render() {
 	#endif
 }
 
-void Orc::attack() {
-	// Specific attack logic for the orc
+void Slime::attack() {
+	// Specific attack logic for the Slime
+}
+
+void Enemy::moveToPlayer(const Vector2& playerPos) 
+{
+	float speed = 0.5f;  // Adjust this value as needed
+
+	// Calculate direction vector from enemy to player
+	Vector2 direction = playerPos - position;
+	direction.normalize();
+
+	// Move enemy towards player
+	position.x += direction.x * speed;
+	position.y += direction.y * speed;
 }

@@ -6,6 +6,8 @@ const float TILE_SIZE = 80.0f;
 int counterY = 0;
 int counterX = 0;
 
+bool current_level_completed = false;
+
 void CollisionManager::handlePlayerCollisions(Player& player) {
 	Vector2 playerPos = player.getPos();
 	Vector2 potentialNewPosition = player.getPos();
@@ -17,32 +19,34 @@ void CollisionManager::handlePlayerCollisions(Player& player) {
 		Level randomLevel = world.getNewLevel();
 		float rowOffset = 0;
 		float columnOffset = 0;
-
+		current_level_completed = true;
 		if (currentTileType == TileType::HALLWAYN) {
 			//NORTH LEVEL
 			counterY++;
 			world.generateNewLevel(randomLevel, 0, world.getRows() - 2 - rowOffset);
 			player.setPos(Vector2(playerPos.x,playerPos.y + 50));
+			current_level_completed = false;
 		}
 		if (currentTileType == TileType::HALLWAYE) { // Eat
 			//EAST LEVEL
 			counterX++;
 			world.generateNewLevel(randomLevel, world.getColumns() - 2 - columnOffset, 0);
 			player.setPos(Vector2(playerPos.x + 50,playerPos.y));
-
+			current_level_completed = false;
 		}
 		if (currentTileType == TileType::HALLWAYS) {
 			//SOUTH LEVEL
 			counterY--;
 			world.generateNewLevel(randomLevel, 0, -world.getRows() + 2 + rowOffset);
 			player.setPos(Vector2(playerPos.x ,playerPos.y - 50));
-
+			current_level_completed = false;
 		}
 		if (currentTileType == TileType::HALLWAYW) { // Waffles
 			//WEST LEVEL
 			counterX--;
 			world.generateNewLevel(randomLevel, -world.getColumns() + 2 + columnOffset, 0);
 			player.setPos(Vector2(playerPos.x- 50 ,playerPos.y ));
+			current_level_completed = false;
 		}
 	}
 
@@ -73,10 +77,15 @@ void CollisionManager::handlePlayerCollisions(Player& player) {
 }
 
 void CollisionManager::handleEnemyCollisions(Player& player) {
+	// printf("Running Collision Check\n");
+	// for (const auto& enemy : world.getEnemies()) {
+	// 	enemy->moveToPlayer(player.getPos());
+	// }
 	if (auto weapon = player.getActiveWeapon()) {
 		if (weapon->getIsAttacking()) {
 			Hitbox weaponHitbox = weapon->getHitbox();
 			for (const auto& enemy : world.getEnemies()) {
+				enemy->moveToPlayer(player.getPos());
 				if (weaponHitbox.isColliding(enemy->getHitbox())) {
 					enemy->TakeDamage(weapon->getDamage());
 				}

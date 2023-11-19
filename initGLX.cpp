@@ -13,6 +13,8 @@ bool isFullscreen = false;
 // bool keysPressed[256] = {false};
 float width = 1280;
 float height = 720;
+float actual_width = 1280;
+float actual_height = 720;
 float aspect = (float)width / (float)height;
 const float gameWidth = 1280.0f;  // Width of the game world in game units
 const float gameHeight = gameWidth / aspect;
@@ -21,6 +23,8 @@ float mousey;
 Atom wmDeleteMessage;  // Define as a global variable
 Colormap cmap;
 bool done = false;
+bool playing_check = false;
+
 struct ScreenSize {
 	int width;
 	int height;
@@ -51,8 +55,11 @@ void changeScreenSize(bool next) {
 	
 	const auto& newSize = screenSizes[currentIndex];
 	XResizeWindow(dpy, window, newSize.width, newSize.height);
-	width = newSize.width;
-	height = newSize.height;
+	actual_width = newSize.width;
+	actual_height = newSize.height;
+	glViewport(0, 0, newSize.width, newSize.height);
+	// printf("Updateing Screen Size");
+	// printf("\n%i\n",XDisplayWidth(dpy,0));
 }
 
 
@@ -71,9 +78,17 @@ void toggleFullscreen() {
 
 		// Move and resize the window to cover the entire screen
 		XMoveResizeWindow(dpy, window, 0, 0, XDisplayWidth(dpy, 0), XDisplayHeight(dpy, 0));
+		glViewport(0,0, XDisplayWidth(dpy, 0), XDisplayHeight(dpy, 0));
+		actual_width = XDisplayWidth(dpy, 0);
+		actual_height = XDisplayHeight(dpy, 0);
+	
+		// printf("\n%i\n",XDisplayHeight(dpy,0));
 	} else {
 		// Restore the window to its previous size and position
 		XMoveResizeWindow(dpy, window, prevX, prevY, prevWidth, prevHeight);
+		glViewport(prevX, prevY, prevWidth, prevHeight);
+		actual_width = prevWidth;
+		actual_height = prevHeight;
 	}
 	isFullscreen = !isFullscreen;
 }
@@ -115,8 +130,8 @@ void initializeGLX() {
 	cmap = XCreateColormap(dpy, root, vi->visual, AllocNone);
 	swa.colormap = cmap;
 	swa.event_mask = ExposureMask | KeyPressMask | KeyReleaseMask |
-		PointerMotionMask | MotionNotify | ButtonPress | ButtonRelease |
-		StructureNotifyMask | SubstructureNotifyMask;
+		PointerMotionMask | MotionNotify |
+		StructureNotifyMask | SubstructureNotifyMask | ButtonPressMask | ButtonReleaseMask;
 
 	unsigned int winops = CWBorderPixel|CWColormap|CWEventMask;
 	if (isFullscreen) {
@@ -174,13 +189,15 @@ void cleanupGLX() {
 }
 
 bool keysPressed[65536] = {false}; // Increased size to accommodate KeySym values
+int key = 0;
+bool leftMouseButtonPressed = false;
 
 void XPendingEvent(XEvent event) {
 	mouse_since_counter(false, false);
 	if (dpy == NULL) return; // Check if dpy is not NULL before proceeding
 	while (XPending(dpy) > 0) {
 		XNextEvent(dpy, &event);
-		int key = (XLookupKeysym(&event.xkey, 0) & 0x0000ffff);
+		key = (XLookupKeysym(&event.xkey, 0) & 0x0000ffff);
 		switch (event.type) {
 			case KeyPress: {
 				keysPressed[key] = true;
@@ -201,6 +218,18 @@ void XPendingEvent(XEvent event) {
 			case ConfigureNotify: {
 				break;
 			}
+		    case ButtonPress: {
+                if (event.xbutton.button == Button1) {
+                    leftMouseButtonPressed = true;
+                }
+                break;
+            }
+            case ButtonRelease: {
+                if (event.xbutton.button == Button1) {
+                    leftMouseButtonPressed = false;
+                }
+                break;
+            }	
 			default:
 				break;
 		}

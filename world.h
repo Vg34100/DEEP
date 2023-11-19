@@ -63,6 +63,7 @@ public:
 	bool isWalkableAtPosition(float x, float y) const;
 	void spawnEnemy(EnemyType type, Vector2 pos);
 	void renderEnemies() const;
+	int countEnemies() const;
 	const std::vector<std::vector<Tile>>& getGrid() const;
 	float getOffsetX() const;
 	float getOffsetY() const;

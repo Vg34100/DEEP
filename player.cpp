@@ -3,23 +3,56 @@
 #include "initGLX.h"
 #include "prodriguezqu.h"
 #include <ctime>
+#include "keybinds.h"
 
 
 float easeOut(float factor) {
 	return 1 - (1 - factor) * (1 - factor);
 } 
 
-void Player::cameraSetup() {
-	// Camera lag
-	// In the render function, adjust the camera lag:
-	float factor = 0.1f;  // You can adjust this value as needed
-	cameraPos.x += (playerPos.x - cameraPos.x) * easeOut(factor);
-	cameraPos.y += (playerPos.y - cameraPos.y) * easeOut(factor);
+void Player::updateCameraShake() {
+	if (shakeFrames > 0) {
+		// Decrement the shake frame counter
+		--shakeFrames;
 
-	glPushMatrix(); 
-	glTranslatef(-cameraPos.x, -cameraPos.y, 0.0f);
-	
+		// Randomly adjust camera position
+		float shakeX = ((std::rand() % 100) / 100.0f * 2.0f - 1.0f) * shakeIntensity;
+		float shakeY = ((std::rand() % 100) / 100.0f * 2.0f - 1.0f) * shakeIntensity;
+
+		cameraPos.x += shakeX;
+		cameraPos.y += shakeY;
+	}
 }
+
+void Player::startCameraShake(float intensity, int frames) {
+	shakeIntensity = intensity;
+	shakeFrames = frames;
+}
+
+void Player::cameraSetup() 
+{
+    float factor = 0.1f;  // Adjust this value as needed for player following
+    float mouseFactor = 0.1f; // Adjust this value as needed for mouse influence
+
+    // Update camera position to follow player
+    cameraPos.x += (playerPos.x - cameraPos.x) * easeOut(factor);
+    cameraPos.y += (playerPos.y - cameraPos.y) * easeOut(factor);
+
+    // Calculate mouse influence
+    float mouseXCentered = mousex - actual_width / 2.0f;
+    float mouseYCentered = mousey - actual_height / 2.0f;
+
+    // Apply a small translation to the camera based on mouse position
+    cameraPos.x += mouseXCentered * mouseFactor;
+    cameraPos.y += -mouseYCentered * mouseFactor;
+
+    // Apply camera transformation
+    glPushMatrix(); 
+    glTranslatef(-cameraPos.x, -cameraPos.y, 0.0f);
+
+	updateCameraShake();
+}
+
 
 
 void Player::handleInput() {
@@ -30,19 +63,19 @@ void Player::handleInput() {
 	directionx = -1;
 
 	// Adjust velocity based on pressed keys
-	if (keysPressed[XK_w]) {
+	if (keysPressed[move_up]) {
 		playerVelocity.y += 4.0f * Speed;
 		directiony = 0;
 	}
-	if (keysPressed[XK_s]) {
+	if (keysPressed[move_down]) {
 		playerVelocity.y -= 4.0f * Speed;
 		directiony = 1;
 	} 
-	if (keysPressed[XK_a]) {
+	if (keysPressed[move_left]) {
 		playerVelocity.x -= 4.0f * Speed;
 		directionx = 0;
 	} 
-	if (keysPressed[XK_d]) {
+	if (keysPressed[move_right]) {
 		playerVelocity.x += 4.0f * Speed;
 		directionx = 1;
 	} 
@@ -54,7 +87,9 @@ void Player::handleInput() {
 		playerVelocity.y *= factor;
 	}
 
-	if (keysPressed[XK_r]) useWeapon();
+	//if (keysPressed[attack_key]) useWeapon();
+	if(keysPressed[attack_key] || leftMouseButtonPressed)
+		useWeapon();
 }
 
 void Player::showHitbox() const {
@@ -114,6 +149,7 @@ void Player::render() {
 	UpdateInvulnerability();
 	updatePlayerDirection();
 	updateMousePosition(mousex, mousey);
+	// printf("%f, %f\n", mousex, mousey);
 	Vector2 topLeft = Vector2(playerPos.x - 0.5f * playerWidth, playerPos.y + 0.5f * playerHeight);
 	Vector2 bottomRight = Vector2(playerPos.x + 0.5f * playerWidth, playerPos.y - 0.5f * playerHeight);
 	Vector2 topRight = Vector2(playerPos.x + 0.5f * playerWidth, playerPos.y + 0.5f * playerHeight);
@@ -192,7 +228,7 @@ void Player::updateMousePosition(float mouseX, float mouseY) {
 }
 
 void Player::updatePlayerDirection() {
-	playerDirection = Vector2(mousex - width / 2, height / 2 - mousey);
+	playerDirection = Vector2(mousex - actual_width / 2, actual_height / 2 - mousey);
 	playerDirection.normalize();
 }
 
@@ -204,19 +240,42 @@ void Player::switchWeapon(int inventoryIndex) {
 
 void Player::useWeapon() { if (activeWeapon) { activeWeapon->use(); }}
 
-void Player::TakeDamage(float damage) {
+void Player::TakeDamage(float damage) 
+{
 	if (!invulnerable) {
 		playerHealth.TakeDamage(damage);
 		invulnerable = true; 
 		lastDamageTime = std::clock(); 
+		startCameraShake(20,25);
 	}
 }
 
-void Player::UpdateInvulnerability() {
+void Player::UpdateInvulnerability() 
+{
 	if (invulnerable) {
 		float elapsedTime = (std::clock() - lastDamageTime) / CLOCKS_PER_SEC;
 		if (elapsedTime >= invincibilityDuration) {
 			invulnerable = false;
 		}
 	}
+}
+
+void Player::updateStatwheel() 
+{
+	statWheel[0] = playerHealth.GetMaxHealth();
+	statWheel[1] = playerMana;
+	statWheel[2] = static_cast<float>(playerAmmo);
+	statWheel[3] = Sanity;
+	statWheel[4] = Speed;
+	statWheel[5] = Damage;
+	statWheel[6] = Resistance;
+	statWheel[7] = AttackSpeed;
+	statWheel[8] = Range;
+	statWheel[9] = Luck;
+	statWheel[10] = Size;
+}
+
+float Player::getStatwheel(int num)
+{
+	return statWheel[num];
 }
