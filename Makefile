@@ -43,7 +43,7 @@ HEDS = initGLX.h \
 OBJS = $(SRCS:%.cpp=objects/%.o)
 DOBJS = $(SRCS:%.cpp=objects/D_%.o)
 
-all: game debug
+all: game
 
 game: $(OBJS) $(HEDS)
 	$(CXX) $(CXXFLAGS) -o $@ $(OBJS) $(LDLIBS)

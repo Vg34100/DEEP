@@ -3,7 +3,7 @@
 #include <ctime>
 
 Enemy::Enemy(const std::string& nm, float dmg, float cooldown, float hp, float sz, World& wrld, Vector2 pos) 
-	: name(nm), attackDamage(dmg), attackCooldown(cooldown), health(hp), size(sz), position(pos), world(wrld)  {
+	: name(nm), attackDamage(dmg), attackCooldown(cooldown), health(hp), size(sz), speed(0.5), position(pos), world(wrld) {
 		#ifdef DEBUG
 		std::cerr << "Enemy created: " << this << std::endl;
 		#endif // DEBUG
@@ -31,9 +31,21 @@ bool Enemy::canBeSummoned(Vector2 pos) {
 }
 
 
+float calculateDamageTaken(float baseDamage, int levelsCompleted) {
+    const float reductionFactor = 0.1f; // This value determines how much impact each level has
+    const float minDamageMultiplier = 0.2f; // This ensures that there's always a minimum percentage of damage taken
+
+    float damageMultiplier = 1.0f - (reductionFactor * levelsCompleted);
+    damageMultiplier = std::max(damageMultiplier, minDamageMultiplier);
+
+    return baseDamage * damageMultiplier;
+}
+
+
 void Enemy::TakeDamage(float damage) {
 	if (!invulnerable) {
-		health.TakeDamage(damage);
+		float damageNegator = calculateDamageTaken(damage, levelsCompleted);
+		health.TakeDamage(damageNegator);
 		invulnerable = true; 
 		lastDamageTime = std::clock(); 
 		if(isDeadCheck()) { 
@@ -85,7 +97,7 @@ Hitbox Enemy::getHitbox()
 //name, damage, cooldown, hp, size, world
 Slime::Slime(World& wrld, Vector2 pos) : Enemy("Slime", 20.0f, 1.0f, 100.0f, 80.0f, wrld, pos) 
 {
-
+	speed = 1;
 }
 
 void Slime::render() 
@@ -134,13 +146,24 @@ void Slime::attack()
 
 void Enemy::moveToPlayer(const Vector2& playerPos) 
 {
-	float speed = 0.5f;  // Adjust this value as needed
+	//float speed = 0.5f;  // Adjust this value as needed
+	float speedMultiplier = speed + ((levelsCompleted/10) * speed);
 
 	// Calculate direction vector from enemy to player
 	Vector2 direction = playerPos - position;
 	direction.normalize();
 
 	// Move enemy towards player
-	position.x += direction.x * speed;
-	position.y += direction.y * speed;
+	position.x += direction.x * speedMultiplier;
+	position.y += direction.y * speedMultiplier;
+}
+
+void Enemy::knockBackFromPlayer(const Vector2& playerPos, float knockBackDistance) {
+    // Calculate direction vector from player to enemy
+    Vector2 direction = position - playerPos;
+    direction.normalize();
+
+    // Teleport enemy a certain distance away from the player
+    position.x += direction.x * knockBackDistance;
+    position.y += direction.y * knockBackDistance;
 }

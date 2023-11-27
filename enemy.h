@@ -14,10 +14,12 @@ protected:
 	float deathTimestamp = 0.0f;
 
 	std::string name;
+
 	float attackDamage;
 	float attackCooldown;
 	Health health;  
 	float size;
+	float speed;
 	Vector2 position;  
 	World& world; 
 	float invincibilityDuration = 0.1f; 
@@ -50,6 +52,7 @@ public:
 	bool isDeadCheck() const;
 
 	void moveToPlayer(const Vector2& playerPos);
+	void knockBackFromPlayer(const Vector2& playerPos, float knockBackDistance);
 
 
 };

@@ -18,6 +18,7 @@
 #include "keybinds.h"
 #include <string>
 #include "util_vector2.h"
+#include <functional>
 
 typedef struct {
     float red;
@@ -625,6 +626,9 @@ bool stats_screen(Player& player, Numbers& numbers, float deltaTime)
 		numbers.renderNumbers(player.getStatwheel(i),
 		 							-width + numberOffsetX, yPos, numberSize);
 	}
+
+	numbers.renderNumbers(player.getCoins(), -width + 150, height - 50, numberSize);
+
 
 	return true;
 }

@@ -99,6 +99,10 @@ void CollisionManager::handleEnemyCollisions(Player& player)
 				//enemy->moveToPlayer(player.getPos());
 				if (weaponHitbox.isColliding(enemy->getHitbox())) {
 					enemy->TakeDamage(weapon->getDamage());
+					if (enemy->isDeadCheck())
+						player.randomlyCollectCoins(0.00, 1.00);
+					else
+						enemy->knockBackFromPlayer(player.getPos(), 40);
 				}
 			}
 		}

@@ -33,8 +33,8 @@ private:
 	float statWheel[11];
 	float playerWidth;  // in world units
 	float playerHeight; // in world units
-
-
+	
+	float coins;
 
 	float invincibilityDuration = 0.1f; 
 	bool invulnerable = false; 
@@ -65,6 +65,7 @@ private:
 public:
 	Player(CollisionManager& cm, float initialMaxHealth) : collisionManager(cm), playerHealth(initialMaxHealth) {
 		activeWeapon = std::make_shared<Lightsaber>(this);
+		coins = 0.0f;
 		playerMana = 0.0f;
 		playerAmmo = 0;
 		Sanity = 0.0f;
@@ -105,8 +106,10 @@ public:
 
 	void updateStatwheel();
 	float getStatwheel(int num);
+	float getCoins() { return coins; }
 
 	void randomlyIncrementAttribute(float minIncrement, float maxIncrement);
+	void randomlyCollectCoins(float minIncrement, float maxIncrement);
 
 	bool initialize();
 	void render();

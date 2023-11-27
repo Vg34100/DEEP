@@ -255,7 +255,7 @@ void Player::useWeapon() { if (activeWeapon) { activeWeapon->use(); }}
 void Player::TakeDamage(float damage) 
 {
 	if (!invulnerable) {
-		playerHealth.TakeDamage(damage - Resistance/damage);
+		playerHealth.TakeDamage(damage - Resistance/damage + ((levelsCompleted/10) * damage));
 		invulnerable = true; 
 		lastDamageTime = std::clock(); 
 		startCameraShake(20,25);
@@ -310,13 +310,15 @@ void Player::randomlyIncrementAttribute(float minIncrement, float maxIncrement)
 		case 3: negation ? Sanity += increment * 3 : Sanity -= increment * 3; break;
 		case 4: Speed += increment/20; break;
 		case 5: 
-			Damage += increment/10; 
+			Damage += increment/25; 
 			/* Add Setting Damage on Weapon */
+			activeWeapon->setDamage(activeWeapon->getDamage() + Damage);
 			break;
 		case 6: Resistance += increment/10; break;
 		case 7: 
-			AttackSpeed += increment/10; 
+			AttackSpeed += increment/150; 
 			/* Add Setting AttackSpeed on Weapon */
+			activeWeapon->setCooldown(activeWeapon->getCooldown() - AttackSpeed);
 			break;
 		case 8: 
 			Range += increment/10; 
@@ -327,11 +329,22 @@ void Player::randomlyIncrementAttribute(float minIncrement, float maxIncrement)
 			/* Add Setting Luck on Weapon */
 			break;
 		case 10: 
-			negation ? Size += increment : Size -= increment; 
+			negation ? Size += increment/20 : Size -= increment/20; 
 			activeWeapon->setAttackSize(Size);
 			break;
 		default: break; // In case of an unexpected value
 	}
+}
+
+void Player::randomlyCollectCoins(float minIncrement, float maxIncrement)
+{
+	srand(static_cast<unsigned int>(time(nullptr))); // Seed the random number generator
+
+	//int attribute = rand() % 11; // Randomly select an attribute (0 to 10)
+	//int negation = rand() % 2;
+	float increment = minIncrement + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (maxIncrement - minIncrement))); // Random increment
+	coins += increment;
+
 }
 
 void Player::updateWeapon()
