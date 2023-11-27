@@ -21,6 +21,7 @@ public:
 	void TakeDamage(float damage, const std::string& damageType = "default");
 	void Heal(float amount);
 	void SetHealth(float amount);
+	void AddMaxHealth(float amount);
 	void AddTemporaryHealth(float amount);
 
 	// Getter methods
@@ -46,6 +47,4 @@ public:
 	void ShowDamageNumber(float damageAmount) const; // Example: show a floating number
 	void DisplayHealthBar(float positionX, float positionY) const; 
 	void DisplayStaticHealthBar(float positionX, float positionY) const; 
-
-	//... other potential methods or UI elements ...
 };

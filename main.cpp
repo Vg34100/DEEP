@@ -88,7 +88,8 @@ enum class GameState {
 	GAME_OVER
 };
 
-int main() {
+int main() 
+{
 	GameState currentState = GameState::INIT;
 	initializeGLX();
 	initGL();

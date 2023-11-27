@@ -8,7 +8,8 @@ int counterX = 0;
 
 bool current_level_completed = false;
 
-void CollisionManager::handlePlayerCollisions(Player& player) {
+void CollisionManager::handlePlayerCollisions(Player& player) 
+{
 	Vector2 playerPos = player.getPos();
 	Vector2 potentialNewPosition = player.getPos();
 	potentialNewPosition.add(player.getVelocity());
@@ -25,6 +26,8 @@ void CollisionManager::handlePlayerCollisions(Player& player) {
 			counterY++;
 			world.generateNewLevel(randomLevel, 0, world.getRows() - 2 - rowOffset);
 			player.setPos(Vector2(playerPos.x,playerPos.y + 50));
+			if (levelsCompleted % 2 == 0)
+				player.randomlyIncrementAttribute(0.2,1.5);
 			current_level_completed = false;
 		}
 		if (currentTileType == TileType::HALLWAYE) { // Eat
@@ -32,6 +35,8 @@ void CollisionManager::handlePlayerCollisions(Player& player) {
 			counterX++;
 			world.generateNewLevel(randomLevel, world.getColumns() - 2 - columnOffset, 0);
 			player.setPos(Vector2(playerPos.x + 50,playerPos.y));
+			if (levelsCompleted % 2 == 0)
+				player.randomlyIncrementAttribute(0.2,1.5);
 			current_level_completed = false;
 		}
 		if (currentTileType == TileType::HALLWAYS) {
@@ -39,6 +44,8 @@ void CollisionManager::handlePlayerCollisions(Player& player) {
 			counterY--;
 			world.generateNewLevel(randomLevel, 0, -world.getRows() + 2 + rowOffset);
 			player.setPos(Vector2(playerPos.x ,playerPos.y - 50));
+			if (levelsCompleted % 2 == 0)
+				player.randomlyIncrementAttribute(0.2,1.5);
 			current_level_completed = false;
 		}
 		if (currentTileType == TileType::HALLWAYW) { // Waffles
@@ -46,8 +53,11 @@ void CollisionManager::handlePlayerCollisions(Player& player) {
 			counterX--;
 			world.generateNewLevel(randomLevel, -world.getColumns() + 2 + columnOffset, 0);
 			player.setPos(Vector2(playerPos.x- 50 ,playerPos.y ));
+			if (levelsCompleted % 2 == 0)
+				player.randomlyIncrementAttribute(0.2,1.5);
 			current_level_completed = false;
 		}
+		player.updateStatwheel();
 	}
 
 
@@ -76,7 +86,8 @@ void CollisionManager::handlePlayerCollisions(Player& player) {
 
 }
 
-void CollisionManager::handleEnemyCollisions(Player& player) {
+void CollisionManager::handleEnemyCollisions(Player& player) 
+{
 	// printf("Running Collision Check\n");
 	// for (const auto& enemy : world.getEnemies()) {
 	// 	enemy->moveToPlayer(player.getPos());
@@ -85,7 +96,7 @@ void CollisionManager::handleEnemyCollisions(Player& player) {
 		if (weapon->getIsAttacking()) {
 			Hitbox weaponHitbox = weapon->getHitbox();
 			for (const auto& enemy : world.getEnemies()) {
-				enemy->moveToPlayer(player.getPos());
+				//enemy->moveToPlayer(player.getPos());
 				if (weaponHitbox.isColliding(enemy->getHitbox())) {
 					enemy->TakeDamage(weapon->getDamage());
 				}
@@ -103,7 +114,8 @@ void CollisionManager::handleEnemyCollisions(Player& player) {
 
 }
 
-std::string tileTypeToString(TileType type) {
+std::string tileTypeToString(TileType type) 
+{
 	switch (type) {
 		case TileType::WALL: return "WALL";
 		case TileType::FLOOR: return "FLOOR";
@@ -118,7 +130,8 @@ std::string tileTypeToString(TileType type) {
 }
 
 
-int CollisionManager::isCollidingWithWallsUsingRays(const Vector2& currentPos, const Vector2& newPos) const {
+int CollisionManager::isCollidingWithWallsUsingRays(const Vector2& currentPos, const Vector2& newPos) const 
+{
 	// Define the ray endpoints
 	Vector2 A = currentPos;
 	Vector2 B = newPos;
@@ -167,7 +180,8 @@ int CollisionManager::isCollidingWithWallsUsingRays(const Vector2& currentPos, c
 	return  false;  // No collision detected
 }
 
-bool CollisionManager::lineIntersectsLine(const Vector2& A, const Vector2& B, const Vector2& C, const Vector2& D) const {
+bool CollisionManager::lineIntersectsLine(const Vector2& A, const Vector2& B, const Vector2& C, const Vector2& D) const 
+{
 	float detACD = (A.x - C.x) * (D.y - C.y) - (D.x - C.x) * (A.y - C.y);
 	float detBCD = (B.x - C.x) * (D.y - C.y) - (D.x - C.x) * (B.y - C.y);
 	float detCAB = (C.x - A.x) * (B.y - A.y) - (B.x - A.x) * (C.y - A.y);

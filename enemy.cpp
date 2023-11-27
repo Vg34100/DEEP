@@ -45,7 +45,8 @@ void Enemy::TakeDamage(float damage) {
 	}
 }
 
-void Enemy::UpdateInvulnerability() {
+void Enemy::UpdateInvulnerability() 
+{
 	if (invulnerable) {
 		float elapsedTime = (std::clock() - lastDamageTime) / CLOCKS_PER_SEC;
 		if (elapsedTime >= invincibilityDuration) {
@@ -54,7 +55,8 @@ void Enemy::UpdateInvulnerability() {
 	}
 }
 
-void Enemy::showHitbox() const {
+void Enemy::showHitbox() const 
+{
 	if(isDead)
 		return;
 	// Draw the rectangle outline
@@ -68,11 +70,15 @@ void Enemy::showHitbox() const {
 	return;
 }
 
-bool Enemy::isDeadCheck() const {
+bool Enemy::isDeadCheck() const 
+{
 	return health.GetCurrentHealth() <= 0;
 }
 
-Hitbox Enemy::getHitbox() {  return hitbox; }
+Hitbox Enemy::getHitbox() 
+{  
+	return hitbox; 
+}
 
 
 
@@ -82,7 +88,8 @@ Slime::Slime(World& wrld, Vector2 pos) : Enemy("Slime", 20.0f, 1.0f, 100.0f, 80.
 
 }
 
-void Slime::render() {
+void Slime::render() 
+{
 	// if(isDead)
 	//     return;
 	UpdateInvulnerability();
@@ -100,14 +107,7 @@ void Slime::render() {
 	float topY = position.y + size;
 
 	// Draw the square
-	if(!isDead)
-	{
-		// glBegin(GL_QUADS);
-		// 	glVertex2f(leftX, bottomY);
-		// 	glVertex2f(rightX, bottomY);
-		// 	glVertex2f(rightX, topY);
-		// 	glVertex2f(leftX, topY);
-		// glEnd();
+	if (!isDead) {
 		static Image idle_image("images/slime.png");
 		bool once = false;
 		if (!once) {
@@ -116,9 +116,7 @@ void Slime::render() {
 		}
 		idle_image.render(position.x + size/2, position.y+size/2, 48);
 		health.DisplayHealthBar(leftX + size/2, topY + 8);
-
 	}
-
 
 	Vector2 topLeft = Vector2(leftX, topY);
 	Vector2 bottomRight = Vector2(rightX, bottomY);
@@ -129,7 +127,8 @@ void Slime::render() {
 	#endif
 }
 
-void Slime::attack() {
+void Slime::attack() 
+{
 	// Specific attack logic for the Slime
 }
 

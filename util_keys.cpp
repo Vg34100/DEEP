@@ -14,7 +14,8 @@ bool holdtoPress(bool reset)
 	return false;
 }
 
-bool handleKeyAction(bool keyCondition, int &counter, int threshold) {
+bool handleKeyAction(bool keyCondition, int &counter, int threshold) 
+{
     if (keyCondition) {
         if (counter <= 0) {
             counter = threshold;  // Reset the counter

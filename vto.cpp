@@ -36,9 +36,9 @@ void Weapon::showHitbox() const {
 
 Lightsaber::Lightsaber(Player *p) : player(p) {
     name = "Lithium Ion Grip Heat Transfer-Saber";
-    damage = 200; 
+    damage = 50; 
     cooldown = 0.05;
-    attackSize = 3;
+    attackSize = 1;
     speed = 0;
     duration = 0.05;
     damageType = "default";
@@ -82,8 +82,8 @@ void Lightsaber::render() {
 
     float distanceFromPlayer = 120.0f;  
     Vector2 startPos = position + direction.multiply(distanceFromPlayer);
-    float indicatorWidth = 250.0f;
-    float indicatorHeight = 200.0f; 
+    float indicatorWidth = 250.0f * attackSize;
+    float indicatorHeight = 200.0f * attackSize; 
     if (!isAttacking) {
         idle.renderSprite(0, 1, startPos.x, startPos.y, 100);
     }

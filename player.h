@@ -70,18 +70,14 @@ public:
 		Sanity = 0.0f;
 		Speed = 1.0f;
 		Damage = 1.0f;
-		Resistance = 1.0f;
+		Resistance = 0.0f;
 		AttackSpeed = 1.0f;
 		Range = 1.0f;
 		Luck = 1.0f;
 		Size = 1.0f;
 		playerWidth = 50.0f * Size;
 		playerHeight = 50.0f * Size;
-		activeWeapon->setDamage(activeWeapon->getDamage() * Damage);  // changes the weapon's damage based on player's damage stat
-		if(activeWeapon->getWeaponClass() != "Melee")
-			activeWeapon->setDuration(activeWeapon->getDuration() * Range); // changes the weapon's duration based on player's range stat | not for Melee Class
-		activeWeapon->setCooldown(activeWeapon->getCooldown() / AttackSpeed); // changes the weapon's cooldown based on player's attack speed stat
-		activeWeapon->setAttackSize(activeWeapon->getAttackSize() * Size); // change the weapon's attack size based on player's own size
+		updateWeapon();
 		initialize();
 		updateStatwheel();
 	};
@@ -95,6 +91,7 @@ public:
 	float getPlayerWidth() { return playerWidth; };
 	float getPlayerHeight() { return playerHeight; };
 	std::shared_ptr<Weapon> getActiveWeapon() const { return activeWeapon; }
+	void updateWeapon();
 
 	void setPos(const Vector2& pos) { playerPos = pos; };
 	void setX(float x) { playerPos.x = x; };
@@ -108,6 +105,8 @@ public:
 
 	void updateStatwheel();
 	float getStatwheel(int num);
+
+	void randomlyIncrementAttribute(float minIncrement, float maxIncrement);
 
 	bool initialize();
 	void render();

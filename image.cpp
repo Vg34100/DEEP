@@ -2,7 +2,8 @@
 #include <iostream>
 #include <GL/glu.h> // Include this header
 
-unsigned char* addAlphaChannel(unsigned char* data, int image_width, int image_height) {
+unsigned char* addAlphaChannel(unsigned char* data, int image_width, int image_height) 
+{
 	int newSize = image_width * image_height * 4;
 	unsigned char* newData = new unsigned char[newSize];
 	unsigned char tr = data[0];  // Red component of transparent color
@@ -22,7 +23,8 @@ unsigned char* addAlphaChannel(unsigned char* data, int image_width, int image_h
 
 
 /* More or less from Walk.cpp*/
-Image::Image(const char* fname) : data(nullptr), texture(0) {
+Image::Image(const char* fname) : data(nullptr), texture(0) 
+{
 	if (!fname || fname[0] == '\0')
 		return;
 
@@ -55,20 +57,23 @@ Image::Image(const char* fname) : data(nullptr), texture(0) {
 }
 
 
-Image::~Image() {
+Image::~Image() 
+{
 	delete[] data;  // Free image data
 	if (texture) {
 		glDeleteTextures(1, &texture);  // Delete texture
 	}
 }
 
-void Image::setSpriteSheet(int rows, int cols) {
+void Image::setSpriteSheet(int rows, int cols) 
+{
 	this->isSpriteSheet = true;
 	this->rows = rows;
 	this->cols = cols;
 }
 
-bool Image::loadTexture() {
+bool Image::loadTexture() 
+{
 	if (!data)
 		return false;
 
@@ -86,8 +91,9 @@ bool Image::loadTexture() {
 	return true;
 }
 
-void Image::render(float x, float y, float scale) {
-	if(!texture) return;
+void Image::render(float x, float y, float scale) 
+{
+	if (!texture) return;
 
 	float aspectRatio = static_cast<float>(image_width) / image_height;
 	float scaledWidth = scale * aspectRatio;
@@ -110,37 +116,37 @@ void Image::render(float x, float y, float scale) {
 	glDisable(GL_BLEND);
 }
 
-void Image::renderSprite(int row, int col, float x, float y, float scale, bool flip) {
-    if(!texture || !isSpriteSheet) return;
+void Image::renderSprite(int row, int col, float x, float y, float scale, bool flip) 
+{
+	if(!texture || !isSpriteSheet) return;
 
-    float frameWidth = static_cast<float>(image_width) / cols;
-    float frameHeight = static_cast<float>(image_height) / rows;
-    float aspectRatio = frameWidth / frameHeight;
-    float scaledWidth = scale * aspectRatio;
-    float scaledHeight = scale;
+	float frameWidth = static_cast<float>(image_width) / cols;
+	float frameHeight = static_cast<float>(image_height) / rows;
+	float aspectRatio = frameWidth / frameHeight;
+	float scaledWidth = scale * aspectRatio;
+	float scaledHeight = scale;
 
-    float s1 = static_cast<float>(col) / cols;
-    float s2 = static_cast<float>(col + 1) / cols;
-    float t1 = static_cast<float>(row) / rows;
-    float t2 = static_cast<float>(row + 1) / rows;
+	float s1 = static_cast<float>(col) / cols;
+	float s2 = static_cast<float>(col + 1) / cols;
+	float t1 = static_cast<float>(row) / rows;
+	float t2 = static_cast<float>(row + 1) / rows;
 
-    if (flip) {
-        std::swap(s1, s2);  // Swap the horizontal texture coordinates
-    }
+	if (flip)
+		std::swap(s1, s2);  // Swap the horizontal texture coordinates
 
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    glBindTexture(GL_TEXTURE_2D, texture);
-    glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
-    glBegin(GL_QUADS);
-        glTexCoord2f(s1, t2); glVertex2f(x - scaledWidth, y - scaledHeight); // Bottom left
-        glTexCoord2f(s2, t2); glVertex2f(x + scaledWidth, y - scaledHeight); // Bottom right
-        glTexCoord2f(s2, t1); glVertex2f(x + scaledWidth, y + scaledHeight); // Top right
-        glTexCoord2f(s1, t1); glVertex2f(x - scaledWidth, y + scaledHeight); // Top left
-    glEnd();
+	glBegin(GL_QUADS);
+		glTexCoord2f(s1, t2); glVertex2f(x - scaledWidth, y - scaledHeight); // Bottom left
+		glTexCoord2f(s2, t2); glVertex2f(x + scaledWidth, y - scaledHeight); // Bottom right
+		glTexCoord2f(s2, t1); glVertex2f(x + scaledWidth, y + scaledHeight); // Top right
+		glTexCoord2f(s1, t1); glVertex2f(x - scaledWidth, y + scaledHeight); // Top left
+	glEnd();
 
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glDisable(GL_BLEND);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glDisable(GL_BLEND);
 }

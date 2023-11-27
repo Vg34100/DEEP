@@ -15,7 +15,8 @@ int levelsCompleted = 0;
 int enemiesRemaining = 0;
 int enemiesDefeated = 0;
 
-World::World() {
+World::World() 
+{
 	LevelManager manager;
 	// 1. Get a random initial level and set the world's offset to center it.
 	Level initialLevel = manager.getRandomLevel(); // Assuming you have a getRandomLevel method in LevelManager
@@ -23,13 +24,15 @@ World::World() {
 	this->setWorldFromLevel(initialized); 
 }
 
-Level World::getNewLevel() {
+Level World::getNewLevel() 
+{
 	LevelManager manager;
 	Level newLevel = manager.getRandomLevel();
 	return newLevel;
 }
 
-void World::generateNewLevel(const Level& level, float customOffsetX, float customOffsetY) {
+void World::generateNewLevel(const Level& level, float customOffsetX, float customOffsetY) 
+{
 	levelsCompleted++;
 	//Level sample = Level::SampleLevel();
 	this->setWorldFromLevel(level, customOffsetX, customOffsetY); 
@@ -46,7 +49,8 @@ void World::generateNewLevel(const Level& level, float customOffsetX, float cust
 
 
 
-WorldCorners World::calculateLevelDimensions(const Level& level, float customOffsetX, float customOffsetY) const {
+WorldCorners World::calculateLevelDimensions(const Level& level, float customOffsetX, float customOffsetY) const 
+{
 	WorldCorners corners;
 
 	// Extract the layout from the level
@@ -78,14 +82,16 @@ WorldCorners World::calculateLevelDimensions(const Level& level, float customOff
 }
 
 
-float World::getTopEdgeY() const {
+float World::getTopEdgeY() const 
+{
 	// Calculate world height
 	float worldHeight = grid.size() * TILE_SIZE;
 	return worldHeight - offsetY;  // Top edge Y position in world space
 }
 
 
-void World::setWorldFromLevel(const Level& level, float customOffsetX, float customOffsetY) {
+void World::setWorldFromLevel(const Level& level, float customOffsetX, float customOffsetY) 
+{
 	offsetX += customOffsetX;
 	offsetY += customOffsetY;
 	customOffsetX = offsetX;
@@ -151,10 +157,10 @@ void World::setWorldFromLevel(const Level& level, float customOffsetX, float cus
 }
 
 
-World::~World() {
-}
+World::~World() {}
 
-void World::spawnEnemy(EnemyType type, Vector2 pos) {
+void World::spawnEnemy(EnemyType type, Vector2 pos) 
+{
 	#ifdef DEBUG
 	printf("Spawning enemy of type: %d at position X: %f, Y: %f\n", static_cast<int>(type), pos.x, pos.y);
 	#endif // DEBUG
@@ -173,7 +179,8 @@ void World::spawnEnemy(EnemyType type, Vector2 pos) {
 }
 
 
-void World::render() {
+void World::render() 
+{
 	this->RemoveDeadEnemies();
 	for (const auto& row : grid) {
 		for (const auto& tile : row) {
@@ -217,27 +224,32 @@ void World::render() {
 	}
 }
 
-void World::renderEnemies() const {
+void World::renderEnemies() const 
+{
 	for (const auto& enemy : enemies) {
 		enemy->render();
 	}
 }
 
-int World::countEnemies() const {
+int World::countEnemies() const 
+{
     return enemies.size();
 }
 
 
-TileType World::getTileTypeAt(int x, int y) const {
+TileType World::getTileTypeAt(int x, int y) const 
+{
 	return grid[y][x].type;
 }
 
-bool World::isWalkable(int x, int y) const {
+bool World::isWalkable(int x, int y) const 
+{
 	TileType type = getTileTypeAt(x, y);
 	return type == TileType::FLOOR || type == TileType::ENEMY || type == TileType::DOOR;
 }
 
-TileType World::getTileTypeAtPosition(float x, float y) {
+TileType World::getTileTypeAtPosition(float x, float y) 
+{
 	int totalRows = grid.size();
 	int totalCols = (totalRows > 0) ? grid[0].size() : 0; // Assuming the grid is rectangular
 
@@ -264,7 +276,8 @@ TileType World::getTileTypeAtPosition(float x, float y) {
 
 
 
-bool World::isWalkableAtPosition(float x, float y) const {
+bool World::isWalkableAtPosition(float x, float y) const 
+{
 	size_t i = static_cast<size_t>(y / (TILE_SIZE)); 
 	size_t j = static_cast<size_t>(x / (TILE_SIZE)); 
 
@@ -277,19 +290,23 @@ bool World::isWalkableAtPosition(float x, float y) const {
 }
 
 
-const std::vector<std::vector<Tile>>& World::getGrid() const {
-	return grid;
+const std::vector<std::vector<Tile>>& World::getGrid() const 
+{ 
+	return grid; 
 }
 
-float World::getOffsetX() const {
-	return offsetX;
+float World::getOffsetX() const 
+{ 
+	return offsetX; 
 }
 
-float World::getOffsetY() const {
-	return offsetY;
+float World::getOffsetY() const 
+{ 
+	return offsetY; 
 }
 
-WorldCorners World::getWorldDimensions() const {
+WorldCorners World::getWorldDimensions() const 
+{
 	WorldCorners corners;
 
 	// Calculate world width and height
@@ -305,7 +322,8 @@ WorldCorners World::getWorldDimensions() const {
 	return corners;
 }
 
-void World::RemoveDeadEnemies() {
+void World::RemoveDeadEnemies() 
+{
 	float currentTime = std::clock();
 	float delay = 0.0f * CLOCKS_PER_SEC;  // 1 second delay
 
@@ -326,6 +344,7 @@ void World::RemoveDeadEnemies() {
 
 
 
-bool World::AreThereNoEnemies() const {
-	return enemies.empty();
+bool World::AreThereNoEnemies() const 
+{ 
+	return enemies.empty(); 
 }

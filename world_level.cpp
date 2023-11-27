@@ -4,7 +4,8 @@
 Level::Level(const std::string& name, const std::vector<std::string>& layout, const std::vector<EnemyType>& enemyTypes) 
 	: _name(name), _layout(layout), _enemyTypes(enemyTypes) {}
 
-Level Level::SampleLevel() {
+Level Level::SampleLevel() 
+{
 	static const std::vector<std::string> layout = {
 		// Your level layout here
 		"----------NN----------",
@@ -37,7 +38,8 @@ Level Level::SampleLevel() {
 	return Level("SampleLevel", layout, enemyTypes);  // "SampleLevel" is the hard-coded name for this level.
 }
 
-Level Level::PitLand() {
+Level Level::PitLand() 
+{
 	static const std::vector<std::string> layout = {
 		// Your level layout here
 		"----------NN----------",

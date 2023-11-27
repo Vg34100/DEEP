@@ -25,12 +25,14 @@ Colormap cmap;
 bool done = false;
 bool playing_check = false;
 
-struct ScreenSize {
+struct ScreenSize 
+{
 	int width;
 	int height;
 };
 
-const std::vector<ScreenSize> screenSizes {
+const std::vector<ScreenSize> screenSizes 
+{
 	{3840, 2160},
 	{3440, 1440},
 	{2560, 1080},
@@ -46,12 +48,12 @@ const std::vector<ScreenSize> screenSizes {
 };
 
 int currentIndex = 4; // Start with the default size
-void changeScreenSize(bool next) {
-	if (next) {
+void changeScreenSize(bool next) 
+{
+	if (next)
 		currentIndex = (currentIndex + 1) % screenSizes.size();
-	} else {
+	else
 		currentIndex = (currentIndex - 1 + screenSizes.size()) % screenSizes.size();
-	}
 	
 	const auto& newSize = screenSizes[currentIndex];
 	XResizeWindow(dpy, window, newSize.width, newSize.height);
@@ -62,11 +64,10 @@ void changeScreenSize(bool next) {
 	// printf("\n%i\n",XDisplayWidth(dpy,0));
 }
 
-
-
 int prevX, prevY, prevWidth, prevHeight; // Store the previous position and size of the window
 
-void toggleFullscreen() {
+void toggleFullscreen() 
+{
 	if (!isFullscreen) {
 		// Store the previous size and position of the window
 		XWindowAttributes windowAttributes;
@@ -93,7 +94,8 @@ void toggleFullscreen() {
 	isFullscreen = !isFullscreen;
 }
 
-void initGL() {
+void initGL() 
+{
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glMatrixMode(GL_PROJECTION); glLoadIdentity();
 	glMatrixMode(GL_MODELVIEW); glLoadIdentity();
@@ -109,7 +111,8 @@ void initGL() {
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
-void initializeGLX() {
+void initializeGLX() 
+{
 	GLint att[] = {GLX_RGBA, GLX_DEPTH_SIZE, 24, GLX_DOUBLEBUFFER, None};
 	XSetWindowAttributes swa;
 	dpy = XOpenDisplay(NULL);
@@ -162,7 +165,8 @@ void initializeGLX() {
 	initialize_fonts();
 }
 
-void cleanupGLX() {
+void cleanupGLX() 
+{
 	cleanup_fonts();
 	glFlush();
 	glFinish();
@@ -172,12 +176,10 @@ void cleanupGLX() {
 			glXDestroyContext(dpy, ctx);
 			ctx = NULL; // Set to NULL to avoid accidental reuse
 		}
-		
 		if (window) {
 			XDestroyWindow(dpy, window);
 			window = 0; // Set to 0 to avoid accidental reuse
 		}
-		
 		if (cmap) {
 			XFreeColormap(dpy, cmap);
 			cmap = 0; // Set to 0 to avoid accidental reuse
@@ -192,7 +194,8 @@ bool keysPressed[65536] = {false}; // Increased size to accommodate KeySym value
 int key = 0;
 bool leftMouseButtonPressed = false;
 
-void XPendingEvent(XEvent event) {
+void XPendingEvent(XEvent event) 
+{
 	mouse_since_counter(false, false);
 	if (dpy == NULL) return; // Check if dpy is not NULL before proceeding
 	while (XPending(dpy) > 0) {
@@ -241,7 +244,8 @@ void XPendingEvent(XEvent event) {
 	}
 }
 
-void XReset() {
+void XReset() 
+{
 	glXSwapBuffers(dpy, window);
 	glClear(GL_COLOR_BUFFER_BIT);
 	fflush(stdout);
