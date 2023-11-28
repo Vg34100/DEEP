@@ -32,8 +32,8 @@ bool Enemy::canBeSummoned(Vector2 pos) {
 
 
 float calculateDamageTaken(float baseDamage, int levelsCompleted) {
-    const float reductionFactor = 0.1f; // This value determines how much impact each level has
-    const float minDamageMultiplier = 0.2f; // This ensures that there's always a minimum percentage of damage taken
+    const float reductionFactor = 0.05f; // This value determines how much impact each level has
+    const float minDamageMultiplier = 0.3f; // This ensures that there's always a minimum percentage of damage taken
 
     float damageMultiplier = 1.0f - (reductionFactor * levelsCompleted);
     damageMultiplier = std::max(damageMultiplier, minDamageMultiplier);

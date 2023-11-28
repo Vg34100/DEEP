@@ -54,6 +54,7 @@ Image::Image(const char* fname) : data(nullptr), texture(0)
 		std::cerr << "ERROR: Unable to open " << ppmname << std::endl;
 	}
 	unlink(ppmname);  // Delete the temporary PPM image
+	loadTexture();
 }
 
 
@@ -91,7 +92,7 @@ bool Image::loadTexture()
 	return true;
 }
 
-void Image::render(float x, float y, float scale) 
+void Image::render(float x, float y, float scale)
 {
 	if (!texture) return;
 
@@ -115,6 +116,32 @@ void Image::render(float x, float y, float scale)
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glDisable(GL_BLEND);
 }
+
+void Image::constRender(float x, float y, float scale) const
+{
+	if (!texture) return;
+
+	float aspectRatio = static_cast<float>(image_width) / image_height;
+	float scaledWidth = scale * aspectRatio;
+	float scaledHeight = scale;
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+
+	glBegin(GL_QUADS);
+		glTexCoord2f(0.0f, 1.0f); glVertex2f(x - scaledWidth, y - scaledHeight); // Bottom left
+		glTexCoord2f(1.0f, 1.0f); glVertex2f(x + scaledWidth, y - scaledHeight); // Bottom right
+		glTexCoord2f(1.0f, 0.0f); glVertex2f(x + scaledWidth, y + scaledHeight); // Top right
+		glTexCoord2f(0.0f, 0.0f); glVertex2f(x - scaledWidth, y + scaledHeight); // Top left
+	glEnd();
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glDisable(GL_BLEND);
+}
+
 
 void Image::renderSprite(int row, int col, float x, float y, float scale, bool flip) 
 {

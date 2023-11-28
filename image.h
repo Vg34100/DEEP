@@ -16,6 +16,7 @@ public:
 
 	bool loadTexture();
 	void render(float x, float y, float scale);
+	void constRender(float x, float y, float scale) const;
 
 	void renderSprite(int row, int col, float x, float y, float scale, bool flip = false);
 

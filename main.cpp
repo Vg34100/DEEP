@@ -84,6 +84,7 @@ enum class GameState {
 	INIT,
 	OPTIONS,
 	PLAYING,
+	SHOP,
 	PAUSED,
 	GAME_OVER
 };
@@ -94,6 +95,7 @@ int main()
 	initializeGLX();
 	initGL();
 	playing_check = false;
+	srand(static_cast<unsigned int>(time(nullptr))); // Seed the random number generator
 
 	printf("Press Enter to Play\n");
 	printf("Change Screen Size using left and right arrows\n");
@@ -114,6 +116,7 @@ int main()
 	static CollisionManager cm(world);
 	static Player player(cm, 100.0f); 
 	static GUI gui(world, player);
+	static Shop shop(world, player);
 	playing_check = false;
 	while (!done) {
 		XReset();
@@ -166,6 +169,25 @@ int main()
 			}
 		}
 
+		if (currentState == GameState::SHOP) {
+			static int inputDelayCounter = 50;
+			if (inputDelayCounter > 0) {
+				inputDelayCounter--;
+			}
+			if (keysPressed[XK_Escape] && inputDelayCounter <= 0) {
+				currentState = GameState::PLAYING;
+				inputDelayCounter = 50;
+			}
+			shop.render(timeSpan);
+
+
+
+
+
+
+
+		}
+
 		if (currentState == GameState::PLAYING) {
 			playing_check = true;
 			static int inputDelayCounter = 50;
@@ -174,6 +196,9 @@ int main()
 			}
 			if (keysPressed[XK_Escape] && inputDelayCounter <= 0) {
 				currentState = GameState::PAUSED;
+				inputDelayCounter = 50;
+			} else if (keysPressed[XK_l] && inputDelayCounter <= 0) {
+				currentState = GameState::SHOP;
 				inputDelayCounter = 50;
 			}
 

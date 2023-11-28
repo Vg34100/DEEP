@@ -19,7 +19,8 @@ SRCS = main.cpp \
        image.cpp \
        libggfonts.a \
        gui.cpp \
-       util_keys.cpp
+       util_keys.cpp \
+       accessories.cpp
 
 HEDS = initGLX.h \
        world.h \
@@ -37,7 +38,8 @@ HEDS = initGLX.h \
        fonts.h \
        gui.h  \
        util_keys.h \
-       keybinds.h
+       keybinds.h \
+       accessories.h
 
 # Object files (this is a "phony" target, no actual .o files are generated)
 OBJS = $(SRCS:%.cpp=objects/%.o)

@@ -137,7 +137,7 @@ int titleScreen()
                  option("images/Options.png"), quit("images/Quit.png"),
                  arrow("images/Select.png"), background("images/Hole.gif");
 	static ScreenState currentState = ScreenState::DELVE;
-    static bool rendering = false, menu = true;
+    static bool menu = true;
     static int inputDelayCounter = InputDelayReset, keyHoldCounter = 0;
 
 	if (!menu) {
@@ -152,11 +152,7 @@ int titleScreen()
 
     // Load textures once
 //0123456789012345678901234567890123456789012345678901234567890123456789012345
-    if (!rendering) {
-        rendering = title.loadTexture() && start.loadTexture() && 
-					option.loadTexture() && quit.loadTexture() && 
-					background.loadTexture() && arrow.loadTexture();
-    }
+
 	background.render(0,0,height+10);
 	title.render(0, height - 300, 150);
 	start.render(0,50,30);
@@ -282,10 +278,7 @@ int optionScreen()
 	});
 
 	if (!options) {
-		options = setMenu.loadTexture() &&
-					option.loadTexture() &&
-					quit.loadTexture() &&
-					arrow.loadTexture();
+		options = true;
 		letters.init();
 		numbers.init();
 	}
@@ -583,8 +576,8 @@ bool on_level_complete(float deltaTime)
 	static Image clear("images/all_defeated.png");
 
 	if (!options) {
-		if (!clear.loadTexture())
-			std::cerr << "Failed to load texture" << std::endl;
+		// if (!clear.loadTexture())
+		// 	std::cerr << "Failed to load texture" << std::endl;
 		clearAnimation.start(-height - 200, -height/2 - 200, 0.4, 2.2); 
 		options = true;
 		clearAnimation.animationInitiated = true;
@@ -608,8 +601,9 @@ bool stats_screen(Player& player, Numbers& numbers, float deltaTime)
 	static bool loaded = false;
 	static Image stats("images/stats_icons.png");
 	if (!loaded) {
-		loaded = stats.loadTexture();
+		// loaded = stats.loadTexture();
 		stats.setSpriteSheet(1,11);
+		loaded = true;
 	}
 
 	const int numStats = 11; // Total number of stats
@@ -627,11 +621,35 @@ bool stats_screen(Player& player, Numbers& numbers, float deltaTime)
 		 							-width + numberOffsetX, yPos, numberSize);
 	}
 
-	numbers.renderNumbers(player.getCoins(), -width + 150, height - 50, numberSize);
+
 
 
 	return true;
 }
+
+bool constant_stats(Player& player, Letters& letters, Numbers& numbers, float deltaTime) 
+{
+	static Image dollars("images/dollar.png");
+	dollars.render(-width + 150, height - 50, 30);
+
+	const int numberSize = 15; // Size for numbers
+	numbers.renderNumbers(player.getCoins(), 
+									-width + 150, height - 50, numberSize);
+
+	static Image backpack("images/backpack.png");
+	backpack.render(width - 100, -height - 100, 30);
+	std::string temp_str = "P";
+	letters.renderLetters(temp_str, width - 120, -height - 120, 20);
+
+	static Image cart("images/cart.png");
+	cart.render(width - 100, -height - 200, 30);
+	temp_str = "L";
+	letters.renderLetters(temp_str, width - 120, -height - 220, 20);
+
+
+	return true;
+}
+
 
 enum class PausedState {
 	CONTINUE,

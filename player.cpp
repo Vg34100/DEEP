@@ -294,8 +294,6 @@ float Player::getStatwheel(int num)
 
 void Player::randomlyIncrementAttribute(float minIncrement, float maxIncrement) 
 {
-	srand(static_cast<unsigned int>(time(nullptr))); // Seed the random number generator
-
 	int attribute = rand() % 11; // Randomly select an attribute (0 to 10)
 	int negation = rand() % 2;
 	float increment = minIncrement + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (maxIncrement - minIncrement))); // Random increment
@@ -307,10 +305,10 @@ void Player::randomlyIncrementAttribute(float minIncrement, float maxIncrement)
 			break; 
 		case 1: playerMana += increment; break;
 		case 2: playerAmmo += static_cast<int>(increment); break; // Casting to int
-		case 3: negation ? Sanity += increment * 3 : Sanity -= increment * 3; break;
+		case 3: Sanity += increment * 3; break;
 		case 4: Speed += increment/20; break;
 		case 5: 
-			Damage += increment/25; 
+			Damage += increment/15; 
 			/* Add Setting Damage on Weapon */
 			activeWeapon->setDamage(activeWeapon->getDamage() + Damage);
 			break;
@@ -325,7 +323,7 @@ void Player::randomlyIncrementAttribute(float minIncrement, float maxIncrement)
 			/* Add Setting Range on Weapon */
 			break;
 		case 9: 
-			Luck += increment/5; 
+			Luck += increment/15; 
 			/* Add Setting Luck on Weapon */
 			break;
 		case 10: 
@@ -336,16 +334,21 @@ void Player::randomlyIncrementAttribute(float minIncrement, float maxIncrement)
 	}
 }
 
-void Player::randomlyCollectCoins(float minIncrement, float maxIncrement)
-{
-	srand(static_cast<unsigned int>(time(nullptr))); // Seed the random number generator
+void Player::randomlyCollectCoins(float minIncrement, float maxIncrement) {
+    // Modify the minimum increment based on luck
+    float luckFactor = 0.01f; // Determines how much luck affects the increment
+    float adjustedMinIncrement = minIncrement + (minIncrement * Luck * luckFactor);
 
-	//int attribute = rand() % 11; // Randomly select an attribute (0 to 10)
-	//int negation = rand() % 2;
-	float increment = minIncrement + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (maxIncrement - minIncrement))); // Random increment
-	coins += increment;
+    // Ensure the adjusted min increment does not exceed the max increment
+    adjustedMinIncrement = std::min(adjustedMinIncrement, maxIncrement);
 
+    // Calculate the random increment
+    float increment = adjustedMinIncrement + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (maxIncrement - adjustedMinIncrement)));
+
+    // Add the increment to coins
+    coins += increment;
 }
+
 
 void Player::updateWeapon()
 {
@@ -355,3 +358,35 @@ void Player::updateWeapon()
 	activeWeapon->setCooldown(activeWeapon->getCooldown() / AttackSpeed); // changes the weapon's cooldown based on player's attack speed stat
 	activeWeapon->setAttackSize(activeWeapon->getAttackSize() * Size); // change the weapon's attack size based on player's own size
 }
+
+void Player::AddMaxHealth(float total)
+{
+	// printf("Adding %f to health\n",total);
+	playerHealth.AddMaxHealth(total);
+	playerHealth.SetHealth(playerHealth.GetMaxHealth()); 
+}
+
+// void Player::addAccessory(const Accessory& accessory) {
+//     std::unique_ptr<Accessory> newAccessory = accessory.clone();
+//     newAccessory->applyEffect(*this);
+//     accessories.push_back(std::move(newAccessory));
+// }
+
+// void Player::addAccessory(std::unique_ptr<Accessory> accessory) {
+// 	//printf("%s",accessory.name.c_str());
+// 	//accessories.push_back(std::make_unique<Accessory>(accessory));
+// 	accessories.push_back(std::move(accessory)); // Transfer ownership
+// 	//printf("%s", accessories.back()->name.c_str());
+// 	//accessories.back()->applyEffect(*this);
+// 	//accessory.applyEffect(*this);
+// }
+
+
+// void Player::applyAccessoryEffect(const Accessory& accessory) {
+// 	// Apply the effect of the accessory
+// 	// For example, if the accessory boosts health:
+// 	if (accessory.name == "Heart Locket") {
+// 		playerHealth += 50; // Assuming playerHealth is a Player attribute
+// 	}
+// 	// Handle other accessories similarly
+// }

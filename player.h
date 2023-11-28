@@ -13,6 +13,9 @@
 
 #include "vto.h"
 
+#include <memory>
+#include "accessories.h"
+
 //class World;
 
 class Player {
@@ -57,6 +60,13 @@ private:
     int frameDelay = 150;
     int timeSinceLastFrame = 0;
 
+
+	// std::vector<std::unique_ptr<Accessory>> accessories;
+    // std::vector<std::unique_ptr<Accessory>> accessories;
+
+    std::vector<std::shared_ptr<Accessory>> accessories;
+
+
 	/* Camera Shake Variables */
     float shakeIntensity = 0.0f;
     int shakeFrames = 0;  
@@ -85,6 +95,28 @@ public:
 
 	std::vector<std::shared_ptr<Weapon>> inventory;
 
+	//void addAccessory(const Accessory& accessory);
+	// void addAccessory(const Accessory& accessory);
+	//void addAccessory(std::unique_ptr<Accessory> accessory);
+
+    void addAccessory(std::shared_ptr<Accessory> accessory) {
+        accessories.push_back(accessory);
+    }
+
+    const std::vector<std::shared_ptr<Accessory>>& getAccessories() const {
+        return accessories;
+    }
+
+    // Method to add an accessory to the player's inventory
+    // void addAccessory(std::unique_ptr<Accessory> accessory) {
+    //     accessories.push_back(std::move(accessory));
+    // }
+
+    // // Method to access the player's accessories
+    // const std::vector<std::unique_ptr<Accessory>>& getAccessories() const {
+    //     return accessories;
+    // }
+
 	//Getters and Setters
 	Vector2 getPos() const { return playerPos; };
 	Vector2 getVelocity() const { return playerVelocity; };
@@ -107,6 +139,7 @@ public:
 	void updateStatwheel();
 	float getStatwheel(int num);
 	float getCoins() { return coins; }
+	void setCoins(float value) { coins = value; }
 
 	void randomlyIncrementAttribute(float minIncrement, float maxIncrement);
 	void randomlyCollectCoins(float minIncrement, float maxIncrement);
@@ -125,6 +158,8 @@ public:
 
 	void TakeDamage(float damage);
 	void UpdateInvulnerability();
+	void AddMaxHealth(float total);
+
 
 	/* Camera Shake Functions */
 	void updateCameraShake();
