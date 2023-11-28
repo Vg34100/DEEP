@@ -630,21 +630,21 @@ bool stats_screen(Player& player, Numbers& numbers, float deltaTime)
 bool constant_stats(Player& player, Letters& letters, Numbers& numbers, float deltaTime) 
 {
 	static Image dollars("images/dollar.png");
-	dollars.render(-width + 150, height - 50, 30);
+	dollars.render(-width + 120, height - 40, 30);
 
 	const int numberSize = 15; // Size for numbers
 	numbers.renderNumbers(player.getCoins(), 
 									-width + 150, height - 50, numberSize);
 
 	static Image backpack("images/backpack.png");
-	backpack.render(width - 100, -height - 100, 30);
+	backpack.render(width - 100, -height + 100, 50);
 	std::string temp_str = "P";
-	letters.renderLetters(temp_str, width - 120, -height - 120, 20);
+	letters.renderLetters(temp_str, width - 120, -height + 120, 20);
 
 	static Image cart("images/cart.png");
-	cart.render(width - 100, -height - 200, 30);
+	cart.render(width - 100, -height + 200, 50);
 	temp_str = "L";
-	letters.renderLetters(temp_str, width - 120, -height - 220, 20);
+	letters.renderLetters(temp_str, width - 120, -height + 220, 20);
 
 
 	return true;

@@ -123,8 +123,7 @@ void Shop::render(float deltaTime)
 	if (keysPressed[enter_key]) {
 		auto& selectedAccessory = collection.getAllAccessories()[selectedIndex];
 		if (player.getCoins() > selectedAccessory->price && !selectedAccessory->bought && !(selectedAccessory->levelMin > levelsCompleted)) {
-			printf("Adding Accessory, %s", selectedAccessory->name.c_str());
-			// player.addAccessory(*selectedAccessory);
+			//printf("Adding Accessory, %s", selectedAccessory->name.c_str());
 			player.addAccessory(selectedAccessory);
 			player.setCoins(player.getCoins() - selectedAccessory->price);
 			selectedAccessory->bought = true;

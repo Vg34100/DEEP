@@ -100,6 +100,7 @@ public:
 	//void addAccessory(std::unique_ptr<Accessory> accessory);
 
     void addAccessory(std::shared_ptr<Accessory> accessory) {
+		accessory->applyEffect(*this); // Apply the effect of the accessory
         accessories.push_back(accessory);
     }
 
