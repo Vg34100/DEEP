@@ -194,6 +194,11 @@ int main()
 			if (inputDelayCounter > 0) {
 				inputDelayCounter--;
 			}
+			if (keysPressed[XK_y]) {
+				printf("Attempting to Restart...\n");
+				Player player2(cm, 100);
+				World world2;
+			}
 			if (keysPressed[XK_Escape] && inputDelayCounter <= 0) {
 				currentState = GameState::PAUSED;
 				inputDelayCounter = 50;
@@ -208,6 +213,7 @@ int main()
 				player.handleInput();
 				cm.handlePlayerCollisions(player);
 				cm.handleEnemyCollisions(player);
+				player.update(timeSpan);
 				physicsCountdown -= physicsRate;
 			}
 				for (const auto& enemy : world.getEnemies()) {

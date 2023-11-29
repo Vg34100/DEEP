@@ -27,9 +27,9 @@ public:
 	void setAttackSize(float a) { attackSize = a; }
 	void setDuration(float d) { duration = d; }
 
-	virtual void use() = 0; // Pure virtual function to ensure each derived class implements it.
+	virtual void use(double elapsedTime) = 0; // Pure virtual function to ensure each derived class implements it.
 	virtual void render() = 0;
-	virtual void update() = 0;
+	virtual void update(double elapsedTime) = 0;
 	// void setHitbox(const Vector2& topLeft, const Vector2& bottomRight) {
 	//     hitbox.topLeft = topLeft;
 	//     hitbox.bottomRight = bottomRight;
@@ -63,8 +63,8 @@ public:
 		speed = 0;
 	}
 
-	void use() override {}
-	void update() override {}
+	void use(double elapsedTime) override {}
+	void update(double elapsedTime) override {}
 	void render() override {}
 private:
 	// Function to check for critical hits based on timing
@@ -77,7 +77,7 @@ public:
 	RangedWeapon() {
 		weaponClass = "Ranged";
 	}
-	void use() override {}
+	void use(double elapsedTime) override {}
 
 private:
 	bool hasSufficientAmmo();
@@ -91,7 +91,7 @@ public:
 		weaponClass = "Magic";
 	}
 
-	void use() override {}
+	void use(double elapsedTime) override {}
 
 private:
 	bool hasSufficientMana();
@@ -105,7 +105,7 @@ public:
 		weaponClass = "Summon";
 	}
 
-	void use() override {}
+	void use(double elapsedTime) override {}
 
 private:
 	int currentSummons();
@@ -115,9 +115,9 @@ class Lightsaber : public MeleeWeapon {
 public:
 	Lightsaber(Player *p);
 
-	void use() override;
+	void use(double elapsedTime) override;
 
-	void update() override;
+	void update(double elapsedTime) override;
 
 	void render() override;
 private:
@@ -130,9 +130,9 @@ class Gun : public RangedWeapon {
 public:
 	Gun(Player *p);
 
-	void use() override;
+	void use(double elapsedTime) override;
 
-	void update() override;
+	void update(double elapsedTime) override;
 
 	void render() override;
 private:

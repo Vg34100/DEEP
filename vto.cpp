@@ -37,10 +37,10 @@ void Weapon::showHitbox() const {
 Lightsaber::Lightsaber(Player *p) : player(p) {
     name = "Lithium Ion Grip Heat Transfer-Saber";
     damage = 50; 
-    cooldown = 0.05;
+    cooldown = 0.5;
     attackSize = 1;
     speed = 0;
-    duration = 0.05;
+    duration = 1;
     damageType = "default";
     weaponClass = "Melee";
     if (!idle.loadTexture()) {
@@ -49,34 +49,80 @@ Lightsaber::Lightsaber(Player *p) : player(p) {
     idle.setSpriteSheet(1,4);
 }
 
-void Lightsaber::use() {
+void Lightsaber::use(double elapsedTime) {
     if (!onCooldown && !isAttacking) {
         isAttacking = true;
-        lastUseTime = std::clock();  // Record the current time
+        lastUseTime = elapsedTime;  // Record the current time
     }
 }
 
-void Lightsaber::update() {
+void Lightsaber::update(double elapsedTime) {
+//     if (isAttacking) {
+//         float elapsedTime = (std::clock() - lastUseTime) / CLOCKS_PER_SEC;
+
+//         // Check if the attack duration has passed
+//         if (elapsedTime >= duration) {
+//             isAttacking = false;
+//             onCooldown = true;
+//             lastUseTime = std::clock(); // Reset the timer for cooldown
+//         }
+//     } else if (onCooldown) {
+//         float elapsedTime = (std::clock() - lastUseTime) / CLOCKS_PER_SEC;
+
+//         // Check if the cooldown has passed
+//         if (elapsedTime >= cooldown) {
+//             onCooldown = false;
+//         }
+//     }
+// }
+
+    //     if (isAttacking) {
+    //         lastAttackTime += elapsedTime;
+
+    //         // Check if the attack duration has passed
+    //         if (lastAttackTime >= duration) {
+    //             isAttacking = false;
+    //             onCooldown = true;
+    //             lastAttackTime = 0.0; // Reset the attack timer
+    //             lastCooldownTime = 0.0; // Start cooldown timer
+    //         }
+    //     } else if (onCooldown) {
+    //         lastCooldownTime += elapsedTime;
+
+    //         // Check if the cooldown has passed
+    //         if (lastCooldownTime >= cooldown) {
+    //             onCooldown = false;
+    //             lastCooldownTime = 0.0; // Reset the cooldown timer
+    //         }
+    //     }
+    // }
+    static float lastAttackTime = 0.0;
+    static float lastCooldownTime = 0.0;
     if (isAttacking) {
-        float elapsedTime = (std::clock() - lastUseTime) / CLOCKS_PER_SEC;
+        lastAttackTime += elapsedTime;
 
         // Check if the attack duration has passed
-        if (elapsedTime >= duration) {
+        if (lastAttackTime >= duration) {
             isAttacking = false;
             onCooldown = true;
-            lastUseTime = std::clock(); // Reset the timer for cooldown
+            lastUseTime = elapsedTime; // Reset the attack timer
+            lastAttackTime = 0.0;
+            lastCooldownTime = 0.0; // Start cooldown timer
         }
     } else if (onCooldown) {
-        float elapsedTime = (std::clock() - lastUseTime) / CLOCKS_PER_SEC;
+        lastCooldownTime += elapsedTime;
 
         // Check if the cooldown has passed
-        if (elapsedTime >= cooldown) {
+        if (lastCooldownTime >= cooldown) {
             onCooldown = false;
+            lastCooldownTime = 0.0; // Reset the cooldown timer
         }
     }
 }
+
+
 void Lightsaber::render() {
-    update();
+    //update();
     Vector2 direction = player->getDirection();
     Vector2 position = player->getPos();
 
@@ -114,14 +160,14 @@ Gun::Gun(Player *p) : player(p) {
     weaponClass = "Range";
 }
 
-void Gun::use() {
+void Gun::use(double elapsedTime) {
     if (!onCooldown && !isAttacking) {
         isAttacking = true;
-        lastUseTime = std::clock();  // Record the current time
+        lastUseTime = elapsedTime;  // Record the current time
     }
 }
 
-void Gun::update() {
+void Gun::update(double elapsedTime) {
     if (isAttacking) {
         float elapsedTime = (std::clock() - lastUseTime) / CLOCKS_PER_SEC;
 
@@ -141,7 +187,7 @@ void Gun::update() {
     }
 }
 void Gun::render() {
-    update();
+    //update();
     Vector2 direction = player->getDirection();
     Vector2 position = player->getPos();
 

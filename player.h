@@ -147,6 +147,7 @@ public:
 
 	bool initialize();
 	void render();
+	void update(double elapsedTime);
     void animate(int elapsedTime);
 
 	void handleMovement(float speedY, float speedX);

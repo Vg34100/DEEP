@@ -152,6 +152,13 @@ bool shouldFlipSprite(int directionsx)
     return directionsx == 0;
 }
 
+void Player::update(double elapsedTime)
+{
+	if (activeWeapon) {
+		activeWeapon->update(elapsedTime);
+	}
+}
+
 void Player::render() 
 { 
 	//playerHealth.SetHealth(40);
