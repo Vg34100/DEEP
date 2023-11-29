@@ -217,6 +217,8 @@ int main()
 				cm.handleEnemyCollisions(player);
 				player.update(timeSpan);
 				physicsCountdown -= physicsRate;
+				if (player.playerIsDead())
+					currentState = GameState::GAME_OVER;
 			}
 				for (const auto& enemy : world.getEnemies()) {
 					enemy->moveToPlayer(player.getPos());
@@ -276,13 +278,20 @@ int main()
 		if (currentState == GameState::GAME_OVER){
 			static int inputDelayCounter = 80;
 			int go_result = gameOver();
-
+			if (inputDelayCounter > 0) {
+				inputDelayCounter--;
+				continue;
+			}
 			switch(go_result) {
 				// -1 retry
 				case -1: {
 					inputDelayCounter = 80;
 					usleep(1000);
 					//__________--retry function here _________
+					player.retry();
+					world.resetWorld();
+					player.resetPosition();
+					currentState = GameState::PLAYING;
 					break;
 				}
 				// 1 options

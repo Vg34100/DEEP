@@ -169,6 +169,7 @@ public:
 
 	void retry();
 	void resetPosition();
+	bool playerIsDead();
 
 };
 

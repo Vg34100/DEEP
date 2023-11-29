@@ -396,3 +396,9 @@ void Player::resetPosition()
 	playerPos.x = 0;
 	playerPos.y = 0;
 }
+
+bool Player::playerIsDead()
+{
+	if (playerHealth.GetCurrentHealth() <= 0) 
+		return true;
+}
