@@ -25,4 +25,14 @@ void processMenuInput(
     std::function<void()> actionFunction);
 
 template<typename T>
-void changeState(T& current, int direction);
+void changeState(T& current, int direction) 
+{
+    // Calculate the number of states in the enum
+    int numStates = static_cast<int>(T::MAX_STATES);
+
+    // Convert enum class to int, adjust the state, and handle wrapping 
+    int newState = (static_cast<int>(current) + direction + numStates) % numStates;
+    
+    // Convert back to the enum type and assign it to the reference
+    current = static_cast<T>(newState);
+}

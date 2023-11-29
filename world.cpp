@@ -89,6 +89,17 @@ float World::getTopEdgeY() const
 	return worldHeight - offsetY;  // Top edge Y position in world space
 }
 
+void World::resetWorld()
+{
+	printf("Attempting to Reset World...\n");
+	enemies.clear();
+	offsetY = 0;
+	offsetX = 0;
+	setWorldFromLevel(getNewLevel(), 0, 0);
+	levelsCompleted = 0;
+	enemiesRemaining = 0;
+	enemiesDefeated = 0;
+}
 
 void World::setWorldFromLevel(const Level& level, float customOffsetX, float customOffsetY) 
 {

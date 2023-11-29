@@ -74,7 +74,7 @@ public:
 	WorldCorners calculateLevelDimensions(const Level& level, float customOffsetX = 0.0f, float customOffsetY = 0.0f) const;
 	Level getNewLevel();
 
-
+	void resetWorld();
 
 	float getTopEdgeY() const;
 	void RemoveDeadEnemies();

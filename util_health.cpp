@@ -30,6 +30,11 @@ void Health::AddMaxHealth(float amount)
 	maxHealth += amount;
 }
 
+void Health::SetMaxHealth(float amount)
+{
+	maxHealth = amount;
+}
+
 
 void Health::AddTemporaryHealth(float amount) 
 {

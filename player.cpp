@@ -110,10 +110,6 @@ void Player::showHitbox() const
 bool Player::initialize() 
 {
     // Perform complex initializations here (e.g., loading textures)
-    if (!idle.loadTexture()) {
-        std::cerr << "Failed to load texture" << std::endl;
-        return false;
-    }
     idle.setSpriteSheet(4,4);
     // ... other initialization code...
     return true;
@@ -373,27 +369,30 @@ void Player::AddMaxHealth(float total)
 	playerHealth.SetHealth(playerHealth.GetMaxHealth()); 
 }
 
-// void Player::addAccessory(const Accessory& accessory) {
-//     std::unique_ptr<Accessory> newAccessory = accessory.clone();
-//     newAccessory->applyEffect(*this);
-//     accessories.push_back(std::move(newAccessory));
-// }
+void Player::retry()
+{
+	//coins = 0.0f;
+	playerMana = 0.0f;
+	playerAmmo = 0;
+	Sanity = 0.0f;
+	Speed = 1.0f;
+	Damage = 1.0f;
+	Resistance = 0.0f;
+	AttackSpeed = 1.0f;
+	Range = 1.0f;
+	Luck = 1.0f;
+	Size = 1.0f;
+	playerWidth = 50.0f * Size;
+	playerHeight = 50.0f * Size;
+	playerHealth.SetMaxHealth(initialHealth);
+	playerHealth.SetHealth(initialHealth);
+	updateWeapon();
+	applyAllEffects();
+	updateStatwheel();
+}
 
-// void Player::addAccessory(std::unique_ptr<Accessory> accessory) {
-// 	//printf("%s",accessory.name.c_str());
-// 	//accessories.push_back(std::make_unique<Accessory>(accessory));
-// 	accessories.push_back(std::move(accessory)); // Transfer ownership
-// 	//printf("%s", accessories.back()->name.c_str());
-// 	//accessories.back()->applyEffect(*this);
-// 	//accessory.applyEffect(*this);
-// }
-
-
-// void Player::applyAccessoryEffect(const Accessory& accessory) {
-// 	// Apply the effect of the accessory
-// 	// For example, if the accessory boosts health:
-// 	if (accessory.name == "Heart Locket") {
-// 		playerHealth += 50; // Assuming playerHealth is a Player attribute
-// 	}
-// 	// Handle other accessories similarly
-// }
+void Player::resetPosition()
+{
+	playerPos.x = 0;
+	playerPos.y = 0;
+}
