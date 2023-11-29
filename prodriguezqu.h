@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <functional>
 
 class Player;
 class Numbers;
@@ -18,4 +19,10 @@ bool stats_screen(Player& player, Numbers& numbers, float deltaTime);
 bool constant_stats(Player& player, Letters& letters, Numbers& numbers, float deltaTime);
 int paused();
 
+void processMenuInput(
+    bool inputCondition, 
+    int& keyHoldCounter, 
+    std::function<void()> actionFunction);
 
+template<typename T>
+void changeState(T& current, int direction);

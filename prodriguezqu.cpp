@@ -18,7 +18,6 @@
 #include "keybinds.h"
 #include <string>
 #include "util_vector2.h"
-#include <functional>
 
 typedef struct {
     float red;
