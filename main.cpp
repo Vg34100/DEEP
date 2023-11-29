@@ -205,6 +205,8 @@ int main()
 			} else if (keysPressed[XK_l] && inputDelayCounter <= 0) {
 				currentState = GameState::SHOP;
 				inputDelayCounter = 50;
+			} else if (keysPressed[XK_g] && inputDelayCounter <=0) {
+				currentState = GameState::GAME_OVER;
 			}
 
 
@@ -268,6 +270,37 @@ int main()
 				break;
 			}
 			}
+
+		}
+
+		if (currentState == GameState::GAME_OVER){
+			static int inputDelayCounter = 80;
+			int go_result = gameOver();
+
+			switch(go_result) {
+				// -1 retry
+				case -1: {
+					inputDelayCounter = 80;
+					usleep(1000);
+					//__________--retry function here _________
+					break;
+				}
+				// 1 options
+				case 1:{
+					inputDelayCounter = 80;
+					currentState = GameState::OPTIONS;
+					break;
+				}
+				// 2 quit
+				case 2:{
+					done = true;
+					break;
+				}
+				default:{
+					break;
+				}
+				
+			}		
 
 		}
 
