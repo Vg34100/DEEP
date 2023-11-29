@@ -38,6 +38,7 @@ private:
 	float playerHeight; // in world units
 	
 	float coins;
+	float initialHealth = 0.0f;
 
 	float invincibilityDuration = 0.1f; 
 	bool invulnerable = false; 
@@ -75,6 +76,7 @@ private:
 public:
 	Player(CollisionManager& cm, float initialMaxHealth) : collisionManager(cm), playerHealth(initialMaxHealth) {
 		activeWeapon = std::make_shared<Lightsaber>(this);
+		initialHealth = initialMaxHealth;
 		coins = 0.0f;
 		playerMana = 0.0f;
 		playerAmmo = 0;
@@ -89,8 +91,8 @@ public:
 		playerWidth = 50.0f * Size;
 		playerHeight = 50.0f * Size;
 		updateWeapon();
-		initialize();
 		updateStatwheel();
+		initialize();
 	};
 
 	std::vector<std::shared_ptr<Weapon>> inventory;
@@ -108,15 +110,13 @@ public:
         return accessories;
     }
 
-    // Method to add an accessory to the player's inventory
-    // void addAccessory(std::unique_ptr<Accessory> accessory) {
-    //     accessories.push_back(std::move(accessory));
-    // }
+    void applyAllEffects() {
+        for (const auto& accessory : accessories) {
+            accessory->applyEffect(*this);
+        }
+    }
 
-    // // Method to access the player's accessories
-    // const std::vector<std::unique_ptr<Accessory>>& getAccessories() const {
-    //     return accessories;
-    // }
+    // Method to add an accessory to the player's inventory
 
 	//Getters and Setters
 	Vector2 getPos() const { return playerPos; };
@@ -166,6 +166,9 @@ public:
 	/* Camera Shake Functions */
 	void updateCameraShake();
 	void startCameraShake(float intensity, int frames);
+
+	void retry();
+	void resetPosition();
 
 };
 

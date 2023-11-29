@@ -22,6 +22,7 @@ public:
 	void Heal(float amount);
 	void SetHealth(float amount);
 	void AddMaxHealth(float amount);
+	void SetMaxHealth(float amount);
 	void AddTemporaryHealth(float amount);
 
 	// Getter methods
