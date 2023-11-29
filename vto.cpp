@@ -49,10 +49,10 @@ Lightsaber::Lightsaber(Player *p) : player(p) {
     idle.setSpriteSheet(1,4);
 }
 
-void Lightsaber::use(double elapsedTime) {
+void Lightsaber::use() {
     if (!onCooldown && !isAttacking) {
         isAttacking = true;
-        lastUseTime = elapsedTime;  // Record the current time
+        //lastUseTime = elapsedTime;  // Record the current time
     }
 }
 
@@ -160,31 +160,54 @@ Gun::Gun(Player *p) : player(p) {
     weaponClass = "Range";
 }
 
-void Gun::use(double elapsedTime) {
+void Gun::use() {
     if (!onCooldown && !isAttacking) {
         isAttacking = true;
-        lastUseTime = elapsedTime;  // Record the current time
+        //lastUseTime = elapsedTime;  // Record the current time
     }
 }
 
 void Gun::update(double elapsedTime) {
+    // if (isAttacking) {
+    //     float elapsedTime = (std::clock() - lastUseTime) / CLOCKS_PER_SEC;
+
+    //     // Check if the attack duration has passed
+    //     if (elapsedTime >= duration) {
+    //         isAttacking = false;
+    //         onCooldown = true;
+    //         lastUseTime = std::clock(); // Reset the timer for cooldown
+    //     }
+    // } else if (onCooldown) {
+    //     float elapsedTime = (std::clock() - lastUseTime) / CLOCKS_PER_SEC;
+
+    //     // Check if the cooldown has passed
+    //     if (elapsedTime >= cooldown) {
+    //         onCooldown = false;
+    //     }
+    // }
+    static float lastAttackTime = 0.0;
+    static float lastCooldownTime = 0.0;
     if (isAttacking) {
-        float elapsedTime = (std::clock() - lastUseTime) / CLOCKS_PER_SEC;
+        lastAttackTime += elapsedTime;
 
         // Check if the attack duration has passed
-        if (elapsedTime >= duration) {
+        if (lastAttackTime >= duration) {
             isAttacking = false;
             onCooldown = true;
-            lastUseTime = std::clock(); // Reset the timer for cooldown
+            lastUseTime = elapsedTime; // Reset the attack timer
+            lastAttackTime = 0.0;
+            lastCooldownTime = 0.0; // Start cooldown timer
         }
     } else if (onCooldown) {
-        float elapsedTime = (std::clock() - lastUseTime) / CLOCKS_PER_SEC;
+        lastCooldownTime += elapsedTime;
 
         // Check if the cooldown has passed
-        if (elapsedTime >= cooldown) {
+        if (lastCooldownTime >= cooldown) {
             onCooldown = false;
+            lastCooldownTime = 0.0; // Reset the cooldown timer
         }
     }
+
 }
 void Gun::render() {
     //update();
