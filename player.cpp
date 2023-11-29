@@ -401,4 +401,5 @@ bool Player::playerIsDead()
 {
 	if (playerHealth.GetCurrentHealth() <= 0) 
 		return true;
+	return false;
 }
