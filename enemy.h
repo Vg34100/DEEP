@@ -12,9 +12,7 @@ class World;
 class Enemy {
 protected:
 	float deathTimestamp = 0.0f;
-
 	std::string name;
-
 	float attackDamage;
 	float attackCooldown;
 	Health health;  

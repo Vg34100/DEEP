@@ -110,13 +110,11 @@ void Health::ShowDamageNumber(float damageAmount) const
 void Health::DisplayHealthBar(float positionX, float positionY) const 
 {
 	std:: string text = std::to_string(static_cast<int>(currentHealth)) + "/" + std::to_string(static_cast<int>(maxHealth));
-	// drawWorldText(text.data(), text.size(), positionX , positionY, 1);
 }
 
 void Health::DisplayStaticHealthBar(float positionX, float positionY) const 
 {
 	std:: string text = std::to_string(static_cast<int>(currentHealth)) + "/" + std::to_string(static_cast<int>(maxHealth));
-	// drawText(text.data(), text.size(), positionX , positionY, 1);
 }
 
 

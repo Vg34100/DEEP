@@ -3,8 +3,6 @@
 #include <vector>
 #include "image.h"
 #include <memory>
-// #include "player.h"
-// #include "world.h"
 
 class Player;
 

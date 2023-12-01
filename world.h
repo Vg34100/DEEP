@@ -1,4 +1,4 @@
-//world/world.h
+//world.h
 #pragma once
 
 #include <vector>
