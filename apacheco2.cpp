@@ -1,3 +1,8 @@
+/**
+ * Author: Aaron Pacheco
+ * Created: 9.29.23 
+*/
+
 #include "apacheco2.h"
 #include "prodriguezqu.h"
 #include <GL/gl.h>
@@ -18,16 +23,14 @@
 #include <functional>
 
 
-/**
- * Author: Aaron Pacheco
- * Created: 9.29.23 
-*/
+
 using namespace std;
 
 bool keyCheck = false;
 
 
-/*int total_running_time(const bool get)
+/* total running time function from LAB work
+int total_running_time(const bool get)
 {
     static int firsttime = 1;
     static int start_time;
@@ -41,7 +44,8 @@ bool keyCheck = false;
     return 0;
 
 } */
-int time_since_key_press(const bool get) {
+int time_since_key_press(const bool get) 
+{
     
     static int firsttime = 1;
     static int start_time;
@@ -85,7 +89,7 @@ int gameOver()
 
 	static bool init = false;
 
-	if(!init){
+	if (!init) {
 		letters.init();
 		init = true;
 	}
