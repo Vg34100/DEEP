@@ -6,7 +6,9 @@
 #include "prodriguezqu.h"
 #include "image.h"
 
-Vector2 rotatePoint(const Vector2& point, float angle, const Vector2& center) {
+Vector2 rotatePoint(const Vector2& point, 
+        float angle, const Vector2& center) 
+{
     float s = sin(angle);
     float c = cos(angle);
 
@@ -23,7 +25,8 @@ Vector2 rotatePoint(const Vector2& point, float angle, const Vector2& center) {
     return p;
 }
 
-void Weapon::showHitbox() const {
+void Weapon::showHitbox() const 
+{
     // Draw the rectangle outline
     glBegin(GL_LINE_LOOP);
     glColor3f(1.0f, 0.0f, 0.0f);  // Color it red for visibility
@@ -34,7 +37,8 @@ void Weapon::showHitbox() const {
     glEnd();
 }
 
-Lightsaber::Lightsaber(Player *p) : player(p) {
+Lightsaber::Lightsaber(Player *p) : player(p) 
+{
     name = "Lithium Ion Grip Heat Transfer-Saber";
     damage = 50; 
     cooldown = 0.5;
@@ -49,53 +53,16 @@ Lightsaber::Lightsaber(Player *p) : player(p) {
     idle.setSpriteSheet(1,4);
 }
 
-void Lightsaber::use() {
+void Lightsaber::use() 
+{
     if (!onCooldown && !isAttacking) {
         isAttacking = true;
         //lastUseTime = elapsedTime;  // Record the current time
     }
 }
 
-void Lightsaber::update(double elapsedTime) {
-//     if (isAttacking) {
-//         float elapsedTime = (std::clock() - lastUseTime) / CLOCKS_PER_SEC;
-
-//         // Check if the attack duration has passed
-//         if (elapsedTime >= duration) {
-//             isAttacking = false;
-//             onCooldown = true;
-//             lastUseTime = std::clock(); // Reset the timer for cooldown
-//         }
-//     } else if (onCooldown) {
-//         float elapsedTime = (std::clock() - lastUseTime) / CLOCKS_PER_SEC;
-
-//         // Check if the cooldown has passed
-//         if (elapsedTime >= cooldown) {
-//             onCooldown = false;
-//         }
-//     }
-// }
-
-    //     if (isAttacking) {
-    //         lastAttackTime += elapsedTime;
-
-    //         // Check if the attack duration has passed
-    //         if (lastAttackTime >= duration) {
-    //             isAttacking = false;
-    //             onCooldown = true;
-    //             lastAttackTime = 0.0; // Reset the attack timer
-    //             lastCooldownTime = 0.0; // Start cooldown timer
-    //         }
-    //     } else if (onCooldown) {
-    //         lastCooldownTime += elapsedTime;
-
-    //         // Check if the cooldown has passed
-    //         if (lastCooldownTime >= cooldown) {
-    //             onCooldown = false;
-    //             lastCooldownTime = 0.0; // Reset the cooldown timer
-    //         }
-    //     }
-    // }
+void Lightsaber::update(double elapsedTime) 
+{
     static float lastAttackTime = 0.0;
     static float lastCooldownTime = 0.0;
     if (isAttacking) {
@@ -121,8 +88,8 @@ void Lightsaber::update(double elapsedTime) {
 }
 
 
-void Lightsaber::render() {
-    //update();
+void Lightsaber::render() 
+{
     Vector2 direction = player->getDirection();
     Vector2 position = player->getPos();
 
@@ -149,7 +116,8 @@ void Lightsaber::render() {
 #endif
 }
 
-Gun::Gun(Player *p) : player(p) {
+Gun::Gun(Player *p) : player(p) 
+{
     name = "Gun";
     damage = 50; 
     cooldown = 0.025;
@@ -160,31 +128,16 @@ Gun::Gun(Player *p) : player(p) {
     weaponClass = "Range";
 }
 
-void Gun::use() {
+void Gun::use() 
+{
     if (!onCooldown && !isAttacking) {
         isAttacking = true;
         //lastUseTime = elapsedTime;  // Record the current time
     }
 }
 
-void Gun::update(double elapsedTime) {
-    // if (isAttacking) {
-    //     float elapsedTime = (std::clock() - lastUseTime) / CLOCKS_PER_SEC;
-
-    //     // Check if the attack duration has passed
-    //     if (elapsedTime >= duration) {
-    //         isAttacking = false;
-    //         onCooldown = true;
-    //         lastUseTime = std::clock(); // Reset the timer for cooldown
-    //     }
-    // } else if (onCooldown) {
-    //     float elapsedTime = (std::clock() - lastUseTime) / CLOCKS_PER_SEC;
-
-    //     // Check if the cooldown has passed
-    //     if (elapsedTime >= cooldown) {
-    //         onCooldown = false;
-    //     }
-    // }
+void Gun::update(double elapsedTime) 
+{
     static float lastAttackTime = 0.0;
     static float lastCooldownTime = 0.0;
     if (isAttacking) {
@@ -209,7 +162,9 @@ void Gun::update(double elapsedTime) {
     }
 
 }
-void Gun::render() {
+
+void Gun::render() 
+{
     //update();
     Vector2 direction = player->getDirection();
     Vector2 position = player->getPos();
