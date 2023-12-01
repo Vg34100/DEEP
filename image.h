@@ -20,7 +20,7 @@ public:
 
 	void renderSprite(int row, int col, float x, float y, float scale, bool flip = false);
 
-	void setSpriteSheet(int rows, int cols); // Set the image as a sprite sheet and define its structure
+	void setSpriteSheet(int rows, int cols);
 
 
 private:

@@ -10,15 +10,18 @@ Enemy::Enemy(const std::string& nm, float dmg, float cooldown, float hp, float s
  
 	}
 
-void Enemy::render() {
+void Enemy::render() 
+{
 	// Rendering logic for the base enemy, e.g., drawing a simple colored square
 }
 
-void Enemy::attack() {
+void Enemy::attack() 
+{
 	// Basic attack logic, can be overridden by subclasses
 }
 
-void Enemy::summon(Vector2 pos) {
+void Enemy::summon(Vector2 pos) 
+{
 	if (canBeSummoned(pos)) {
 		position = pos;
 	} else {
@@ -26,12 +29,14 @@ void Enemy::summon(Vector2 pos) {
 	}
 }
 
-bool Enemy::canBeSummoned(Vector2 pos) {
+bool Enemy::canBeSummoned(Vector2 pos) 
+{
 	return world.getTileTypeAtPosition(pos.x, pos.y) == TileType::ENEMY;  // Assuming ENEMY is an enum value in your World class
 }
 
 
-float calculateDamageTaken(float baseDamage, int levelsCompleted) {
+float calculateDamageTaken(float baseDamage, int levelsCompleted) 
+{
     const float reductionFactor = 0.05f; // This value determines how much impact each level has
     const float minDamageMultiplier = 0.3f; // This ensures that there's always a minimum percentage of damage taken
 
@@ -42,7 +47,8 @@ float calculateDamageTaken(float baseDamage, int levelsCompleted) {
 }
 
 
-void Enemy::TakeDamage(float damage) {
+void Enemy::TakeDamage(float damage) 
+{
 	if (!invulnerable) {
 		float damageNegator = calculateDamageTaken(damage, levelsCompleted);
 		health.TakeDamage(damageNegator);
@@ -158,7 +164,8 @@ void Enemy::moveToPlayer(const Vector2& playerPos)
 	position.y += direction.y * speedMultiplier;
 }
 
-void Enemy::knockBackFromPlayer(const Vector2& playerPos, float knockBackDistance) {
+void Enemy::knockBackFromPlayer(const Vector2& playerPos, float knockBackDistance) 
+{
     // Calculate direction vector from player to enemy
     Vector2 direction = position - playerPos;
     direction.normalize();

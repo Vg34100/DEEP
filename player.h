@@ -61,10 +61,6 @@ private:
     int frameDelay = 150;
     int timeSinceLastFrame = 0;
 
-
-	// std::vector<std::unique_ptr<Accessory>> accessories;
-    // std::vector<std::unique_ptr<Accessory>> accessories;
-
     std::vector<std::shared_ptr<Accessory>> accessories;
 
 
@@ -97,25 +93,11 @@ public:
 
 	std::vector<std::shared_ptr<Weapon>> inventory;
 
-	//void addAccessory(const Accessory& accessory);
-	// void addAccessory(const Accessory& accessory);
-	//void addAccessory(std::unique_ptr<Accessory> accessory);
+    void addAccessory(std::shared_ptr<Accessory> accessory);
 
-    void addAccessory(std::shared_ptr<Accessory> accessory) {
-		accessory->applyEffect(*this); // Apply the effect of the accessory
-        accessories.push_back(accessory);
-    }
+    const std::vector<std::shared_ptr<Accessory>>& getAccessories() const;
 
-    const std::vector<std::shared_ptr<Accessory>>& getAccessories() const {
-        return accessories;
-    }
-
-    void applyAllEffects() {
-        for (const auto& accessory : accessories) {
-            accessory->applyEffect(*this);
-        }
-    }
-
+    void applyAllEffects();
     // Method to add an accessory to the player's inventory
 
 	//Getters and Setters

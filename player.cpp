@@ -1,4 +1,4 @@
-//player/player.cpp
+//player.cpp
 #include "player.h"
 #include "initGLX.h"
 #include "prodriguezqu.h"
@@ -402,4 +402,15 @@ bool Player::playerIsDead()
 	if (playerHealth.GetCurrentHealth() <= 0) 
 		return true;
 	return false;
+}
+
+void Player::applyAllEffects() {
+	for (const auto& accessory : accessories) {
+		accessory->applyEffect(*this);
+	}
+}
+
+void Player::addAccessory(std::shared_ptr<Accessory> accessory) {
+	accessory->applyEffect(*this); // Apply the effect of the accessory
+	accessories.push_back(accessory);
 }

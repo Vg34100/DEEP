@@ -88,15 +88,10 @@ void CollisionManager::handlePlayerCollisions(Player& player)
 
 void CollisionManager::handleEnemyCollisions(Player& player) 
 {
-	// printf("Running Collision Check\n");
-	// for (const auto& enemy : world.getEnemies()) {
-	// 	enemy->moveToPlayer(player.getPos());
-	// }
 	if (auto weapon = player.getActiveWeapon()) {
 		if (weapon->getIsAttacking()) {
 			Hitbox weaponHitbox = weapon->getHitbox();
 			for (const auto& enemy : world.getEnemies()) {
-				//enemy->moveToPlayer(player.getPos());
 				if (weaponHitbox.isColliding(enemy->getHitbox())) {
 					enemy->TakeDamage(weapon->getDamage());
 					if (enemy->isDeadCheck())
@@ -127,8 +122,6 @@ std::string tileTypeToString(TileType type)
 		case TileType::HALLWAYE: return "HWE";
 		case TileType::HALLWAYS: return "HWS";
 		case TileType::HALLWAYW: return "HWW";
-
-		// ... other cases ...
 		default: return "UNKNOWN";
 	}
 }
