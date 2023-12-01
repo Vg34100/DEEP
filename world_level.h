@@ -38,13 +38,25 @@ public:
 		return _layout[0].size();
 	}
 
-	static Level SampleLevel();  // A method to generate a sample level
+	static Level EmptyLevel(); // The base of the levels
+
+
+	static Level SampleLevel();  
 	// Add more static methods for other levels
+	static Level SampleLevel2();
+	static Level SampleLevel3();
+	static Level SampleLevel4();
+	static Level SampleLevel5();
 	static Level PitLand();
+
 
 	static std::vector<Level> getAllAvailableLevels() {
 		return {
 			SampleLevel(),
+			SampleLevel2(),
+			SampleLevel3(),
+			SampleLevel4(),
+			SampleLevel5(),
 			PitLand(),
 			// Add any other levels you create in the future here.
 		};
