@@ -91,7 +91,9 @@ float World::getTopEdgeY() const
 
 void World::resetWorld()
 {
+	#ifdef DEBUG
 	printf("Attempting to Reset World...\n");
+	#endif // DEBUG
 	enemies.clear();
 	offsetY = 0;
 	offsetX = 0;

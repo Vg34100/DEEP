@@ -103,6 +103,7 @@ int main()
 	printf("Objective: Kill Enemies (White) with Attack -> Proceed to Next Level through Hallway (LightGray)\n");
 	printf("Player Stats wit CTRL+Z\n");
 	printf("Display Stats and other Developer Options with CTRL+S\n");
+	printf("If you get stuck: Press G for Game Over\n");
 	fflush(stdout);
 
 	#ifdef DEBUG
@@ -179,13 +180,6 @@ int main()
 				inputDelayCounter = 50;
 			}
 			shop.render(timeSpan);
-
-
-
-
-
-
-
 		}
 
 		if (currentState == GameState::PLAYING) {
@@ -193,11 +187,6 @@ int main()
 			static int inputDelayCounter = 50;
 			if (inputDelayCounter > 0) {
 				inputDelayCounter--;
-			}
-			if (keysPressed[XK_y]) {
-				printf("Attempting to Restart...\n");
-				Player player2(cm, 100);
-				World world2;
 			}
 			if (keysPressed[XK_Escape] && inputDelayCounter <= 0) {
 				currentState = GameState::PAUSED;
