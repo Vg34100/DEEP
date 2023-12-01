@@ -116,9 +116,9 @@ void Lightsaber::render()
 #endif
 }
 
-Gun::Gun(Player *p) : player(p) 
+Mjolnir::Mjolnir(Player *p) : player(p) 
 {
-    name = "Gun";
+    name = "Mjolnir";
     damage = 50; 
     cooldown = 0.025;
     attackSize = 1;
@@ -126,9 +126,13 @@ Gun::Gun(Player *p) : player(p)
     duration = 1;
     damageType = "default";
     weaponClass = "Range";
+    if (!idle.loadTexture()) {
+        std::cerr << "Failed to load texture" << std::endl;
+    }
+    idle.setSpriteSheet(1,2);
 }
 
-void Gun::use() 
+void Mjolnir::use() 
 {
     if (!onCooldown && !isAttacking) {
         isAttacking = true;
@@ -136,7 +140,7 @@ void Gun::use()
     }
 }
 
-void Gun::update(double elapsedTime) 
+void Mjolnir::update(double elapsedTime) 
 {
     static float lastAttackTime = 0.0;
     static float lastCooldownTime = 0.0;
@@ -163,7 +167,7 @@ void Gun::update(double elapsedTime)
 
 }
 
-void Gun::render() 
+void Mjolnir::render() 
 {
     //update();
     Vector2 direction = player->getDirection();
@@ -174,19 +178,11 @@ void Gun::render()
     float indicatorWidth = 250.0f;
     float indicatorHeight = 200.0f; 
 
+    if (!isAttacking) {
+        idle.renderSprite(0, 2, startPos.x, startPos.y, 100);
+    }
     if (isAttacking) {
-        // Draw the rectangle
-        glBegin(GL_QUADS);
-        glColor3f(0.2f, 0.2f, 0.2f);
-        glVertex2f(startPos.x - 0.5f * indicatorWidth, startPos.y - 0.5f *
-                indicatorHeight);
-        glVertex2f(startPos.x + 0.5f * indicatorWidth, startPos.y - 0.5f * 
-                indicatorHeight);
-        glVertex2f(startPos.x + 0.5f * indicatorWidth, startPos.y + 0.5f * 
-                indicatorHeight);
-        glVertex2f(startPos.x - 0.5f * indicatorWidth, startPos.y + 0.5f * 
-                indicatorHeight);
-        glEnd();
+        idle.renderSprite(0, 1, startPos.x, startPos.y, 100);
     }
     Vector2 topLeft = Vector2(startPos.x - 0.5f * indicatorWidth, 
             startPos.y - 0.5f * indicatorHeight);

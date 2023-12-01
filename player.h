@@ -71,7 +71,7 @@ private:
 
 public:
 	Player(CollisionManager& cm, float initialMaxHealth) : collisionManager(cm), playerHealth(initialMaxHealth) {
-		activeWeapon = std::make_shared<Lightsaber>(this);
+		activeWeapon = std::make_shared<Mjolnir>(this);
 		initialHealth = initialMaxHealth;
 		coins = 0.0f;
 		playerMana = 0.0f;
@@ -96,6 +96,13 @@ public:
     void addAccessory(std::shared_ptr<Accessory> accessory);
 
     const std::vector<std::shared_ptr<Accessory>>& getAccessories() const;
+
+	void changeToLight() {
+		activeWeapon = std::make_shared<Lightsaber>(this);
+	}
+	void changeToMjolnir() {
+		activeWeapon = std::make_shared<Mjolnir>(this);
+	}
 
     void applyAllEffects();
     // Method to add an accessory to the player's inventory

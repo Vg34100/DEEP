@@ -93,6 +93,11 @@ void Player::handleInput()
 	//if (keysPressed[attack_key]) useWeapon();
 	if(keysPressed[attack_key] || leftMouseButtonPressed)
 		useWeapon();
+
+	if (keysPressed[switch_weapon_right])
+		changeToLight();
+	if (keysPressed[switch_weapon_left])
+		changeToMjolnir();
 }
 
 void Player::showHitbox() const 

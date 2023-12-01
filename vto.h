@@ -138,14 +138,16 @@ class Lightsaber : public MeleeWeapon
         static constexpr const char* SPRITE_SHEET_PATH = "images/lightsaberSprite.jpeg";
 
 };
-class Gun : public RangedWeapon 
+class Mjolnir : public RangedWeapon 
 {
     public:
-        Gun(Player *p);
+        Mjolnir(Player *p);
         void use() override;
         void update(double elapsedTime) override;
         void render() override;
     private:
         Player *player; // A pointer/reference to 
                         // the player to know their direction and position
+    Image idle{"images/mjolnir.png"};
+    static constexpr const char* SPRITE_SHEET_PATH = "images/mjolnir.png";
 };
