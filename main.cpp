@@ -22,7 +22,6 @@
 #include "image.h"
 #include "fonts.h"
 #include "gui.h"
-#include "util_keys.h"
 #include "keybinds.h"
 
 const double physicsRate = 1.0 / 256.0;
