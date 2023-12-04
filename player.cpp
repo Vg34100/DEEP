@@ -158,12 +158,12 @@ void Player::update(double elapsedTime)
 	if (activeWeapon) {
 		activeWeapon->update(elapsedTime);
 	}
+	UpdateInvulnerability();
 }
 
 void Player::render() 
 { 
 	//playerHealth.SetHealth(40);
-	UpdateInvulnerability();
 	updatePlayerDirection();
 	updateMousePosition(mousex, mousey);
 	// printf("%f, %f\n", mousex, mousey);

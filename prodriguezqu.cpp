@@ -31,7 +31,6 @@ void clamp(T& value, const T& minVal, const T& maxVal)
     value = std::max(minVal, std::min(value, maxVal));
 }
 
-//0123456789012345678901234567890123456789012345678901234567890123456789012345
 void drawBar(Vector2 pos, Vector2 dim, Color color, bool center = false) 
 {
 	/* Function to Draw Bar */
@@ -55,7 +54,6 @@ void drawBar(Vector2 pos, Vector2 dim, Color color, bool center = false)
 	glEnd();
 }
 
-//0123456789012345678901234567890123456789012345678901234567890123456789012345
 void renderHealthBar(int maxHealth, int currentHealth) 
 {
     /* Configure Health Bar Appearance */
@@ -84,7 +82,6 @@ void renderHealthBar(int maxHealth, int currentHealth)
     drawBar(barPosition, currentBarSize, currentHealthColor);
 }
 
-
 enum class ScreenState 
 {
 	DELVE,
@@ -93,10 +90,6 @@ enum class ScreenState
 	MAX_STATES
 };
 
-
-
-
-//012345678901234567890123456789012345678901234567890123456789012345678901234567
 const int InputDelayReset = 30;
 const int KeyHoldThreshold = 60;
 
@@ -139,13 +132,11 @@ int titleScreen()
 	});
 
     // Load textures once
-//0123456789012345678901234567890123456789012345678901234567890123456789012345
-
-	background.render(0,0,height+10);
+	background.render(0, 0, height + 10);
 	title.render(0, height - 300, 150);
-	start.render(0,50,30);
-	option.render(0,-75,30);
-	quit.render(0,-200,30);
+	start.render(0, 50, 30);
+	option.render(0, -75, 30);
+	quit.render(0, -200, 30);
 
     // Input delay handling
 	if (inputDelayCounter > 0) {
@@ -155,21 +146,21 @@ int titleScreen()
 
 	switch (currentState) {
 	case ScreenState::DELVE:
-		arrow.render(-200,50,30);
+		arrow.render(-200, 50, 30);
 		if (keysPressed[enter_key]) {
 			menu = false;
 			return 1;
 		}
 		break;
 	case ScreenState::OPTION:
-		arrow.render(-200,-75,30);
+		arrow.render(-200, -75, 30);
 		if (keysPressed[enter_key]) {
 			menu = false;
 			return 2;
 		}
 		break;
 	case ScreenState::QUIT:
-		arrow.render(-200,-200,30);
+		arrow.render(-200, -200, 30);
 		if (keysPressed[enter_key]) return -1;
 		break;
 	default:
@@ -178,7 +169,8 @@ int titleScreen()
 	return 0;
 }
 
-enum class OptionState {
+enum class OptionState 
+{
 	QUIT,
 	FULLSCREEN,
 	SCREENSIZE,
@@ -194,12 +186,12 @@ enum class OptionState {
 	MAX_STATES 
 };
 
-enum class InputState {
+enum class InputState 
+{
 	NORMAL,
 	WAITING_FOR_INPUT
 };
 
-//0123456789012345678901234567890123456789012345678901234567890123456789012345
 void handleOptionKey(bool stateCheck,
                      int& keyVar, int& size, int key, InputState& inputState) {
 	static int tempKey = keyVar;
@@ -270,9 +262,9 @@ int optionScreen()
 		letters.init();
 		numbers.init();
 	}
-	setMenu.render(0,0,height + 300);
-	quit.render(-width+200,height-200,30);
-	option.render(0,height-200,height*0.1);
+	setMenu.render(0, 0, height + 300);
+	quit.render(-width + 200, height - 200, 30);
+	option.render(0, height - 200, height * 0.1);
 
 	/* GAMEPLAY KEYBINDINGS: */
 	/*
@@ -299,7 +291,7 @@ int optionScreen()
 
 	switch(optionState) {
 	case OptionState::QUIT: {
-		arrow.render(-width+100,height-200,30);
+		arrow.render(-width + 100, height - 200, 30);
 		if (keysPressed[enter_key]) {
 		settinginit = false;
 		return -1;
@@ -307,7 +299,7 @@ int optionScreen()
 		break;
 	}
 	case OptionState::FULLSCREEN: {
-		arrow.render(-600,height-400,30);
+		arrow.render(-600, height - 400, 30);
 		static int FSkeyHoldCounter = 0;
 		bool fullscreenToggle = keysPressed[menu_left] ||
 									 keysPressed[menu_right];
@@ -317,7 +309,7 @@ int optionScreen()
 		break;
 	}
 	case OptionState::SCREENSIZE: {
-		arrow.render(-600,height-500,30);
+		arrow.render(-600, height - 500, 30);
 		static int SSkeyHoldCounter = 0;
 		bool screenSizeToggle = keysPressed[menu_left] || 
 										keysPressed[menu_right];
@@ -327,56 +319,56 @@ int optionScreen()
 		break;
 	}
 	case OptionState::ATTACK_KEY: {
-		arrow.render(-600,height-650,30);
+		arrow.render(-600, height - 650, 30);
 		bool keyCheck = optionState == OptionState::ATTACK_KEY;
         handleOptionKey(keyCheck, attack_key, attack_input_size,
 												 key, inputState);
 		break;
 	}
 	case OptionState::MOVE_UP_KEY: {
-		arrow.render(-600,height-700,30);
+		arrow.render(-600, height - 700, 30);
 		bool keyCheck = optionState == OptionState::MOVE_UP_KEY;
         handleOptionKey(keyCheck, move_up, move_up_input_size,
 												 key, inputState);
 		break;		
 	}
 	case OptionState::MOVE_DOWN_KEY: {
-		arrow.render(-600,height-750,30);
+		arrow.render(-600, height - 750, 30);
 		bool keyCheck = optionState == OptionState::MOVE_DOWN_KEY;
         handleOptionKey(keyCheck, move_down, move_down_input_size,
 												 key, inputState);
 		break;		
 	}
 	case OptionState::MOVE_LEFT_KEY: {
-		arrow.render(-600,height-800,30);
+		arrow.render(-600, height - 800, 30);
 		bool keyCheck = optionState == OptionState::MOVE_LEFT_KEY;
         handleOptionKey(keyCheck, move_left, move_left_input_size,
 												 key, inputState);
 		break;		
 	}
 	case OptionState::MOVE_RIGHT_KEY: {
-		arrow.render(-600,height-850,30);
+		arrow.render(-600, height - 850, 30);
 		bool keyCheck = optionState == OptionState::MOVE_RIGHT_KEY;
         handleOptionKey(keyCheck, move_right, move_right_input_size,
 												 key, inputState);
 		break;		
 	}
 	case OptionState::RELOAD_KEY: {
-		arrow.render(-600,height-900,30);
+		arrow.render(-600, height - 900, 30);
 		bool keyCheck = optionState == OptionState::RELOAD_KEY;
         handleOptionKey(keyCheck, reload_key, reload_input_size,
 												 key, inputState);
 		break;		
 	}
 	case OptionState::DODGE_KEY: {
-		arrow.render(-600,height-950,30);
+		arrow.render(-600, height - 950, 30);
 		bool keyCheck = optionState == OptionState::DODGE_KEY;
         handleOptionKey(keyCheck, dodge_key, dodge_input_size,
 												 key, inputState);
 		break;		
 	}
 	case OptionState::SWITCH_WEAPON_L_KEY: {
-		arrow.render(-600,height-1000,30);
+		arrow.render(-600, height - 1000, 30);
 		bool keyCheck = optionState == OptionState::SWITCH_WEAPON_L_KEY;
         handleOptionKey(keyCheck, switch_weapon_left, 
 							switch_weapon_l_input_size, key, inputState);
@@ -384,7 +376,7 @@ int optionScreen()
 		break;		
 	}
 	case OptionState::SWITCH_WEAPON_R_KEY: {
-		arrow.render(-600,height-1050,30);
+		arrow.render(-600, height - 1050, 30);
 		bool keyCheck = optionState == OptionState::SWITCH_WEAPON_R_KEY;
         handleOptionKey(keyCheck, switch_weapon_right, 
 							switch_weapon_r_input_size, key, inputState);
@@ -399,19 +391,19 @@ int optionScreen()
 	/* Display Fullscreen Setting */
 	if (isFullscreen) {
 		std::string str = "FULLSCREEN";
-		letters.renderLetters(str, 0, height-400, 50);
+		letters.renderLetters(str, 0, height - 400, 50);
 	}
 	else {
 		std::string str = "WINDOWED";
-		letters.renderLetters(str, 0, height-400, 50);
+		letters.renderLetters(str, 0, height - 400, 50);
 	}
 
 
 	/* Display Screen Size */
 	std::string currentSize = "x";
-	letters.renderLetters(currentSize, 0, height-500, 30);
-	numbers.renderInts(actual_width,-150,height-500,30);
-	numbers.renderInts(actual_height,150,height-500,30);
+	letters.renderLetters(currentSize, 0, height - 500, 30);
+	numbers.renderInts(actual_width, -150, height - 500, 30);
+	numbers.renderInts(actual_height, 150, height - 500, 30);
 
 	std::vector<Keybind> keybinds = {
 		{"Attack", attack_key, attack_input_size},
@@ -494,7 +486,8 @@ void levelenemyText(double elapsedtime)
 }
 
 
-enum class AnimationState {
+enum class AnimationState 
+{
 	Idle,
 	MovingUp,
 	WaitingAtTop,
@@ -638,7 +631,8 @@ bool constant_stats(Player& player, Letters& letters, Numbers& numbers, float de
 }
 
 
-enum class PausedState {
+enum class PausedState 
+{
 	CONTINUE,
 	SETTINGS,
 	QUIT,
@@ -664,7 +658,7 @@ int paused()
 	int settings_size = 60;
 	int quit_size = 60;
 
-	switch(paustedState) {
+	switch (paustedState) {
 	case PausedState::CONTINUE: {
 		continue_size = 80;
 		if (keysPressed[enter_key]) 
@@ -689,14 +683,14 @@ int paused()
 
 	std::string temp_str;
 	temp_str = "PAUSED";
-	letters.renderLetters(temp_str,0,height-200,100);
+	letters.renderLetters(temp_str, 0, height - 200, 100);
 
 	temp_str = "Continue";
-	letters.renderLetters(temp_str,0,height-600,continue_size);
+	letters.renderLetters(temp_str, 0, height - 600, continue_size);
 	temp_str = "Settings";
-	letters.renderLetters(temp_str,0,height-750,settings_size);
+	letters.renderLetters(temp_str, 0, height - 750, settings_size);
 	temp_str = "Quit";
-	letters.renderLetters(temp_str,0,height-900,quit_size);
+	letters.renderLetters(temp_str, 0, height - 900, quit_size);
 
 	return 0;
 }
