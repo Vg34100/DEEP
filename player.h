@@ -40,7 +40,7 @@ private:
 	float coins;
 	float initialHealth = 0.0f;
 
-	float invincibilityDuration = 0.1f; 
+	float invincibilityDuration = 0.5f; 
 	bool invulnerable = false; 
 	float lastDamageTime = 0.0f; 
 
@@ -148,7 +148,7 @@ public:
 
 
 	void TakeDamage(float damage);
-	void UpdateInvulnerability();
+	void UpdateInvulnerability(double elapsedTime);
 	void AddMaxHealth(float total);
 
 

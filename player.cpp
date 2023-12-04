@@ -158,7 +158,7 @@ void Player::update(double elapsedTime)
 	if (activeWeapon) {
 		activeWeapon->update(elapsedTime);
 	}
-	UpdateInvulnerability();
+	UpdateInvulnerability(elapsedTime);
 }
 
 void Player::render() 
@@ -270,12 +270,19 @@ void Player::TakeDamage(float damage)
 	}
 }
 
-void Player::UpdateInvulnerability() 
+void Player::UpdateInvulnerability(double elapsedTime) 
 {
+	static float lastDamagedTime = 0.0;
+
 	if (invulnerable) {
-		float elapsedTime = (std::clock() - lastDamageTime) / CLOCKS_PER_SEC;
-		if (elapsedTime >= invincibilityDuration) {
+		// float elapsedTime = (std::clock() - lastDamageTime) / CLOCKS_PER_SEC;
+		// if (elapsedTime >= invincibilityDuration) {
+		// 	invulnerable = false;
+		// }
+		lastDamagedTime += elapsedTime;
+		if (lastDamagedTime >= invincibilityDuration) {
 			invulnerable = false;
+			lastDamagedTime = 0.0;
 		}
 	}
 }
