@@ -103,7 +103,7 @@ Hitbox Enemy::getHitbox()
 //name, damage, cooldown, hp, size, world
 Slime::Slime(World& wrld, Vector2 pos) : Enemy("Slime", 20.0f, 1.0f, 100.0f, 80.0f, wrld, pos) 
 {
-	speed = 2;
+	speed = 1;
 }
 
 void Slime::render() 

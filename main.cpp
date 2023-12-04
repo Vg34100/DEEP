@@ -129,6 +129,7 @@ int main()
 		timeCopy(&timeStart, &timeCurrent);
 		physicsCountdown += timeSpan;
 		static int init_inputDelayCounter = 80;
+		static int play_inputDelayCounter = 50;
 
 		static bool paused_check = false;
 		if (currentState == GameState::INIT) {
@@ -184,22 +185,25 @@ int main()
 
 		if (currentState == GameState::PLAYING) {
 			playing_check = true;
-			static int inputDelayCounter = 50;
-			if (inputDelayCounter > 0) {
-				inputDelayCounter--;
+			// static int inputDelayCounter = 50;
+			if (play_inputDelayCounter > 0) {
+				play_inputDelayCounter--;
 			}
-			if (keysPressed[XK_Escape] && inputDelayCounter <= 0) {
+			if (keysPressed[XK_Escape] && play_inputDelayCounter <= 0) {
 				currentState = GameState::PAUSED;
-				inputDelayCounter = 50;
-			} else if (keysPressed[XK_l] && inputDelayCounter <= 0) {
+				play_inputDelayCounter = 50;
+			} else if (keysPressed[XK_l] && play_inputDelayCounter <= 0) {
 				currentState = GameState::SHOP;
-				inputDelayCounter = 50;
-			} else if (keysPressed[XK_g] && inputDelayCounter <=0) {
+				play_inputDelayCounter = 50;
+			} else if (keysPressed[XK_g] && play_inputDelayCounter <=0) {
 				currentState = GameState::GAME_OVER;
+				play_inputDelayCounter = 50;
 			}
 
 
 			player.cameraSetup();
+			world.render();
+			world.renderEnemies();
 			while (physicsCountdown >= physicsRate) {
 				player.handleInput();
 				cm.handlePlayerCollisions(player);
@@ -208,12 +212,17 @@ int main()
 				physicsCountdown -= physicsRate;
 				if (player.playerIsDead())
 					currentState = GameState::GAME_OVER;
-			}
-				for (const auto& enemy : world.getEnemies()) {
-					enemy->moveToPlayer(player.getPos());
+				
+				if (play_inputDelayCounter <= 0) {
+					for (const auto& enemy : world.getEnemies()) {
+						enemy->moveToPlayer(player.getPos());
+					}
+
 				}
-				world.render();
-				world.renderEnemies();
+
+			}
+
+
 				player.render();
 				player.animate(timeSpan * 80);
 				gui.render(timeSpan);
@@ -280,6 +289,7 @@ int main()
 					player.retry();
 					world.resetWorld();
 					player.resetPosition();
+					play_inputDelayCounter = 50;
 					currentState = GameState::PLAYING;
 					break;
 				}
