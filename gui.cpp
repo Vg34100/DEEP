@@ -5,8 +5,8 @@
 #include "player.h"
 #include "world.h"
 #include "initGLX.h"
-#include "util_keys.h"
 #include "keybinds.h"
+#include "vto.h"
 
 GUI::GUI(World& world, Player& player) : world(world), player(player) 
 {

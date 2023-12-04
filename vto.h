@@ -4,6 +4,9 @@
 #include "util_vector2.h"
 #include "image.h"
 
+bool holdtoPress(bool reset);
+bool handleKeyAction(bool keyCondition, int &counter, int threshold);
+
 int renderFunctionCalls(const bool renderFun);
 class Player;
 

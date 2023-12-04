@@ -19,7 +19,6 @@ SRCS = main.cpp \
        image.cpp \
        libggfonts.a \
        gui.cpp \
-       util_keys.cpp \
        accessories.cpp
 
 HEDS = initGLX.h \
@@ -37,7 +36,6 @@ HEDS = initGLX.h \
        image.h \
        fonts.h \
        gui.h  \
-       util_keys.h \
        keybinds.h \
        accessories.h
 
