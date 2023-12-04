@@ -86,6 +86,7 @@ enum class GameState {
 	PLAYING,
 	SHOP,
 	PAUSED,
+	CREDITS,
 	GAME_OVER
 };
 
@@ -304,12 +305,28 @@ int main()
 					done = true;
 					break;
 				}
+				case 3:{
+					inputDelayCounter = 80;
+					currentState = GameState::CREDITS;
+					break;
+				}
 				default:{
 					break;
 				}
 				
 			}		
 
+		}
+		if (currentState == GameState::CREDITS) {
+			static int inputDelayCounter = 50;
+			if (inputDelayCounter > 0) {
+				inputDelayCounter--;
+			}
+			if (keysPressed[XK_Escape] && inputDelayCounter <= 0) {
+				currentState = GameState::GAME_OVER;
+				inputDelayCounter = 50;
+			}
+			credits();
 		}
 
 		devMode();

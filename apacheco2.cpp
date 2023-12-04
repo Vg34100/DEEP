@@ -22,12 +22,9 @@
 #include "util_vector2.h"
 #include <functional>
 
-
-
 using namespace std;
 
 bool keyCheck = false;
-
 
 /* total running time function from LAB work
 int total_running_time(const bool get)
@@ -69,18 +66,14 @@ int time_since_key_press(const bool get)
     return 0;
 
 }
-
-
 //gameover
 enum class gameOverState {
 	RETRY,
 	SETTINGS,
 	QUIT,
+	CREDITS,
 	MAX_STATES
 };
-
-
-
 
 int gameOver()
 {
@@ -103,6 +96,7 @@ int gameOver()
 	int retry_size = 60;
 	int settings_size = 60;
 	int quit_size = 60;
+	int credits_size = 60;
 
 	switch(game_over) {
 	case gameOverState::RETRY: {
@@ -123,6 +117,12 @@ int gameOver()
 			return 2;
 		break;
 	}
+	case gameOverState::CREDITS: {
+		credits_size = 80;
+		if (keysPressed[enter_key]) 
+			return 3;
+		break;
+	}
 	default:
 		break;
 	}
@@ -137,6 +137,38 @@ int gameOver()
 	letters.renderLetters(temp_str,0,height-750,settings_size);
 	temp_str = "Quit";
 	letters.renderLetters(temp_str,0,height-900,quit_size);
+	temp_str = "Credits";
+	letters.renderLetters(temp_str,0,height-1050,credits_size);
+
+
 
 	return 0;
+}
+
+void credits() {
+    static Letters letters;
+
+	static bool init = false;
+
+	if (!init) {
+		letters.init();
+		init = true;
+	}
+
+
+	int credits_size = 60;
+
+
+	std::string temp_str;
+	temp_str = "CREDITS";
+	letters.renderLetters(temp_str, 0 , height - 200, credits_size);
+	temp_str = "Made by";
+	letters.renderLetters(temp_str, 0 , height - 700, credits_size);
+	temp_str = "Pablo Rodriguez";
+	letters.renderLetters(temp_str, 0 , height - 800, credits_size);
+	temp_str = "Vincent To";
+	letters.renderLetters(temp_str, 0 , height - 900, credits_size);
+	temp_str = "Aaron Pacheco";
+	letters.renderLetters(temp_str, 0 , height - 1000, credits_size);
+
 }
