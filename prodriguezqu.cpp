@@ -20,23 +20,23 @@
 #include "util_vector2.h"
 
 typedef struct {
-    float red;
-    float green;
-    float blue;
+	float red;
+	float green;
+	float blue;
 } Color;
 
 template<typename T>
 void clamp(T& value, const T& minVal, const T& maxVal) 
 {
-    value = std::max(minVal, std::min(value, maxVal));
+	value = std::max(minVal, std::min(value, maxVal));
 }
 
 void drawBar(Vector2 pos, Vector2 dim, Color color, bool center = false) 
 {
 	/* Function to Draw Bar */
 	/* Position, Dimensions [Width, Height], Color [Red, Green, Blue]*/
-    glColor3f(color.red, color.green, color.blue);
-    glBegin(GL_QUADS);
+	glColor3f(color.red, color.green, color.blue);
+	glBegin(GL_QUADS);
 
 	if (!center) {
 		glVertex2i(pos.x, pos.y);
@@ -56,30 +56,30 @@ void drawBar(Vector2 pos, Vector2 dim, Color color, bool center = false)
 
 void renderHealthBar(int maxHealth, int currentHealth) 
 {
-    /* Configure Health Bar Appearance */
-    Vector2 barSize = {200.0f, 40.0f}; // Health bar dimensions
-    Vector2 barPosition = {
-        width - barSize.x - 10.0f, // 10px from the right edge
-        height - barSize.y - 10.0f // 10px from the bottom edge
-    };
+	/* Configure Health Bar Appearance */
+	Vector2 barSize = {200.0f, 40.0f}; // Health bar dimensions
+	Vector2 barPosition = {
+		width - barSize.x - 10.0f, // 10px from the right edge
+		height - barSize.y - 10.0f // 10px from the bottom edge
+	};
 
-    /* Ensure Current Health is Within Range */
-    clamp(currentHealth, 0, maxHealth);
+	/* Ensure Current Health is Within Range */
+	clamp(currentHealth, 0, maxHealth);
 
-    /* Calculate Health Bar Width */
-    float healthRatio = static_cast<float>(currentHealth) / maxHealth;
-    float currentWidth = healthRatio * barSize.x;
+	/* Calculate Health Bar Width */
+	float healthRatio = static_cast<float>(currentHealth) / maxHealth;
+	float currentWidth = healthRatio * barSize.x;
 
-    /* Define Colors for Health Bar States */
-    Color maxHealthColor = {0.1, 0.1, 0.1}; // Color for full health
-    Color currentHealthColor = {0.0, 1.0, 0.0}; // Color for current health
+	/* Define Colors for Health Bar States */
+	Color maxHealthColor = {0.1, 0.1, 0.1}; // Color for full health
+	Color currentHealthColor = {0.0, 1.0, 0.0}; // Color for current health
 
-    /* Draw the Full Health Bar */
-    drawBar(barPosition, barSize, maxHealthColor);
+	/* Draw the Full Health Bar */
+	drawBar(barPosition, barSize, maxHealthColor);
 
-    /* Draw the Current Health Bar */
-    Vector2 currentBarSize = {currentWidth, barSize.y};
-    drawBar(barPosition, currentBarSize, currentHealthColor);
+	/* Draw the Current Health Bar */
+	Vector2 currentBarSize = {currentWidth, barSize.y};
+	drawBar(barPosition, currentBarSize, currentHealthColor);
 }
 
 enum class ScreenState 
@@ -94,32 +94,32 @@ const int InputDelayReset = 30;
 const int KeyHoldThreshold = 60;
 
 void processMenuInput(
-    bool inputCondition, 
-    int& keyHoldCounter, 
-    std::function<void()> actionFunction) 
+	bool inputCondition, 
+	int& keyHoldCounter, 
+	std::function<void()> actionFunction) 
 {
-    if (inputCondition) {
-        if (keyHoldCounter <= 0) {
-            actionFunction(); // Perform the passed action
-            keyHoldCounter = KeyHoldThreshold;
-        } else {
-            keyHoldCounter--;
-        }
-    } else {
-        keyHoldCounter = 0;
-    }
+	if (inputCondition) {
+		if (keyHoldCounter <= 0) {
+			actionFunction(); // Perform the passed action
+			keyHoldCounter = KeyHoldThreshold;
+		} else {
+			keyHoldCounter--;
+		}
+	} else {
+		keyHoldCounter = 0;
+	}
 }
 
 
 int titleScreen() 
 {
-    /* Static variables for menu state and images */
-    static Image title("images/Deep.png"), start("images/Delve.png"),
-                 option("images/Options.png"), quit("images/Quit.png"),
-                 arrow("images/Select.png"), background("images/Hole.gif");
+	/* Static variables for menu state and images */
+	static Image title("images/Deep.png"), start("images/Delve.png"),
+				 option("images/Options.png"), quit("images/Quit.png"),
+				 arrow("images/Select.png"), background("images/Hole.gif");
 	static ScreenState currentState = ScreenState::DELVE;
-    static bool menu = true;
-    static int inputDelayCounter = InputDelayReset, keyHoldCounter = 0;
+	static bool menu = true;
+	static int inputDelayCounter = InputDelayReset, keyHoldCounter = 0;
 
 	if (!menu) {
 		inputDelayCounter = InputDelayReset;
@@ -131,14 +131,14 @@ int titleScreen()
 		changeState(currentState, keysPressed[menu_up] ? -1 : 1);
 	});
 
-    // Load textures once
+	// Load textures once
 	background.render(0, 0, height + 10);
 	title.render(0, height - 300, 150);
 	start.render(0, 50, 30);
 	option.render(0, -75, 30);
 	quit.render(0, -200, 30);
 
-    // Input delay handling
+	// Input delay handling
 	if (inputDelayCounter > 0) {
 		inputDelayCounter--;
 		return 0;
@@ -193,34 +193,34 @@ enum class InputState
 };
 
 void handleOptionKey(bool stateCheck,
-                     int& keyVar, int& size, int key, InputState& inputState) {
+					 int& keyVar, int& size, int key, InputState& inputState) {
 	static int tempKey = keyVar;
-    if (stateCheck && key == XK_Return) {
-        inputState = InputState::WAITING_FOR_INPUT;
-        keyVar = XK_Clear; // Clear the key variable
-    }
+	if (stateCheck && key == XK_Return) {
+		inputState = InputState::WAITING_FOR_INPUT;
+		keyVar = XK_Clear; // Clear the key variable
+	}
 
-    // Check if waiting for new input
-    if (inputState == InputState::WAITING_FOR_INPUT) {
-        size = 40; // Increase the input size
-        if (key != XK_Return && key != XK_Escape &&
-            key != XK_Shift_L && key != XK_Control_L && 
-            key != menu_up && key != menu_down
-            /*&&  ... other keys to exclude ... */) {
-            keyVar = key;
-            inputState = InputState::NORMAL;
-        } else {
-            keyVar = tempKey; // Revert to the original key 
-        }
-    } else {
-        size = 30; // Default input size
-    }
+	// Check if waiting for new input
+	if (inputState == InputState::WAITING_FOR_INPUT) {
+		size = 40; // Increase the input size
+		if (key != XK_Return && key != XK_Escape &&
+			key != XK_Shift_L && key != XK_Control_L && 
+			key != menu_up && key != menu_down
+			/*&&  ... other keys to exclude ... */) {
+			keyVar = key;
+			inputState = InputState::NORMAL;
+		} else {
+			keyVar = tempKey; // Revert to the original key 
+		}
+	} else {
+		size = 30; // Default input size
+	}
 }
 
 struct Keybind {
-    std::string action;
-    int key;
-    int inputSize;
+	std::string action;
+	int key;
+	int inputSize;
 };
 
 int optionScreen()
@@ -321,56 +321,56 @@ int optionScreen()
 	case OptionState::ATTACK_KEY: {
 		arrow.render(-600, height - 650, 30);
 		bool keyCheck = optionState == OptionState::ATTACK_KEY;
-        handleOptionKey(keyCheck, attack_key, attack_input_size,
+		handleOptionKey(keyCheck, attack_key, attack_input_size,
 												 key, inputState);
 		break;
 	}
 	case OptionState::MOVE_UP_KEY: {
 		arrow.render(-600, height - 700, 30);
 		bool keyCheck = optionState == OptionState::MOVE_UP_KEY;
-        handleOptionKey(keyCheck, move_up, move_up_input_size,
+		handleOptionKey(keyCheck, move_up, move_up_input_size,
 												 key, inputState);
 		break;		
 	}
 	case OptionState::MOVE_DOWN_KEY: {
 		arrow.render(-600, height - 750, 30);
 		bool keyCheck = optionState == OptionState::MOVE_DOWN_KEY;
-        handleOptionKey(keyCheck, move_down, move_down_input_size,
+		handleOptionKey(keyCheck, move_down, move_down_input_size,
 												 key, inputState);
 		break;		
 	}
 	case OptionState::MOVE_LEFT_KEY: {
 		arrow.render(-600, height - 800, 30);
 		bool keyCheck = optionState == OptionState::MOVE_LEFT_KEY;
-        handleOptionKey(keyCheck, move_left, move_left_input_size,
+		handleOptionKey(keyCheck, move_left, move_left_input_size,
 												 key, inputState);
 		break;		
 	}
 	case OptionState::MOVE_RIGHT_KEY: {
 		arrow.render(-600, height - 850, 30);
 		bool keyCheck = optionState == OptionState::MOVE_RIGHT_KEY;
-        handleOptionKey(keyCheck, move_right, move_right_input_size,
+		handleOptionKey(keyCheck, move_right, move_right_input_size,
 												 key, inputState);
 		break;		
 	}
 	case OptionState::RELOAD_KEY: {
 		arrow.render(-600, height - 900, 30);
 		bool keyCheck = optionState == OptionState::RELOAD_KEY;
-        handleOptionKey(keyCheck, reload_key, reload_input_size,
+		handleOptionKey(keyCheck, reload_key, reload_input_size,
 												 key, inputState);
 		break;		
 	}
 	case OptionState::DODGE_KEY: {
 		arrow.render(-600, height - 950, 30);
 		bool keyCheck = optionState == OptionState::DODGE_KEY;
-        handleOptionKey(keyCheck, dodge_key, dodge_input_size,
+		handleOptionKey(keyCheck, dodge_key, dodge_input_size,
 												 key, inputState);
 		break;		
 	}
 	case OptionState::SWITCH_WEAPON_L_KEY: {
 		arrow.render(-600, height - 1000, 30);
 		bool keyCheck = optionState == OptionState::SWITCH_WEAPON_L_KEY;
-        handleOptionKey(keyCheck, switch_weapon_left, 
+		handleOptionKey(keyCheck, switch_weapon_left, 
 							switch_weapon_l_input_size, key, inputState);
 
 		break;		
@@ -378,7 +378,7 @@ int optionScreen()
 	case OptionState::SWITCH_WEAPON_R_KEY: {
 		arrow.render(-600, height - 1050, 30);
 		bool keyCheck = optionState == OptionState::SWITCH_WEAPON_R_KEY;
-        handleOptionKey(keyCheck, switch_weapon_right, 
+		handleOptionKey(keyCheck, switch_weapon_right, 
 							switch_weapon_r_input_size, key, inputState);
 
 		break;		
