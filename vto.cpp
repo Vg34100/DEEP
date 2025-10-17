@@ -50,7 +50,7 @@ Lightsaber::Lightsaber(Player *p) : player(p)
 	if (!idle.loadTexture()) {
 		std::cerr << "Failed to load texture" << std::endl;
 	}
-	idle.setSpriteSheet(1,4);
+	idle.setSpriteSheet(1,2);
 }
 
 void Lightsaber::use() 
@@ -98,10 +98,10 @@ void Lightsaber::render()
 	float indicatorWidth = 250.0f * attackSize;
 	float indicatorHeight = 200.0f * attackSize; 
 	if (!isAttacking) {
-		idle.renderSprite(0, 1, startPos.x, startPos.y, 100);
+		idle.renderSprite(0, 2, startPos.x, startPos.y, 100);
 	}
 	if (isAttacking) {
-		idle.renderSprite(0, 3, startPos.x, startPos.y, 100);
+		idle.renderSprite(0, 1, startPos.x, startPos.y, 100);
 	}
 
 	Vector2 topLeft = Vector2(startPos.x - 0.2f * indicatorWidth, 

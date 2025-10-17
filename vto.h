@@ -137,8 +137,8 @@ class Lightsaber : public MeleeWeapon
     private:
         Player *player; // A pointer/reference to the player 
                         // to know their direction and position
-        Image idle{"images/lightsaberSprite.jpeg"};
-        static constexpr const char* SPRITE_SHEET_PATH = "images/lightsaberSprite.jpeg";
+        Image idle{"images/lightsaber.png"};
+        static constexpr const char* SPRITE_SHEET_PATH = "images/lightsaber.png";
 
 };
 class Mjolnir : public RangedWeapon 
